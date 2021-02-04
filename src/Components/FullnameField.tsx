@@ -1,21 +1,21 @@
 import { InputAdornment, TextField } from '@material-ui/core';
-import { Email } from '@material-ui/icons';
+import { Person } from '@material-ui/icons';
 import React, { VFC } from 'react';
-import { EMAIL_INP_ERR } from '../constants';
+import { FULLNAME_INP_ERR } from '../constants';
 import { InputProps } from '../typings/fields';
 
-export const EmailField: VFC<InputProps> = ({ register }) => {
+export const FullnameField: VFC<InputProps> = ({ register }) => {
     return (
         <TextField
-            inputRef={register(EMAIL_INP_ERR)}
-            label="Email"
-            name="email"
+            inputRef={register(FULLNAME_INP_ERR)}
+            label="Full Name"
+            name="fullname"
             variant="outlined"
             margin="normal"
             InputProps={{
                 startAdornment: (
                     <InputAdornment position="start">
-                        <Email />
+                        <Person />
                     </InputAdornment>
                 )
             }}
