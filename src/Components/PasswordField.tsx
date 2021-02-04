@@ -1,7 +1,7 @@
 import { IconButton, InputAdornment, TextField } from '@material-ui/core';
 import React, { MouseEvent, useState, VFC } from 'react';
 import { PASSWORD_INP_ERR } from '../constants';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Lock, Visibility, VisibilityOff } from '@material-ui/icons';
 import { InputProps } from '../typings/fields';
 
 export const PasswordField: VFC<InputProps> = ({ register }) => {
@@ -19,6 +19,11 @@ export const PasswordField: VFC<InputProps> = ({ register }) => {
             size="medium"
             type={showPassword ? 'text' : 'password'}
             InputProps={{
+                startAdornment: (
+                    <InputAdornment position="start">
+                        <Lock />
+                    </InputAdornment>
+                ),
                 endAdornment: (
                     <InputAdornment position="end">
                         <IconButton onClick={togglePassword} onMouseDown={handleMouseDownPassword}>
