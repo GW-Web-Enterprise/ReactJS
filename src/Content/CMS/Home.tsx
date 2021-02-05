@@ -1,5 +1,7 @@
 import React, { VFC } from 'react';
+import { useAuth } from '../../Contexts/AuthContext';
 
 export const Home: VFC = () => {
-    return <div>Welcome to the CMS homepage</div>;
+    const { logout } = useAuth();
+    return <div onClick={logout}>Welcome to the CMS homepage, click me to signout</div>;
 };
