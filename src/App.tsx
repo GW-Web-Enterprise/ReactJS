@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import { AccessPortal } from './Templates/AccessPortal';
 import { AuthProvider } from './Contexts/AuthContext';
@@ -12,6 +12,7 @@ function App() {
             <Router>
                 <AuthProvider>
                     <Switch>
+                        <Route exact path="/" render={() => <Redirect to="/ap/login" />} />
                         <AccessPortal />;
                     </Switch>
                 </AuthProvider>

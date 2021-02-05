@@ -20,7 +20,7 @@ export const Private: VFC<PrivateProps> = ({ component: Component, ...routeProps
     return (
         <Route
             {...routeProps}
-            render={(childProps) => (currentUser ? <Component {...childProps} /> : <Redirect to="/login" />)}
+            render={(childProps) => (currentUser ? <Component {...childProps} /> : <Redirect to="/ap/login" />)}
             // a 'render prop' is a function prop that receives data from another component and returns a component.
             // For example, the Route component here drops the data in the function prop and execute it
         ></Route>
