@@ -1,9 +1,13 @@
-import { RouteProps } from "react-router-dom";
 import { ForgotPasswordForm } from "./Content/AccessPortal/ForgotPasswordForm";
 import { LoginForm } from "./Content/AccessPortal/LoginForm";
 import { SignUpForm } from "./Content/AccessPortal/SignUpForm";
+import { Home } from "./Content/CMS/Home";
+import { CustomRouteProps } from "./typings/routes";
 
-export const accessPortalRoutes: Array<RouteProps> = [
+// 🚨 The purpose of this file is to define different isolated independent contents rendered based on different routes
+
+// Each one is mapped to <AccessRoute>
+export const accessPortalRoutes: Array<CustomRouteProps> = [
     {
         path: '/ap/signup',
         component: SignUpForm
@@ -18,8 +22,10 @@ export const accessPortalRoutes: Array<RouteProps> = [
     }
 ]
 
-export const cmsRoutes: Array<RouteProps> = [
+// Each one is mapped to <PrivateRoute>
+export const cmsRoutes: Array<CustomRouteProps> = [
     {
-        path: '/cms'
+        path: '/cms',
+        component: Home
     }
 ]
