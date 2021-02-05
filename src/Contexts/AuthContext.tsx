@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect, VFC, ReactNode } from 'react';
-import { auth } from '../firebase';
+import { useHistory } from 'react-router-dom';
+import { auth, GoogleAuthProvider } from '../firebase';
 
 // create a pipeline of data flowing from parent to deeply-nested children
 const AuthContext = React.createContext({} as AuthContextInterface);
@@ -12,10 +13,13 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider: VFC<{ children: ReactNode }> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<firebase.default.User>(null!);
     const [loading, setLoading] = useState(true);
+    const history = useHistory();
 
     const signup: AuthFunc = (email, password) => auth.createUserWithEmailAndPassword(email, password);
 
-    const loginSecretly = () => auth.signInAnonymously();
+    const lazyLogin = () => auth.signInAnonymously();
+
+    const loginWithGoogle = () => auth.signInWithPopup(GoogleAuthProvider);
 
     const login: AuthFunc = (email, password) => auth.signInWithEmailAndPassword(email, password);
 
@@ -28,7 +32,8 @@ export const AuthProvider: VFC<{ children: ReactNode }> = ({ children }) => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             setCurrentUser(user!);
-            setLoading(false);
+            user ? history.push('/cms') : history.push('/');
+            setLoading(false); // Render content on login or logout
         });
 
         return unsubscribe; // invoked when the component is unmounted
@@ -36,8 +41,9 @@ export const AuthProvider: VFC<{ children: ReactNode }> = ({ children }) => {
 
     const value: AuthContextInterface = {
         currentUser,
-        loginSecretly,
+        lazyLogin,
         login,
+        loginWithGoogle,
         signup,
         logout,
         resetPassword,
@@ -53,11 +59,9 @@ type ChangeCreFunc = (newCredential: string) => Promise<void>;
 
 interface AuthContextInterface {
     currentUser: firebase.default.User | null;
-    /**
-     * Login as guest without providing credentials
-     */
-    loginSecretly: () => Promise<firebase.default.auth.UserCredential>;
+    lazyLogin: () => Promise<firebase.default.auth.UserCredential>;
     login: AuthFunc;
+    loginWithGoogle: () => Promise<firebase.default.auth.UserCredential>;
     signup: AuthFunc;
     logout: () => Promise<void>;
     resetPassword: ChangeCreFunc;

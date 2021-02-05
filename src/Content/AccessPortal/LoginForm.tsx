@@ -4,10 +4,12 @@ import { useForm } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
 import googleLogo from '../../assets/google-color.svg';
 import { EmailField, InlineIcon, PasswordField } from '../../Components';
+import { useAuth } from '../../Contexts/AuthContext';
 
 type Inps = { email: string; password: string };
 
 export const LoginForm: VFC = () => {
+    const { loginWithGoogle } = useAuth();
     const [loading, setLoading] = useState(false);
     const { register, handleSubmit, errors } = useForm<Inps>();
     const onSubmit = (data: Inps) => {
@@ -20,6 +22,7 @@ export const LoginForm: VFC = () => {
                 <Button
                     disabled={loading}
                     variant="outlined"
+                    onClick={loginWithGoogle}
                     startIcon={<InlineIcon src={googleLogo} alt="Google logo" />}
                 >
                     Continue with Google
