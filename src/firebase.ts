@@ -7,8 +7,9 @@ ones you have required below, so you could get a runtime error if you reference 
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/analytics';
+import 'firebase/performance'
 
-export default firebase.initializeApp({
+firebase.initializeApp({
     apiKey: 'AIzaSyBzHQIRDVJooBCRmF30kwrmU2o6OE4q2rQ',
     authDomain: 'gw-enterprise.firebaseapp.com',
     projectId: 'gw-enterprise',
@@ -18,7 +19,10 @@ export default firebase.initializeApp({
     measurementId: 'G-BNDJYP9MPL',
 });
 
-// the firebase object after initilization is authenticated by the server
-export const auth = firebase.auth()
-export const firestore = firebase.firestore()
 export const analytics = firebase.analytics()
+
+// the firebase object after initilization is authenticated by the server
+export const GoogleAuthProvider = new firebase.auth.GoogleAuthProvider()
+export const auth = firebase.auth()
+export const db = firebase.firestore()
+export const perf = firebase.performance()
