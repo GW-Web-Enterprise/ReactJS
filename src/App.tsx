@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
-import { AccessPortal } from './Templates/AccessPortal';
 import { AuthProvider } from './Contexts/AuthContext';
 import { CssBaseline } from '@material-ui/core';
+import { AccessPortalTemplate, CmsTemplate } from './Templates';
 
 function App() {
     return (
@@ -13,7 +13,8 @@ function App() {
                 <AuthProvider>
                     <Switch>
                         <Route exact path="/" render={() => <Redirect to="/ap/login" />} />
-                        <AccessPortal />;
+                        <Route path="/ap" component={AccessPortalTemplate} />
+                        <Route path="/cms" component={CmsTemplate} />
                     </Switch>
                 </AuthProvider>
             </Router>
