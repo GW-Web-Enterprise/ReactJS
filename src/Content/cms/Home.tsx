@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import { VFC } from 'react';
 import { useAuth } from '../../Contexts/AuthContext';
 
 export const Home: VFC = () => {
