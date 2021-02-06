@@ -5,7 +5,7 @@ import { CustomRouteProps } from "./typings/routes";
 // 🚨 The purpose of this file is to define different isolated independent contents rendered based on different routes
 // All route props defined inside this file will be imported by the templates
 
-// Each one is mapped to <AccessRoute>
+// Each one will be mapped to <UnauthenticatedRoute>
 export const ACCESS_PORTAL_ROUTES: Array<CustomRouteProps> = [
     {
         path: '/ap/signup',
@@ -21,7 +21,7 @@ export const ACCESS_PORTAL_ROUTES: Array<CustomRouteProps> = [
     }
 ]
 
-// Each one is mapped to <PrivateRoute>
+// Each one will be mapped to <PrivateRoute>
 export const CMS_ROUTES: Array<CustomRouteProps> = [
     {
         path: '/cms',
