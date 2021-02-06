@@ -1,7 +1,5 @@
-import { ForgotPasswordForm } from "./Content/AccessPortal/ForgotPasswordForm";
-import { LoginForm } from "./Content/AccessPortal/LoginForm";
-import { SignUpForm } from "./Content/AccessPortal/SignUpForm";
-import { Home } from "./Content/CMS/Home";
+import { ForgotPasswordForm, LoginForm, SignUpForm } from "./Content/ap";
+import { Home } from "./Content/cms";
 import { CustomRouteProps } from "./typings/routes";
 
 // 🚨 The purpose of this file is to define different isolated independent contents rendered based on different routes

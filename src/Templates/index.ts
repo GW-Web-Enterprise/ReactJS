@@ -1,2 +1,2 @@
-export * from './AccessPortalTemplate'
+export * from './ApTemplate'
 export * from './CmsTemplate'
