@@ -1,11 +1,11 @@
 import React, { VFC } from 'react';
 import { NavDrawer, PrivateRoute } from '../Components';
-import { CMS_ROUTES } from '../routes';
+import { CONSOLE_ROUTES } from '../routes';
 
-export const CmsTemplate: VFC = () => {
+export const ConsoleTemplate: VFC = () => {
     return (
         <NavDrawer>
-            {CMS_ROUTES.map((routeProps, index) => (
+            {CONSOLE_ROUTES.map((routeProps, index) => (
                 <PrivateRoute key={index} {...routeProps} />
             ))}
         </NavDrawer>

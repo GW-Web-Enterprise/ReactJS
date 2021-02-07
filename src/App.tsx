@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import './App.css';
 import { AuthProvider } from './Contexts/AuthContext';
 import { CssBaseline } from '@material-ui/core';
-import { ApTemplate, CmsTemplate } from './Templates';
+import { ApTemplate, ConsoleTemplate } from './Templates';
 
 function App() {
     return (
@@ -14,7 +14,7 @@ function App() {
                     <Switch>
                         <Route exact path="/" render={() => <Redirect to="/ap/login" />} />
                         <Route path="/ap" component={ApTemplate} />
-                        <Route path="/cms" component={CmsTemplate} />
+                        <Route path="/console" component={ConsoleTemplate} />
                     </Switch>
                 </AuthProvider>
             </Router>

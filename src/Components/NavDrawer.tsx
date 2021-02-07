@@ -124,7 +124,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         <Menu />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        Content Management System
+                        System Console
                     </Typography>
                     <Button color="inherit" onClick={logout}>
                         Logout
@@ -153,25 +153,25 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button component={Link} to="/cms/faculties">
+                    <ListItem button component={Link} to="/console/faculties">
                         <ListItemIcon>
                             <InlineIcon src={facultyIcon} />
                         </ListItemIcon>
                         <ListItemText primary="Faculties" />
                     </ListItem>
-                    <ListItem button component={Link} to="/cms/users">
+                    <ListItem button component={Link} to="/console/users">
                         <ListItemIcon>
                             <People />
                         </ListItemIcon>
                         <ListItemText primary="Users" />
                     </ListItem>
-                    <ListItem button component={Link} to="/cms/articles">
+                    <ListItem button component={Link} to="/console/articles">
                         <ListItemIcon>
                             <InlineIcon src={articleIcon} />
                         </ListItemIcon>
                         <ListItemText primary="Articles" />
                     </ListItem>
-                    <ListItem button component={Link} to="/cms/roles">
+                    <ListItem button component={Link} to="/console/roles">
                         <ListItemIcon>
                             <InlineIcon src={keyIcon} />
                         </ListItemIcon>

@@ -1,2 +1,2 @@
 export * from './ApTemplate'
-export * from './CmsTemplate'
+export * from './ConsoleTemplate'
