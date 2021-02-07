@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-export const DrawerNav: VFC<{ children: ReactNode }> = ({ children }) => {
+export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
     const classes = useStyles();
     const theme = useTheme();
     const { logout } = useAuth();
