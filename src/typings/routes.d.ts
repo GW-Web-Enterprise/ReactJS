@@ -5,4 +5,5 @@ export interface CustomRouteProps extends RouteProps {
      *  The union React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any> support React.VFC<P = {}>
     */
     component: typeof React.Component | React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>
+    path: string
 }
