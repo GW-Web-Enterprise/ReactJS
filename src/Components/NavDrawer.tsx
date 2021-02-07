@@ -100,8 +100,10 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
     const theme = useTheme();
     const { logout } = useAuth();
     const [open, setOpen] = useState(true);
+    const [selectedIndex, setSelectedIndex] = useState(0);
     const handleDrawerOpen = () => setOpen(true);
     const handleDrawerClose = () => setOpen(false);
+    const handleListItemClick = (index: number) => () => setSelectedIndex(index);
 
     return (
         <div className={classes.root}>
@@ -153,31 +155,61 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem button component={Link} to="/console/overview">
+                    <ListItem
+                        selected={selectedIndex === 0}
+                        onClick={handleListItemClick(0)}
+                        button
+                        component={Link}
+                        to="/console/overview"
+                    >
                         <ListItemIcon>
                             <Home />
                         </ListItemIcon>
                         <ListItemText primary="Overview" />
                     </ListItem>
-                    <ListItem button component={Link} to="/console/faculties">
+                    <ListItem
+                        selected={selectedIndex === 1}
+                        onClick={handleListItemClick(1)}
+                        button
+                        component={Link}
+                        to="/console/faculties"
+                    >
                         <ListItemIcon>
                             <InlineIcon src={facultyIcon} />
                         </ListItemIcon>
                         <ListItemText primary="Faculties" />
                     </ListItem>
-                    <ListItem button component={Link} to="/console/users">
+                    <ListItem
+                        selected={selectedIndex === 2}
+                        onClick={handleListItemClick(2)}
+                        button
+                        component={Link}
+                        to="/console/users"
+                    >
                         <ListItemIcon>
                             <People />
                         </ListItemIcon>
                         <ListItemText primary="Users" />
                     </ListItem>
-                    <ListItem button component={Link} to="/console/articles">
+                    <ListItem
+                        selected={selectedIndex === 3}
+                        onClick={handleListItemClick(3)}
+                        button
+                        component={Link}
+                        to="/console/articles"
+                    >
                         <ListItemIcon>
                             <InlineIcon src={articleIcon} />
                         </ListItemIcon>
                         <ListItemText primary="Articles" />
                     </ListItem>
-                    <ListItem button component={Link} to="/console/roles">
+                    <ListItem
+                        selected={selectedIndex === 4}
+                        onClick={handleListItemClick(4)}
+                        button
+                        component={Link}
+                        to="/console/roles"
+                    >
                         <ListItemIcon>
                             <InlineIcon src={keyIcon} />
                         </ListItemIcon>
