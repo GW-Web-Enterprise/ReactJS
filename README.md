@@ -1,3 +1,10 @@
+This repo follows the [Git commit message convention](https://github.com/kazupon/git-commit-message-convention) extended from Angular style
+# Techniques, Technologies, Libraries used in the project
++ [Context API & UseContext Hook](https://reactjs.org/docs/context.html) to propagate the info of the authenticated user to all UI components
++ ['Render props'](https://reactjs.org/docs/render-props.html)
++ [Firebase BaaS](https://firebase.google.com/docs)
++ [Material UI](https://material-ui.com/)
++ [React Router Dom](https://reactrouter.com/web/guides/quick-start) to render UI dynamically based on current route
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
