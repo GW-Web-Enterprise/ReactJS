@@ -5,6 +5,10 @@ import {
     Divider,
     Drawer,
     IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
     makeStyles,
     Theme,
     Toolbar,
@@ -12,9 +16,14 @@ import {
     useTheme
 } from '@material-ui/core';
 import React, { ReactNode, useState, VFC } from 'react';
-import { ChevronLeft, ChevronRight, Menu } from '@material-ui/icons';
+import { ChevronLeft, ChevronRight, Menu, People } from '@material-ui/icons';
+import facultyIcon from '../assets/faculty-solid.svg';
+import articleIcon from '../assets/article.svg';
+import keyIcon from '../assets/key.svg';
 import clsx from 'clsx';
 import { useAuth } from '../Contexts/AuthContext';
+import { InlineIcon } from './InlineIcon';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -129,6 +138,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                     [classes.drawerOpen]: open,
                     [classes.drawerClose]: !open
                 })}
+                //TODO: Understand the 'paper' prop below
                 classes={{
                     paper: clsx({
                         [classes.drawerOpen]: open,
@@ -142,6 +152,32 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                     </IconButton>
                 </div>
                 <Divider />
+                <List>
+                    <ListItem button component={Link} to="/cms/faculties">
+                        <ListItemIcon>
+                            <InlineIcon src={facultyIcon} />
+                        </ListItemIcon>
+                        <ListItemText primary="Faculties" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/cms/users">
+                        <ListItemIcon>
+                            <People />
+                        </ListItemIcon>
+                        <ListItemText primary="Users" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/cms/articles">
+                        <ListItemIcon>
+                            <InlineIcon src={articleIcon} />
+                        </ListItemIcon>
+                        <ListItemText primary="Articles" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/cms/roles">
+                        <ListItemIcon>
+                            <InlineIcon src={keyIcon} />
+                        </ListItemIcon>
+                        <ListItemText primary="Roles & Permissions" />
+                    </ListItem>
+                </List>
             </Drawer>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
