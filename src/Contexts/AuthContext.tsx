@@ -32,7 +32,7 @@ export const AuthProvider: VFC<{ children: ReactNode }> = ({ children }) => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             setCurrentUser(user!);
-            user ? history.push('/console') : history.push('/');
+            user ? history.push('/console/overview') : history.push('/ap/login');
             setLoading(false); // Render content on login or logout
         });
 

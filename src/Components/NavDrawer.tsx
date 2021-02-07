@@ -16,7 +16,7 @@ import {
     useTheme
 } from '@material-ui/core';
 import React, { ReactNode, useState, VFC } from 'react';
-import { ChevronLeft, ChevronRight, Menu, People } from '@material-ui/icons';
+import { ChevronLeft, ChevronRight, Home, Menu, People } from '@material-ui/icons';
 import facultyIcon from '../assets/faculty-solid.svg';
 import articleIcon from '../assets/article.svg';
 import keyIcon from '../assets/key.svg';
@@ -153,6 +153,12 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                 </div>
                 <Divider />
                 <List>
+                    <ListItem button component={Link} to="/console/overview">
+                        <ListItemIcon>
+                            <Home />
+                        </ListItemIcon>
+                        <ListItemText primary="Overview" />
+                    </ListItem>
                     <ListItem button component={Link} to="/console/faculties">
                         <ListItemIcon>
                             <InlineIcon src={facultyIcon} />
