@@ -99,7 +99,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
     const classes = useStyles();
     const theme = useTheme();
     const { logout } = useAuth();
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(window.innerWidth >= 768);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const handleDrawerOpen = () => setOpen(true);
     const handleDrawerClose = () => setOpen(false);
@@ -184,24 +184,24 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         onClick={handleListItemClick(2)}
                         button
                         component={Link}
-                        to="/console/users"
-                    >
-                        <ListItemIcon>
-                            <People />
-                        </ListItemIcon>
-                        <ListItemText primary="Users" />
-                    </ListItem>
-                    <ListItem
-                        selected={selectedIndex === 3}
-                        onClick={handleListItemClick(3)}
-                        button
-                        component={Link}
                         to="/console/articles"
                     >
                         <ListItemIcon>
                             <InlineIcon src={articleIcon} />
                         </ListItemIcon>
                         <ListItemText primary="Articles" />
+                    </ListItem>
+                    <ListItem
+                        selected={selectedIndex === 3}
+                        onClick={handleListItemClick(3)}
+                        button
+                        component={Link}
+                        to="/console/users"
+                    >
+                        <ListItemIcon>
+                            <People />
+                        </ListItemIcon>
+                        <ListItemText primary="Users" />
                     </ListItem>
                     <ListItem
                         selected={selectedIndex === 4}
