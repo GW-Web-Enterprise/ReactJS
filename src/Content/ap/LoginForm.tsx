@@ -23,7 +23,7 @@ export const LoginForm: VFC = () => {
                     disabled={loading}
                     variant="outlined"
                     onClick={loginWithGoogle}
-                    startIcon={<InlineIcon src={googleLogo} alt="Google logo" />}
+                    startIcon={<InlineIcon src={googleLogo} />}
                 >
                     Continue with Google
                 </Button>
