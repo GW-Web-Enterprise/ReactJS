@@ -32,12 +32,16 @@ export const AuthProvider: VFC<{ children: ReactNode }> = ({ children }) => {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             setCurrentUser(user!);
-            user ? history.push('/console/overview') : history.push('/ap/login');
+            const currentPath = window.location.pathname;
+            // If the user is logged in, then they must be at the system console
+            if (user) if (!/^\/console/.test(currentPath)) history.push('/console/overview');
+            // If the user is unauthenticated, then they must be at the access portal area
+            if (!user) if (!/^\/ap/.test(currentPath)) history.push('/ap/login');
             setLoading(false); // Render content on login or logout
         });
 
         return unsubscribe; // invoked when the component is unmounted
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const value: AuthContextInterface = {
         currentUser,

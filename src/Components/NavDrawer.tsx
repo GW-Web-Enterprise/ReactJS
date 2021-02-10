@@ -100,7 +100,16 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
     const theme = useTheme();
     const { logout } = useAuth();
     const [open, setOpen] = useState(window.innerWidth >= 768);
-    const [selectedIndex, setSelectedIndex] = useState(0);
+    enum PageToNavIndex {
+        overview,
+        faculties,
+        articles,
+        users,
+        roles
+    }
+    const currentPath = window.location.pathname;
+    const currentPage = currentPath.slice(currentPath.lastIndexOf('/') + 1);
+    const [selectedIndex, setSelectedIndex] = useState(PageToNavIndex[currentPage as keyof typeof PageToNavIndex]);
     const handleDrawerOpen = () => setOpen(true);
     const handleDrawerClose = () => setOpen(false);
     const handleListItemClick = (index: number) => () => setSelectedIndex(index);
@@ -160,7 +169,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         onClick={handleListItemClick(0)}
                         button
                         component={Link}
-                        to="/console/overview"
+                        to={`/console/${PageToNavIndex[0]}`}
                     >
                         <ListItemIcon>
                             <Home />
@@ -172,7 +181,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         onClick={handleListItemClick(1)}
                         button
                         component={Link}
-                        to="/console/faculties"
+                        to={`/console/${PageToNavIndex[1]}`}
                     >
                         <ListItemIcon>
                             <InlineIcon src={facultyIcon} />
@@ -184,7 +193,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         onClick={handleListItemClick(2)}
                         button
                         component={Link}
-                        to="/console/articles"
+                        to={`/console/${PageToNavIndex[2]}`}
                     >
                         <ListItemIcon>
                             <InlineIcon src={articleIcon} />
@@ -196,7 +205,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         onClick={handleListItemClick(3)}
                         button
                         component={Link}
-                        to="/console/users"
+                        to={`/console/${PageToNavIndex[3]}`}
                     >
                         <ListItemIcon>
                             <People />
@@ -208,7 +217,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         onClick={handleListItemClick(4)}
                         button
                         component={Link}
-                        to="/console/roles"
+                        to={`/console/${PageToNavIndex[4]}`}
                     >
                         <ListItemIcon>
                             <InlineIcon src={keyIcon} />
