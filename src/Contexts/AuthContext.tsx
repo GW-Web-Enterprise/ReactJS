@@ -25,12 +25,12 @@ export const AuthProvider: VFC<{ children: ReactNode }> = ({ children }) => {
 
     const logout = () => auth.signOut();
 
-    const resetPassword: ChangeCreFunc = (email) => auth.sendPasswordResetEmail(email);
+    const resetPassword: ChangeCreFunc = email => auth.sendPasswordResetEmail(email);
 
-    const updatePassword: ChangeCreFunc = (password) => currentUser.updatePassword(password);
+    const updatePassword: ChangeCreFunc = password => currentUser.updatePassword(password);
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user!);
             const currentPath = window.location.pathname;
             // If the user is logged in, then they must be at the system console

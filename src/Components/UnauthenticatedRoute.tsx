@@ -11,7 +11,7 @@ export const UnauthenticatedRoute: VFC<CustomRouteProps> = ({ component: Compone
     return (
         <Route
             {...routeProps}
-            render={(childProps) => (currentUser ? <Redirect to="/console" /> : <Component {...childProps} />)}
+            render={childProps => (currentUser ? <Redirect to="/console" /> : <Component {...childProps} />)}
         />
     );
 };
