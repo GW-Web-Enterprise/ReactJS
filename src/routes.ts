@@ -1,5 +1,6 @@
 import { ForgotPasswordForm, LoginForm, SignUpForm } from "./Content/ap";
 import { Overview } from "./Content/console";
+import { Faculty } from "./Content/console/Faculty";
 import { CustomRouteProps } from "./typings/routes";
 
 // 🚨 The purpose of this file is to define different isolated independent contents rendered based on different routes
@@ -26,5 +27,9 @@ export const CONSOLE_ROUTES: Array<CustomRouteProps> = [
     {
         path: '/console/overview',
         component: Overview
+    },
+    {
+        path: '/console/faculties',
+        component: Faculty
     }
 ]
