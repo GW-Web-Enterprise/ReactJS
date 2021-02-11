@@ -1,12 +1,13 @@
 import { Box, Popover } from '@material-ui/core';
-import React, { MutableRefObject, ReactNode, useRef, useState, VFC } from 'react';
+import React, { MutableRefObject, useRef, useState, VFC } from 'react';
 interface PopoverItemProps {
-    children: ReactNode;
-    /** A 'render prop' renders the JSX element that toggles the Popover when clicked */
+    /** A 'render prop' that renders the JSX element to toggle the Popover */
     renderToggle: (toggle: () => void, toggleEl: MutableRefObject<null>) => JSX.Element;
+    /** A 'render prop' that returns the actual popover content */
+    renderPopContent: () => JSX.Element;
 }
 
-export const PopoverItem: VFC<PopoverItemProps> = ({ children, renderToggle }) => {
+export const PopoverItem: VFC<PopoverItemProps> = ({ renderToggle, renderPopContent }) => {
     const toggleEl = useRef(null);
     const [open, setOpen] = useState(false);
 
@@ -26,7 +27,7 @@ export const PopoverItem: VFC<PopoverItemProps> = ({ children, renderToggle }) =
                     horizontal: 'center'
                 }}
             >
-                <Box style={{ padding: '16px' }}>{children}</Box>
+                <Box style={{ padding: '16px' }}>{renderPopContent()}</Box>
             </Popover>
         </Box>
     );

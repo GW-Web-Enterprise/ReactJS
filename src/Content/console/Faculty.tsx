@@ -22,9 +22,8 @@ export const Faculty: VFC = () => {
                             Faculty of Math
                         </Button>
                     )}
-                >
-                    <TabNav />
-                </PopoverItem>
+                    renderPopContent={() => <TabNav />}
+                />
             )}
         </Fragment>
     );
