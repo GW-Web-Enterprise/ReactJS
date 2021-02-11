@@ -1,6 +1,7 @@
 dependencies:
   '@material-ui/core': 4.11.3_4695a47c40ef995f48f8c834d2fb82ec
   '@material-ui/icons': 4.11.2_0ccdcaa3fbbaae4c459e50ee1fb71c84
+  '@material-ui/lab': 4.0.0-alpha.57_0ccdcaa3fbbaae4c459e50ee1fb71c84
   '@testing-library/jest-dom': 5.11.9
   '@testing-library/react': 11.2.4_react-dom@17.0.1+react@17.0.1
   '@testing-library/user-event': 12.6.3
@@ -1217,6 +1218,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-J5AIf3vPj3UwXaAzb5j1xM4WAQDX3EMgemF8rjCP3SoW09LfRKAXQKt6CoVYl230P6iWdRcBbnLDDdnqWxZSCA==
+  /@babel/runtime/7.12.13:
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
+    resolution:
+      integrity: sha512-8+3UMPBrjFa/6TtKi/7sehPKqfAm4g6K+YQjyyFOLUTxzOngcRZTlAVY8sc2CORJYqdHQY8gRPHmn+qo15rCBw==
   /@babel/runtime/7.12.5:
     dependencies:
       regenerator-runtime: 0.13.7
@@ -1873,6 +1880,30 @@ packages:
         optional: true
     resolution:
       integrity: sha512-fQNsKX2TxBmqIGJCSi3tGTO/gZ+eJgWmMJkgDiOfyNaunNaxcklJQFaFogYcFl0qFuaEz1qaXYXboa/bUXVSOQ==
+  /@material-ui/lab/4.0.0-alpha.57_0ccdcaa3fbbaae4c459e50ee1fb71c84:
+    dependencies:
+      '@babel/runtime': 7.12.13
+      '@material-ui/core': 4.11.3_4695a47c40ef995f48f8c834d2fb82ec
+      '@material-ui/utils': 4.11.2_react-dom@17.0.1+react@17.0.1
+      '@types/react': 17.0.0
+      clsx: 1.1.1
+      prop-types: 15.7.2
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
+      react-is: 17.0.1
+    dev: false
+    engines:
+      node: '>=8.0.0'
+    peerDependencies:
+      '@material-ui/core': ^4.9.10
+      '@types/react': ^16.8.6 || ^17.0.0
+      react: ^16.8.0 || ^17.0.0
+      react-dom: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    resolution:
+      integrity: sha512-qo/IuIQOmEKtzmRD2E4Aa6DB4A87kmY6h0uYhjUmrrgmEAgbbw9etXpWPVXuRK6AGIQCjFzV6WO2i21m1R4FCw==
   /@material-ui/styles/4.11.3_4695a47c40ef995f48f8c834d2fb82ec:
     dependencies:
       '@babel/runtime': 7.12.5
@@ -13143,6 +13174,7 @@ packages:
 specifiers:
   '@material-ui/core': ^4.11.3
   '@material-ui/icons': ^4.11.2
+  '@material-ui/lab': ^4.0.0-alpha.57
   '@testing-library/jest-dom': ^5.11.4
   '@testing-library/react': ^11.1.0
   '@testing-library/user-event': ^12.1.10
