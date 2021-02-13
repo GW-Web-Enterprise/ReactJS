@@ -11,8 +11,9 @@ import {
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import React, { Fragment, useState, VFC } from 'react';
-import { PopoverItem, TabNav } from '../../Components';
-import { cloneComponent } from '../../utils';
+import { PopoverItem } from '../../../Components';
+import { cloneComponent } from '../../../utils';
+import { TabNav } from './TabNav';
 
 export const Faculty: VFC = () => {
     const [open, setOpen] = useState(false);

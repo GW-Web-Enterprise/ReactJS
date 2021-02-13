@@ -1,6 +1,6 @@
 import { ForgotPasswordForm, LoginForm, SignUpForm } from "./Content/ap";
-import { Overview } from "./Content/console";
 import { Faculty } from "./Content/console/Faculty";
+import { Overview } from "./Content/console/Overview";
 import { CustomRouteProps } from "./typings/routes";
 
 // 🚨 The purpose of this file is to define different isolated independent contents rendered based on different routes

@@ -7,4 +7,4 @@ export * from './FullnameField'
 export * from './NavDrawer'
 export * from './PopoverItem'
 export * from './SearchBar'
-export * from './TabNav'
+
