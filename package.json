@@ -25,9 +25,9 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "FAST_REFRESH=false react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "FAST_REFRESH=false react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -49,6 +49,8 @@
     ]
   },
   "devDependencies": {
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "react-app-rewire-alias": "^1.0.0",
+    "react-app-rewired": "^2.1.8"
   }
 }

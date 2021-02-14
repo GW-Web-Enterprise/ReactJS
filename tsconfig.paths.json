@@ -1,8 +1,5 @@
 {
     "compilerOptions": {
-        /* baseUrl set to 'src' will allow this import syntax to exist: import {} from 'firebase'. Therefore, the relative import is much
-    better, for example, import {} from './firebase'. baseUrl will disable the relative import and use the non-relative one, hence, this
-    setting option is removed */
         "paths": {
             "@app/assets/*": ["./src/assets/*"],
             "@app/utils/*": ["./src/utils/*"],
