@@ -5,6 +5,5 @@
     "semi": true,
     "singleQuote": true,
     "trailingComma": "none",
-    "arrowParens": "avoid",
-    "parser": "typescript"
+    "arrowParens": "avoid"
 }
