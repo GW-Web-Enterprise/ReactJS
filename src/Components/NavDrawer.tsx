@@ -17,13 +17,13 @@ import {
 } from '@material-ui/core';
 import React, { ReactNode, useState, VFC } from 'react';
 import { ChevronLeft, ChevronRight, Home, Menu, People } from '@material-ui/icons';
-import facultyIcon from '../assets/faculty-solid.svg';
-import articleIcon from '../assets/article.svg';
-import keyIcon from '../assets/key.svg';
+import facultyIcon from '@app/assets/faculty-solid.svg';
+import articleIcon from '@app/assets/article.svg';
+import keyIcon from '@app/assets/key.svg';
 import clsx from 'clsx';
-import { useAuth } from '../Contexts/AuthContext';
-import { InlineIcon } from './InlineIcon';
 import { Link } from 'react-router-dom';
+import { InlineIcon } from '@app/Components/InlineIcon';
+import { useAuth } from '@app/Contexts/AuthContext';
 
 const drawerWidth = 240;
 

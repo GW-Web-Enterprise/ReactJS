@@ -1,8 +1,8 @@
 import { IconButton, InputAdornment, TextField } from '@material-ui/core';
 import React, { MouseEvent, useState, VFC } from 'react';
-import { PASSWORD_INP_ERR } from '../constants';
 import { Lock, Visibility, VisibilityOff } from '@material-ui/icons';
-import { InputProps } from '../typings/fields';
+import { PASSWORD_INP_ERR } from '@app/constants/inputErrs';
+import { InputProps } from '@app/typings/fields';
 
 export const PasswordField: VFC<InputProps> = ({ register }) => {
     const [showPassword, setShowPassword] = useState(false);

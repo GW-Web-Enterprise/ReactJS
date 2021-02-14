@@ -2,12 +2,13 @@ import { Box, Button, Link } from '@material-ui/core';
 import React, { Fragment, useState, VFC } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
-import googleLogo from '../../assets/google-color.svg';
-import { EmailField, InlineIcon, PasswordField } from '../../Components';
-import { useAuth } from '../../Contexts/AuthContext';
+import googleLogo from '@app/assets/google-color.svg';
+import { InlineIcon } from '@app/Components/InlineIcon';
+import { EmailField } from '@app/Components/EmailField';
+import { useAuth } from '@app/Contexts/AuthContext';
+import { PasswordField } from '@app/Components/PasswordField';
 
 type Inps = { email: string; password: string };
-
 export const LoginForm: VFC = () => {
     const { loginWithGoogle } = useAuth();
     const [loading, setLoading] = useState(false);

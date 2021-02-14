@@ -1,8 +1,8 @@
+import { FULLNAME_INP_ERR } from '@app/constants/inputErrs';
+import { InputProps } from '@app/typings/fields';
 import { InputAdornment, TextField } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
 import React, { VFC } from 'react';
-import { FULLNAME_INP_ERR } from '../constants';
-import { InputProps } from '../typings/fields';
 
 export const FullnameField: VFC<InputProps> = ({ register }) => {
     return (

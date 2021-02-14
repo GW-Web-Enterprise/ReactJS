@@ -1,10 +1,5 @@
+import { REGEX_EMAIL, REGEX_FULLNAME, REGEX_NO_SPACES } from "@app/constants/regexes";
 import { RegisterOptions } from "react-hook-form";
-
-// eslint-disable-next-line
-export const REGEX_EMAIL = /^(([^<>()\[\]\\.,;:\s-@#$!%^&*+=_/`?{}|'"]+(\.[^<>()\[\]\\.,;:\s-@_!#$%^&*()=+/`?{}|'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i
-export const REGEX_NO_SPACES = /^\S*$/
-export const REGEX_NO_LEADING_TRAILING_DOUBLE_SPACES = /^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/
-export const REGEX_FULLNAME = /^([a-zA-Z]+\s)*[a-zA-Z]+$/
 
 const fullnameErr = 'Your fullname must contain between 4 and 64 characters'
 export const FULLNAME_INP_ERR: RegisterOptions = {
@@ -29,4 +24,3 @@ export const PASSWORD_INP_ERR: RegisterOptions = {
     maxLength: { value: 60, message: passwordErr },
     pattern: { value: REGEX_NO_SPACES, message: 'Password should not contain any whitespace' }
 }
-

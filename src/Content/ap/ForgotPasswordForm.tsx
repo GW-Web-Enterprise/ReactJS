@@ -1,8 +1,8 @@
+import { EmailField } from '@app/Components/EmailField';
 import { Box, Button, Link } from '@material-ui/core';
 import React, { useState, VFC } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
-import { EmailField } from '../../Components';
 
 export const ForgotPasswordForm: VFC = () => {
     const [loading, setLoading] = useState(false);

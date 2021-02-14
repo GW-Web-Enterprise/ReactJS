@@ -1,7 +1,9 @@
+import { EmailField } from '@app/Components/EmailField';
+import { FullnameField } from '@app/Components/FullnameField';
+import { PasswordField } from '@app/Components/PasswordField';
 import { Box, Button, Link } from '@material-ui/core';
 import React, { useState, VFC } from 'react';
 import { useForm } from 'react-hook-form';
-import { EmailField, FullnameField, PasswordField } from '../../Components';
 import { Link as RouterLink } from 'react-router-dom';
 
 type Inps = { email: string; password: string; fullname: string };

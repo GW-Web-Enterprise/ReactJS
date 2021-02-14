@@ -1,7 +1,7 @@
 import React, { VFC } from 'react';
 import { Grid } from '@material-ui/core';
 import { ACCESS_PORTAL_ROUTES } from '../routes';
-import { UnauthenticatedRoute } from '../Components';
+import { UnauthenticatedRoute } from '@app/Components/UnauthenticatedRoute';
 
 export const ApTemplate: VFC = () => {
     return (

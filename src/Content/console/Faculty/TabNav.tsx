@@ -20,11 +20,11 @@ import {
     Button
 } from '@material-ui/core';
 import React, { Fragment, useState, VFC } from 'react';
-import { SearchBar } from '../../../Components/SearchBar';
 import { AddCircle, RemoveCircle } from '@material-ui/icons';
-import { cloneComponent } from '../../../utils';
-import { PopoverItem } from '../../../Components/PopoverItem';
 import { Alert } from '@material-ui/lab';
+import { SearchBar } from '@app/Components/SearchBar';
+import { cloneComponent } from '@app/utils/cloneComponent';
+import { PopoverItem } from '@app/Components/PopoverItem';
 
 type TabPanelProps = { children?: React.ReactNode; index: number; value: number };
 

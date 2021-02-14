@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.css';
-import { AuthProvider } from './Contexts/AuthContext';
 import { CssBaseline } from '@material-ui/core';
+import { AuthProvider } from '@app/Contexts/AuthContext';
 import { ApTemplate, ConsoleTemplate } from './Templates';
 
 function App() {

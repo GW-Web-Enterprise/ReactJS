@@ -1,7 +1,7 @@
+import { useAuth } from '@app/Contexts/AuthContext';
+import { CustomRouteProps } from '@app/typings/routes';
 import { VFC } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { useAuth } from '../Contexts/AuthContext';
-import { CustomRouteProps } from '../typings/routes';
 
 /**
  * The component passed in here is private, rendered if and only if the user is logged in. Redirect to /ap/login if unauthenticated

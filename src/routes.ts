@@ -1,10 +1,11 @@
-import { ForgotPasswordForm, LoginForm, SignUpForm } from "./Content/ap";
-import { Faculty } from "./Content/console/Faculty";
-import { Overview } from "./Content/console/Overview";
-import { CustomRouteProps } from "./typings/routes";
-
 // 🚨 The purpose of this file is to define different isolated independent contents rendered based on different routes
 // All route props defined inside this file will be imported by the templates
+import { ForgotPasswordForm } from "@app/Content/ap/ForgotPasswordForm"
+import { LoginForm } from "@app/Content/ap/LoginForm"
+import { SignUpForm } from "@app/Content/ap/SignUpForm"
+import { Faculty } from "@app/Content/console/Faculty"
+import { Overview } from "@app/Content/console/Overview"
+import { CustomRouteProps } from "@app/typings/routes"
 
 // Each one will be mapped to <UnauthenticatedRoute>
 export const ACCESS_PORTAL_ROUTES: Array<CustomRouteProps> = [
