@@ -3,19 +3,34 @@ import { TabNav } from '@app/Content/console/Faculty/TabNav';
 import { cloneComponent } from '@app/utils/cloneComponent';
 import {
     Box,
-    Button,
+    ButtonGroup,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
     Fab,
+    Button,
     TextField,
-    Tooltip
+    Tooltip,
+    Typography,
+    makeStyles,
+    createStyles,
+    FormControl
 } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Add, Delete, Edit } from '@material-ui/icons';
 import React, { Fragment, useState, VFC } from 'react';
 
+const useStyles = makeStyles(() =>
+    createStyles({
+        actionBtn: {
+            color: '#1976d2',
+            border: '1px solid rgba(25, 118, 210, 0.5)'
+        }
+    })
+);
+
 export const Faculty: VFC = () => {
+    const classes = useStyles();
     const [open, setOpen] = useState(false);
     return (
         <Fragment>
@@ -39,24 +54,60 @@ export const Faculty: VFC = () => {
             </Dialog>
 
             {cloneComponent(10)(
-                <PopoverItem
-                    placement="bottom"
-                    renderToggle={(toggle, toggleEl) => (
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            ref={toggleEl}
-                            onClick={toggle}
-                            style={{
-                                color: '#1976d2',
-                                border: '1px solid rgba(25, 118, 210, 0.5)'
-                            }}
-                        >
-                            Faculty of Math
-                        </Button>
-                    )}
-                    renderPopContent={() => <TabNav />}
-                />
+                <ButtonGroup color="inherit" style={{ margin: '8px' }}>
+                    <PopoverItem
+                        placement="bottom"
+                        renderToggle={(toggle, toggleEl) => (
+                            <Tooltip title="Click to view faculty members" arrow>
+                                <Button ref={toggleEl} onClick={toggle} className={classes.actionBtn}>
+                                    Math
+                                </Button>
+                            </Tooltip>
+                        )}
+                        renderPopContent={() => <TabNav />}
+                    />
+                    <PopoverItem
+                        placement="bottom"
+                        renderToggle={(toggle, toggleEl) => (
+                            <Tooltip title="Edit faculty name" arrow>
+                                <Button ref={toggleEl} onClick={toggle} className={classes.actionBtn}>
+                                    <Edit />
+                                </Button>
+                            </Tooltip>
+                        )}
+                        renderPopContent={() => (
+                            <FormControl>
+                                <TextField variant="outlined" margin="normal" label="New faculty name" />
+                                <Button variant="contained" color="primary">
+                                    Edit
+                                </Button>
+                            </FormControl>
+                        )}
+                    />
+                    <PopoverItem
+                        placement="bottom"
+                        renderToggle={(toggle, toggleEl) => (
+                            <Tooltip title="Delete faculty" arrow>
+                                <Button ref={toggleEl} onClick={toggle} className={classes.actionBtn}>
+                                    <Delete />
+                                </Button>
+                            </Tooltip>
+                        )}
+                        renderPopContent={() => (
+                            <Box>
+                                <Typography variant="button" display="block" gutterBottom>
+                                    Delete this faculty?
+                                </Typography>
+                                <Button variant="contained" color="secondary">
+                                    No
+                                </Button>
+                                <Button variant="contained" color="primary" style={{ float: 'right' }}>
+                                    Yes
+                                </Button>
+                            </Box>
+                        )}
+                    />
+                </ButtonGroup>
             )}
         </Fragment>
     );
