@@ -23,7 +23,7 @@ const useStyles = makeStyles(() =>
     })
 );
 
-export const ManageFaculty: VFC = () => {
+export const ViewFaculty: VFC = () => {
     const classes = useStyles();
     return (
         <ButtonGroup color="inherit" style={{ margin: '8px' }}>
