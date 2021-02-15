@@ -42,7 +42,7 @@ const TabPanel: VFC<TabPanelProps> = ({ children, value, index, ...other }) => {
     );
 };
 
-export const TabNav: VFC = () => {
+export const PushPopMember: VFC = () => {
     const [value, setValue] = useState(0);
     const [open, setOpen] = useState(false);
     const handleChange = (e: React.ChangeEvent<{}>, newValue: number) => setValue(newValue);
