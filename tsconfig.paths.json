@@ -7,7 +7,7 @@
             "@app/typings/*": ["./src/typings/*"],
             "@app/Content/*": ["./src/Content/*"],
             "@app/Components/*": ["./src/Components/*"],
-            "@app/Contexts/*": ["./src/Contexts/*"]
+            "@app/hooks/*": ["./src/hooks/*"]
         }
     }
 }

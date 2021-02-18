@@ -5,8 +5,8 @@ import { Link as RouterLink } from 'react-router-dom';
 import googleLogo from '@app/assets/google-color.svg';
 import { InlineIcon } from '@app/Components/InlineIcon';
 import { EmailField } from '@app/Components/EmailField';
-import { useAuth } from '@app/Contexts/AuthContext';
 import { PasswordField } from '@app/Components/PasswordField';
+import { useAuth } from '../../hooks/useAuth';
 
 type Inps = { email: string; password: string };
 export const LoginForm: VFC = () => {
