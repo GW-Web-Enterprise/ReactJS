@@ -4,7 +4,7 @@ interface PopoverItemProps {
     /** A 'render prop' that renders the JSX element to toggle the Popover */
     renderToggle: (toggle: () => void, toggleEl: MutableRefObject<null>) => ReactNode;
     /** A 'render prop' that returns the actual popover content */
-    renderPopContent: () => ReactNode;
+    renderPopContent: (toggle: () => void) => ReactNode;
     placement: 'top' | 'bottom';
 }
 
@@ -40,7 +40,7 @@ export const PopoverItem: VFC<PopoverItemProps> = ({ renderToggle, renderPopCont
         <Fragment>
             {renderToggle(() => setOpen(!open), toggleEl)}
             <Popover open={open} anchorEl={toggleEl.current} onClose={() => setOpen(false)} {...pos[placement]}>
-                <Box style={{ padding: '16px' }}>{renderPopContent()}</Box>
+                <Box style={{ padding: '16px' }}>{renderPopContent(() => setOpen(!open))}</Box>
             </Popover>
         </Fragment>
     );
