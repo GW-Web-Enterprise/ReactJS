@@ -31,9 +31,9 @@ export const LoginForm: VFC = () => {
             </Box>
             <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
                 <EmailField register={register} />
-                {<Box color="error.main">{errors.email?.message}</Box>}
+                <Box color="error.main">{errors.email?.message}</Box>
                 <PasswordField register={register} />
-                {<Box color="error.main">{errors.password?.message}</Box>}
+                <Box color="error.main">{errors.password?.message}</Box>
                 <Button
                     disabled={loading}
                     type="submit"

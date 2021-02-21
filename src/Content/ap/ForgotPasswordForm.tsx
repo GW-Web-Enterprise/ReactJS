@@ -14,7 +14,7 @@ export const ForgotPasswordForm: VFC = () => {
     return (
         <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
             <EmailField register={register} />
-            {<Box color="error.main">{errors.email?.message}</Box>}
+            <Box color="error.main">{errors.email?.message}</Box>
             <Button
                 disabled={loading}
                 type="submit"
