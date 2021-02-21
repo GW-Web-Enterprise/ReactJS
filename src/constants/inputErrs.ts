@@ -1,6 +1,7 @@
 import { REGEX_EMAIL, REGEX_FULLNAME, REGEX_NO_SPACES } from "@app/constants/regexes";
 import { RegisterOptions } from "react-hook-form";
 
+// 📌 USER
 const fullnameErr = 'Your fullname must contain between 4 and 64 characters'
 export const FULLNAME_INP_ERR: RegisterOptions = {
     required: fullnameErr,
@@ -23,4 +24,12 @@ export const PASSWORD_INP_ERR: RegisterOptions = {
     minLength: { value: 6, message: passwordErr },
     maxLength: { value: 60, message: passwordErr },
     pattern: { value: REGEX_NO_SPACES, message: 'Password should not contain any whitespace' }
+}
+
+// 📌 FACULTY
+const facultyNameErr = 'Must contain between 3 and 50 characters';
+export const FACULTY_NAME_ERR: RegisterOptions = {
+    required: facultyNameErr,
+    minLength: { value: 3, message: facultyNameErr },
+    maxLength: { value: 50, message: facultyNameErr }
 }
