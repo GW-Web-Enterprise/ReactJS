@@ -127,8 +127,8 @@ export const PushPopMember: VFC = () => {
                                                 }}
                                             >
                                                 <option aria-label="None" value="" />
-                                                <option value={10}>student</option>
-                                                <option value={20}>coordinicator</option>
+                                                <option value="student">student</option>
+                                                <option value="coordinator">coordinator</option>
                                             </NativeSelect>
                                             <FormHelperText>What this member will be allowed to do?</FormHelperText>
                                             <Button variant="contained" color="primary">
