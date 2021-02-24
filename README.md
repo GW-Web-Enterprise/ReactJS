@@ -5,6 +5,7 @@ This repo follows the [Git commit message convention](https://github.com/kazupon
 + [Firebase BaaS](https://firebase.google.com/docs)
 + [Material UI](https://material-ui.com/)
 + [React Router Dom](https://reactrouter.com/web/guides/quick-start) to render UI dynamically based on current route
++ This ['usehooks'](https://github.com/gragland/usehooks) repo teaches me how to write React custom hooks
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
