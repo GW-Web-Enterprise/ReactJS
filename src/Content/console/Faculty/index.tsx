@@ -13,8 +13,9 @@ export const Faculty: VFC = () => {
     const { data, status } = useFirestoreQuery(ref);
     const [alertInfo, setAlertInfo] = useState<AlertInfo>(null);
 
-    const addFaculty = (data: FacultySave) => ref.add(data);
-    const editFaculty = (id: string, data: FacultySave) => ref.doc(id).update(data)
+    const addFaculty = ({ name, ...props }: FacultySave) => ref.add({ name: name.toLowerCase(), ...props });
+    const editFaculty = (id: string, { name, ...props }: FacultySave) =>
+        ref.doc(id).update({ name: name.toLowerCase(), ...props });
     const deleteFaculty = (id: string) => ref.doc(id).delete();
     return (
         <Fragment>

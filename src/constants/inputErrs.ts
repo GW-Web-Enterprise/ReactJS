@@ -1,4 +1,4 @@
-import { REGEX_EMAIL, REGEX_FULLNAME, REGEX_NO_SPACES } from "@app/constants/regexes";
+import { REGEX_EMAIL, REGEX_FULLNAME, REGEX_LETTERS_ONLY_NO_LEADING_TRAILING_DOUBLE_SPACES, REGEX_NO_SPACES } from "@app/constants/regexes";
 import { RegisterOptions } from "react-hook-form";
 
 // 📌 USER
@@ -31,5 +31,6 @@ const facultyNameErr = 'Must contain between 3 and 50 characters';
 export const FACULTY_NAME_ERR: RegisterOptions = {
     required: facultyNameErr,
     minLength: { value: 3, message: facultyNameErr },
-    maxLength: { value: 50, message: facultyNameErr }
+    maxLength: { value: 50, message: facultyNameErr },
+    pattern: { value: REGEX_LETTERS_ONLY_NO_LEADING_TRAILING_DOUBLE_SPACES, message: 'Only letters and single spaces are accepted. Remove any leading or traling space you might have entered' }
 }
