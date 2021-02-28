@@ -18,18 +18,26 @@ import { FacultySave } from '@app/typings/schemas';
 import { AlertInfo } from '@app/typings/components';
 
 type Props = {
+    numbFaculties: number;
     setAlertInfo: Dispatch<SetStateAction<AlertInfo>>;
     onCreate: (data: FacultySave) => Promise<firebase.firestore.DocumentReference>;
 };
-export const AddFaculty: VFC<Props> = ({ onCreate, setAlertInfo }) => {
+export const AddFaculty: VFC<Props> = ({ onCreate, setAlertInfo, numbFaculties }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const { register, handleSubmit, errors } = useForm<FacultySave>();
     const handleCreate = (data: FacultySave) =>
         onCreate(data)
             .then(() => setAlertInfo({ status: 'success', message: 'Faculty added successfully' }))
             .catch(err => {
+                // Could be due to unique faculty name constraint or the number of faculties reach its maximum number
                 console.log(err);
-                setAlertInfo({ status: 'error', message: 'Failed to add faculty' });
+                setAlertInfo({
+                    status: 'error',
+                    message:
+                        numbFaculties === 20
+                            ? 'Maximum number of faculties is 20, you cannot add more. Sorry!'
+                            : 'Faculty name already exists, please choose another name'
+                });
             })
             .then(() => setDialogOpen(false));
 

@@ -42,7 +42,7 @@ export const FacultyListItem: VFC<Props> = ({ facultyId, name, onEdit, onDelete,
             .then(() => setAlertInfo({ status: 'success', message: 'Faculty name is changed successfully' }))
             .catch(err => {
                 console.log(err);
-                setAlertInfo({ status: 'error', message: 'Failed to edit faculty' });
+                setAlertInfo({ status: 'error', message: 'Faculty name already exists, please choose another name' });
             })
             .then(() => toggle());
     return (

@@ -31,7 +31,7 @@ export const Faculty: VFC = () => {
             </Snackbar>
             {status === 'loading' && <LinearProgress />}
             {/* Maximum number of faculties is 143 */}
-            <AddFaculty onCreate={addFaculty} setAlertInfo={setAlertInfo} />
+            <AddFaculty onCreate={addFaculty} setAlertInfo={setAlertInfo} numbFaculties={data?.length} />
             {status === 'success' &&
                 data?.map(({ id, name }: FacultyRead) => (
                     <FacultyListItem
