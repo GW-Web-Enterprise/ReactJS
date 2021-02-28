@@ -1,8 +1,8 @@
 export type FacultyRead = {
-    id: string,
-    name: string
-}
+    id: string;
+    name: string;
+} & firebase.firestore.DocumentData;
 
 export type FacultySave = {
-    name: string
-}
+    name: string;
+} & firebase.firestore.DocumentData;
