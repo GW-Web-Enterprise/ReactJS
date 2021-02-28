@@ -34,7 +34,7 @@ const reducer = (queryState: QueryInfo, action: ActionType): QueryInfo => {
  * imports firebase code, and abstract away the primitive React hooks (well, it does alot of things for you)
  * @example firebase.firestore().collection("cities").where("state", "==", "CA") // This refers to multiple docs
  */
-export function useFireStoreQuery(query: firebase.firestore.Query) {
+export function useFirestoreQuery(query: firebase.firestore.Query) {
     const initialQueryState: QueryInfo = { status: query ? 'loading' : 'idle', data: undefined, error: undefined };
     const [queryState, dispatch] = useReducer(reducer, initialQueryState);
 
