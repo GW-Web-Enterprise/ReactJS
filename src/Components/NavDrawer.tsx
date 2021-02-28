@@ -23,7 +23,7 @@ import keyIcon from '@app/assets/key.svg';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { InlineIcon } from '@app/Components/InlineIcon';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '@app/hooks/useAuth';
 
 const drawerWidth = 240;
 

@@ -1,7 +1,7 @@
+import { useAuth } from '@app/hooks/useAuth';
 import { CustomRouteProps } from '@app/typings/routes';
 import { VFC } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 
 /**
  * The component passed in here is only rendered if and only if the user is NOT logged in. Redirect to /console if the user is already authenticated
