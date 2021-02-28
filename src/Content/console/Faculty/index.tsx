@@ -3,14 +3,14 @@ import { FacultyListItem } from '@app/Content/console/Faculty/FacultyListItem';
 import React, { Fragment, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import { LinearProgress, Snackbar } from '@material-ui/core';
-import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 import { Alert } from '@material-ui/lab';
 import { FacultyRead, FacultySave } from '@app/typings/schemas';
 import { AlertInfo } from '@app/typings/components';
+import { useFireStoreQuery } from '@app/hooks/useFireStoreQuery';
 
 const ref = firebase.firestore().collection('faculties');
 export const Faculty: VFC = () => {
-    const { data, status } = useFirestoreQuery(ref);
+    const { data, status } = useFireStoreQuery(ref);
     const [alertInfo, setAlertInfo] = useState<AlertInfo>(null);
 
     const addFaculty = ({ name, ...props }: FacultySave) => ref.add({ name: name.toLowerCase(), ...props });
@@ -30,10 +30,10 @@ export const Faculty: VFC = () => {
                 </Alert>
             </Snackbar>
             {status === 'loading' && <LinearProgress />}
-            {/* Maximum number of faculties is 143 */}
-            <AddFaculty onCreate={addFaculty} setAlertInfo={setAlertInfo} numbFaculties={data?.length} />
+            {data && <AddFaculty onCreate={addFaculty} setAlertInfo={setAlertInfo} numbFaculties={data?.length} />}
             {status === 'success' &&
-                data?.map(({ id, name }: FacultyRead) => (
+                data &&
+                data.map(({ id, name }: FacultyRead) => (
                     <FacultyListItem
                         key={id}
                         facultyId={id}

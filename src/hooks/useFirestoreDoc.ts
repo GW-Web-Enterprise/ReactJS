@@ -1,16 +1,16 @@
-import { useMemoCompare } from '@app/hooks/useMemoCompare';
+import { useEffect, useReducer } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { useEffect, useReducer } from 'react';
+import { useMemoCompare } from '@app/hooks/useMemoCompare';
 
 type QueryInfo =
     | { status: 'idle' | 'loading'; data: undefined; error: undefined }
-    | { status: 'success'; data: Array<ResultDoc>; error: undefined }
+    | { status: 'success'; data: ResultDoc | undefined; error: undefined }
     | { status: 'error'; data: undefined; error: firebase.firestore.FirestoreError };
 type ActionType =
     | { type: 'idle' }
     | { type: 'loading' }
-    | { type: 'success'; payload: Array<ResultDoc> }
+    | { type: 'success'; payload: ResultDoc | undefined }
     | { type: 'error'; payload: firebase.firestore.FirestoreError };
 
 const reducer = (queryState: QueryInfo, action: ActionType): QueryInfo => {
@@ -29,12 +29,10 @@ const reducer = (queryState: QueryInfo, action: ActionType): QueryInfo => {
 };
 
 /**
- * Accept a query reference
- * @description This hook subscribes/unsubscribes to real-time changes automatically,
- * imports firebase code, and abstract away the primitive React hooks (well, it does alot of things for you)
- * @example firebase.firestore().collection("cities").where("state", "==", "CA") // This refers to multiple docs
+ * Accept a single doc reference
+ * @example firebase.firestore().collection('cities').doc('SF') // This refers to a single doc
  */
-export function useFireStoreQuery(query: firebase.firestore.Query) {
+export function useFirestoreDoc(query: firebase.firestore.DocumentReference) {
     const initialQueryState: QueryInfo = { status: query ? 'loading' : 'idle', data: undefined, error: undefined };
     const [queryState, dispatch] = useReducer(reducer, initialQueryState);
 
@@ -45,7 +43,7 @@ export function useFireStoreQuery(query: firebase.firestore.Query) {
 
         return queryCached.onSnapshot(
             response => {
-                const data = getCollectionData(response);
+                const data = getDocData(response);
                 dispatch({ type: 'success', payload: data });
             },
             error => dispatch({ type: 'error', payload: error })
@@ -55,9 +53,7 @@ export function useFireStoreQuery(query: firebase.firestore.Query) {
 }
 
 type ResultDoc = { id: string } & firebase.firestore.DocumentData;
-function getCollectionData(collection: firebase.firestore.QuerySnapshot): Array<ResultDoc> {
-    // A QuerySnapshot contains zero or more DocumentSnapshot objects representing the results of a query
-    // It's not an error if there is 0 documents matched by the query
-    if (collection.empty) return [];
-    return collection.docs.map(docSnapshot => ({ id: docSnapshot.id, ...docSnapshot.data() }));
+function getDocData(doc: firebase.firestore.DocumentSnapshot): ResultDoc | undefined {
+    // For a DocumentSnapshot that points to a non-existing document, doc.data() will return 'undefined'
+    return doc.exists ? { id: doc.id, ...doc.data() } : undefined;
 }
