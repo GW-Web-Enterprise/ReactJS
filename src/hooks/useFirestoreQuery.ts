@@ -5,12 +5,12 @@ import { useEffect, useReducer } from 'react';
 
 type QueryInfo =
     | { status: 'idle' | 'loading'; data: undefined; error: undefined }
-    | { status: 'success'; data: Array<ResultDoc>; error: undefined }
+    | { status: 'success'; data: Array<any>; error: undefined }
     | { status: 'error'; data: undefined; error: firebase.firestore.FirestoreError };
 type ActionType =
     | { type: 'idle' }
     | { type: 'loading' }
-    | { type: 'success'; payload: Array<ResultDoc> }
+    | { type: 'success'; payload: Array<any> }
     | { type: 'error'; payload: firebase.firestore.FirestoreError };
 
 const reducer = (queryState: QueryInfo, action: ActionType): QueryInfo => {
@@ -54,8 +54,7 @@ export function useFirestoreQuery(query: firebase.firestore.Query) {
     return queryState;
 }
 
-type ResultDoc = { id: string } & firebase.firestore.DocumentData;
-function getCollectionData(collection: firebase.firestore.QuerySnapshot): Array<ResultDoc> {
+function getCollectionData(collection: firebase.firestore.QuerySnapshot): Array<any> {
     // A QuerySnapshot contains zero or more DocumentSnapshot objects representing the results of a query
     // It's not an error if there is 0 documents matched by the query
     if (collection.empty) return [];

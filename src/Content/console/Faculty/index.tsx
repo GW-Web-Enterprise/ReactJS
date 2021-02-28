@@ -6,11 +6,11 @@ import { LinearProgress, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { FacultyRead, FacultySave } from '@app/typings/schemas';
 import { AlertInfo } from '@app/typings/components';
-import { useFireStoreQuery } from '@app/hooks/useFireStoreQuery';
+import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 
 const ref = firebase.firestore().collection('faculties');
 export const Faculty: VFC = () => {
-    const { data, status } = useFireStoreQuery(ref);
+    const { data, status } = useFirestoreQuery(ref);
     const [alertInfo, setAlertInfo] = useState<AlertInfo>(null);
 
     const addFaculty = ({ name, ...props }: FacultySave) => ref.add({ name: name.toLowerCase(), ...props });
@@ -30,10 +30,9 @@ export const Faculty: VFC = () => {
                 </Alert>
             </Snackbar>
             {status === 'loading' && <LinearProgress />}
-            {data && <AddFaculty onCreate={addFaculty} setAlertInfo={setAlertInfo} numbFaculties={data?.length} />}
+            {data && <AddFaculty onCreate={addFaculty} setAlertInfo={setAlertInfo} numbFaculties={data.length} />}
             {status === 'success' &&
-                data &&
-                data.map(({ id, name }: FacultyRead) => (
+                data?.map(({ id, name }: FacultyRead) => (
                     <FacultyListItem
                         key={id}
                         facultyId={id}
