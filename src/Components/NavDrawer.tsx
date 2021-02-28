@@ -19,6 +19,7 @@ import React, { ReactNode, useState, VFC } from 'react';
 import { ChevronLeft, ChevronRight, Home, Menu, People } from '@material-ui/icons';
 import facultyIcon from '@app/assets/faculty-solid.svg';
 import articleIcon from '@app/assets/article.svg';
+import repoIcon from '@app/assets/folder-upload.svg';
 import keyIcon from '@app/assets/key.svg';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
@@ -103,6 +104,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
     enum PageToNavIndex {
         overview,
         faculties,
+        repos,
         articles,
         users,
         roles
@@ -196,9 +198,9 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         to={`/console/${PageToNavIndex[2]}`}
                     >
                         <ListItemIcon>
-                            <InlineIcon src={articleIcon} />
+                            <InlineIcon src={repoIcon} />
                         </ListItemIcon>
-                        <ListItemText primary="Articles" />
+                        <ListItemText primary="Publishing Repos" />
                     </ListItem>
                     <ListItem
                         selected={selectedIndex === 3}
@@ -208,9 +210,9 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         to={`/console/${PageToNavIndex[3]}`}
                     >
                         <ListItemIcon>
-                            <People />
+                            <InlineIcon src={articleIcon} />
                         </ListItemIcon>
-                        <ListItemText primary="Users" />
+                        <ListItemText primary="Articles" />
                     </ListItem>
                     <ListItem
                         selected={selectedIndex === 4}
@@ -218,6 +220,18 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         button
                         component={Link}
                         to={`/console/${PageToNavIndex[4]}`}
+                    >
+                        <ListItemIcon>
+                            <People />
+                        </ListItemIcon>
+                        <ListItemText primary="Users" />
+                    </ListItem>
+                    <ListItem
+                        selected={selectedIndex === 5}
+                        onClick={handleListItemClick(5)}
+                        button
+                        component={Link}
+                        to={`/console/${PageToNavIndex[5]}`}
                     >
                         <ListItemIcon>
                             <InlineIcon src={keyIcon} />
