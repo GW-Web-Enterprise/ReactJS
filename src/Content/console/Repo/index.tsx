@@ -1,6 +1,13 @@
+import { FacultyReposMgt } from '@app/Content/console/Repo/FacultyReposMgt';
 import { FacultySelector } from '@app/Content/console/Repo/FacultySelector';
-import { VFC } from 'react';
+import { Fragment, useState, VFC } from 'react';
 
 export const Repo: VFC = () => {
-    return <FacultySelector />;
+    const [selectedFacultyId, setFacultyId] = useState('');
+    return (
+        <Fragment>
+            <FacultySelector onSelect={setFacultyId} />
+            <FacultyReposMgt facultyId={selectedFacultyId} />
+        </Fragment>
+    );
 };
