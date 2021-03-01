@@ -1,16 +1,17 @@
 import { LinearProgress, List, ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core';
-import React, { Fragment, useRef, useState } from 'react';
+import React, { Dispatch, Fragment, SetStateAction, useRef, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import { FacultyRead } from '@app/typings/schemas';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 
+type Props = { onSelect: Dispatch<SetStateAction<string>> };
 const db = firebase.firestore();
-export const FacultySelector = () => {
+export const FacultySelector: VFC<Props> = ({ onSelect }) => {
     const facultySelectorRef = useRef(null);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [menuOpen, setMenuOpen] = useState(false);
     const handleFacSelect = (index: number, facultyId: string) => () => {
-        console.log(facultyId);
+        onSelect(facultyId);
         setMenuOpen(false);
         setSelectedIndex(index);
     };
