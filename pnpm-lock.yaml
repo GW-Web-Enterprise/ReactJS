@@ -2,6 +2,7 @@ dependencies:
   '@material-ui/core': 4.11.3_4695a47c40ef995f48f8c834d2fb82ec
   '@material-ui/icons': 4.11.2_0ccdcaa3fbbaae4c459e50ee1fb71c84
   '@material-ui/lab': 4.0.0-alpha.57_0ccdcaa3fbbaae4c459e50ee1fb71c84
+  '@material-ui/pickers': 3.2.10_c640d2d0176bfcab1d99b942ffa7ebe7
   '@testing-library/jest-dom': 5.11.9
   '@testing-library/react': 11.2.4_react-dom@17.0.1+react@17.0.1
   '@testing-library/user-event': 12.6.3
@@ -1232,6 +1233,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
+  /@babel/runtime/7.13.8:
+    dependencies:
+      regenerator-runtime: 0.13.7
+    dev: false
+    resolution:
+      integrity: sha512-CwQljpw6qSayc0fRG1soxHAKs1CnQMOChm4mlQP6My0kf9upVGizj/KhlTTgyUnETmHpcUXjaluNAkteRFuafg==
   /@babel/template/7.12.7:
     dependencies:
       '@babel/code-frame': 7.12.11
@@ -1286,6 +1293,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
+  /@date-io/core/1.3.13:
+    dev: false
+    resolution:
+      integrity: sha512-AlEKV7TxjeK+jxWVKcCFrfYAk8spX9aCyiToFIiLPtfQbsjmRGLIhb5VZgptQcJdHtLXo7+m0DuurwFgUToQuA==
   /@emotion/hash/0.8.0:
     dev: false
     resolution:
@@ -1906,6 +1917,25 @@ packages:
         optional: true
     resolution:
       integrity: sha512-qo/IuIQOmEKtzmRD2E4Aa6DB4A87kmY6h0uYhjUmrrgmEAgbbw9etXpWPVXuRK6AGIQCjFzV6WO2i21m1R4FCw==
+  /@material-ui/pickers/3.2.10_c640d2d0176bfcab1d99b942ffa7ebe7:
+    dependencies:
+      '@babel/runtime': 7.13.8
+      '@date-io/core': 1.3.13
+      '@material-ui/core': 4.11.3_4695a47c40ef995f48f8c834d2fb82ec
+      '@types/styled-jsx': 2.2.8
+      clsx: 1.1.1
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
+      react-transition-group: 4.4.1_react-dom@17.0.1+react@17.0.1
+      rifm: 0.7.0_react@17.0.1
+    dev: false
+    peerDependencies:
+      '@material-ui/core': ^4.0.0
+      prop-types: ^15.6.0
+      react: ^16.8.4
+      react-dom: ^16.8.4
+    resolution:
+      integrity: sha512-B8G6Obn5S3RCl7hwahkQj9sKUapwXWFjiaz/Bsw1fhYFdNMnDUolRiWQSoKPb1/oKe37Dtfszoywi1Ynbo3y8w==
   /@material-ui/styles/4.11.3_4695a47c40ef995f48f8c834d2fb82ec:
     dependencies:
       '@babel/runtime': 7.12.5
@@ -2512,6 +2542,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-aj/L7RIMsRlWML3YB6KZiXB3fV2t41+5RBGYF8z+tAKU43Px8C3cYUZsDvf1/+Bm4FK21QWBrDutu8ZJ/70qOw==
+  /@types/react/17.0.2:
+    dependencies:
+      '@types/prop-types': 15.7.3
+      csstype: 3.0.7
+    dev: false
+    resolution:
+      integrity: sha512-Xt40xQsrkdvjn1EyWe1Bc0dJLcil/9x2vAuW7ya+PuQip4UYUaXyhzWmAbwRsdMgwOFHpfp7/FFZebDU6Y8VHA==
   /@types/resolve/0.0.8:
     dependencies:
       '@types/node': 13.13.40
@@ -2526,6 +2563,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
+  /@types/styled-jsx/2.2.8:
+    dependencies:
+      '@types/react': 17.0.2
+    dev: false
+    resolution:
+      integrity: sha512-Yjye9VwMdYeXfS71ihueWRSxrruuXTwKCbzue4+5b2rjnQ//AtyM7myZ1BEhNhBQ/nL/RE7bdToUoLln2miKvg==
   /@types/tapable/1.0.6:
     dev: false
     resolution:
@@ -4681,6 +4724,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-+ZAmfyWMT7TiIlzdqJgjMb7S4f1beorDbWbsocyK4RaiqA5RTX3K14bnBWmmA9QEM0gRdsjyyrEmcyga8Zsxmw==
+  /csstype/3.0.7:
+    dev: false
+    resolution:
+      integrity: sha512-KxnUB0ZMlnUWCsx2Z8MUsr6qV6ja1w9ArPErJaJaF8a5SOWoHLIszeCTKGRGRgtLgYrs1E8CHkNSP1VZTTPc9g==
   /cyclist/1.0.1:
     dev: false
     resolution:
@@ -11063,6 +11110,15 @@ packages:
     dev: false
     resolution:
       integrity: sha1-QzdOLiyglosO8VI0YLfXMP8i7rM=
+  /rifm/0.7.0_react@17.0.1:
+    dependencies:
+      '@babel/runtime': 7.13.8
+      react: 17.0.1
+    dev: false
+    peerDependencies:
+      react: '>=16.8'
+    resolution:
+      integrity: sha512-DSOJTWHD67860I5ojetXdEQRIBvF6YcpNe53j0vn1vp9EUb9N80EiZTxgP+FkDKorWC8PZw052kTF4C1GOivCQ==
   /rimraf/2.7.1:
     dependencies:
       glob: 7.1.6
@@ -13194,6 +13250,7 @@ specifiers:
   '@material-ui/core': ^4.11.3
   '@material-ui/icons': ^4.11.2
   '@material-ui/lab': ^4.0.0-alpha.57
+  '@material-ui/pickers': ^3.2.10
   '@testing-library/jest-dom': ^5.11.4
   '@testing-library/react': ^11.1.0
   '@testing-library/user-event': ^12.1.10
