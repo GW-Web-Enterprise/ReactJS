@@ -7,7 +7,7 @@ export const Repo: VFC = () => {
     return (
         <Fragment>
             <FacultySelector onSelect={setFacultyId} />
-            <FacultyReposMgt facultyId={selectedFacultyId} />
+            {selectedFacultyId && <FacultyReposMgt facultyId={selectedFacultyId} />}
         </Fragment>
     );
 };

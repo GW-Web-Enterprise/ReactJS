@@ -1,4 +1,5 @@
-import React, { Fragment, useContext, useRef, useState } from 'react';
+import React, { Dispatch, Fragment, SetStateAction, useContext, useRef, useState, VFC } from 'react';
+import firebase from 'firebase/app';
 import {
     Avatar,
     Box,
@@ -16,6 +17,8 @@ import { DateTimePicker, MuiPickersContext } from '@material-ui/pickers';
 import { Controller, useForm } from 'react-hook-form';
 import { useAuth } from '@app/hooks/useAuth';
 import { REPO_DESC_ERR, REPO_NAME_ERR } from '@app/constants/inputErrs';
+import { RepoSave } from '@app/typings/schemas';
+import { AlertInfo } from '@app/typings/components';
 
 const ColorButton = withStyles(() => ({
     root: {
@@ -27,7 +30,13 @@ const ColorButton = withStyles(() => ({
     }
 }))(Button);
 
-export const AddRepo = () => {
+type Inps = { name: string; closeTimestamp: Date; finalTimestamp: Date; description?: string };
+type Props = {
+    facultyId: string;
+    setAlertInfo: Dispatch<SetStateAction<AlertInfo>>;
+    onAdd: (data: RepoSave) => Promise<firebase.firestore.DocumentReference>;
+};
+export const AddRepo: VFC<Props> = ({ onAdd, facultyId, setAlertInfo }) => {
     const { currentUser } = useAuth();
     const utils = useContext(MuiPickersContext);
     const [loading, setLoading] = useState(false);
@@ -40,13 +49,22 @@ export const AddRepo = () => {
     const finalTimestampMin = utils?.addDays(closeTimestamp!, 3); // Must give students at least 3 days to edit
     const finalTimestampMax = utils?.addDays(closeTimestamp!, 14); // 7 days to edit at max
 
-    const handleClose = () => {
+    const handleDialogClose = () => {
         setcloseTimestamp(closeTimestampMin);
         setDialogOpen(false);
     };
-    const { control, handleSubmit, register, errors } = useForm();
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const { control, handleSubmit, register, errors } = useForm<Inps>();
+    const onSubmit = (data: Inps) => {
+        const repoToSave = {
+            ...data,
+            closeTimestamp: firebase.firestore.Timestamp.fromDate(data.closeTimestamp),
+            finalTimestamp: firebase.firestore.Timestamp.fromDate(data.finalTimestamp),
+            facultyId: facultyId
+        };
+        onAdd(repoToSave)
+            .then(() => setAlertInfo({ status: 'success', message: 'Repo created successfully' }))
+            .catch(() => () => setAlertInfo({ status: 'error', message: 'Failed to create repo' }))
+            .then(handleDialogClose);
     };
     return (
         <Fragment>
@@ -54,7 +72,7 @@ export const AddRepo = () => {
                 <InlineIcon src={repoIcon} />
                 New Repo
             </ColorButton>
-            <Dialog open={dialogOpen} onClose={handleClose}>
+            <Dialog open={dialogOpen} onClose={handleDialogClose}>
                 <DialogTitle>New repo for faculty articles</DialogTitle>
                 <DialogContent>
                     <Chip
