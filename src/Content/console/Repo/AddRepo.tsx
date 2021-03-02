@@ -34,14 +34,14 @@ export const AddRepo = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const { current: initialDate } = useRef(new Date()); // Not re-initialized on re-render
-    const firstDeadlineMin = utils?.addDays(initialDate, 7); // Must give students at least 7 day to CUD
-    const firstDeadlineMax = utils?.addDays(initialDate, 120); // 120 days to CUD
-    const [firstDeadline, setFirstDeadline] = useState(firstDeadlineMin); // current selected value of 1st deadline
-    const secondDeadlineMin = utils?.addDays(firstDeadline!, 3); // Must give students at least 3 days to edit after the 1st deadline
-    const secondDeadlineMax = utils?.addDays(firstDeadline!, 14); // 7 days to edit
+    const closeTimestampMin = utils?.addDays(initialDate, 7); // Must give students at least 7 day to CUD
+    const closeTimestampMax = utils?.addDays(initialDate, 120); // 120 days to CUD at max
+    const [closeTimestamp, setcloseTimestamp] = useState(closeTimestampMin); // currently-selected value of closeTimestamp
+    const finalTimestampMin = utils?.addDays(closeTimestamp!, 3); // Must give students at least 3 days to edit
+    const finalTimestampMax = utils?.addDays(closeTimestamp!, 14); // 7 days to edit at max
 
     const handleClose = () => {
-        setFirstDeadline(firstDeadlineMin);
+        setcloseTimestamp(closeTimestampMin);
         setDialogOpen(false);
     };
     const { control, handleSubmit, register, errors } = useForm();
@@ -80,43 +80,42 @@ export const AddRepo = () => {
                         />
                         <Box color="error.main">{errors.description?.message}</Box>
                         <Controller
-                            name="First deadline"
+                            name="closeTimestamp"
                             control={control}
-                            defaultValue={firstDeadlineMin}
+                            defaultValue={closeTimestampMin}
                             render={({ ref, onChange, ...rest }) => (
                                 <DateTimePicker
                                     margin="normal"
                                     variant="dialog"
-                                    label="First deadline"
-                                    helperText="Students cannot submit or delete articles after the 1st deadline (but can still edit the existing ones)"
+                                    label="Close date and time"
+                                    helperText="Students cannot submit or delete articles after this date and time (but can still edit the existing ones until the final date and time below)"
                                     autoOk
                                     disablePast={true}
                                     hideTabs
-                                    minDate={firstDeadlineMin}
-                                    maxDate={firstDeadlineMax}
+                                    minDate={closeTimestampMin}
+                                    maxDate={closeTimestampMax}
                                     onChange={selected => {
-                                        setFirstDeadline(selected);
+                                        setcloseTimestamp(selected);
                                         onChange(selected);
                                     }}
                                     allowKeyboardControl={false}
-                                    style={{ marginRight: '8px' }}
                                     {...rest}
                                 />
                             )}
                         />
                         <Controller
-                            name="Second deadline"
+                            name="finalTimestamp"
                             control={control}
-                            defaultValue={secondDeadlineMin}
+                            defaultValue={finalTimestampMin}
                             render={({ ref, ...rest }) => (
                                 <DateTimePicker
                                     margin="normal"
                                     variant="dialog"
-                                    label="Second deadline"
-                                    minDate={secondDeadlineMin}
-                                    maxDate={secondDeadlineMax}
-                                    minDateMessage="Please repick the 2nd deadline"
-                                    maxDateMessage="Please repick the 2nd deadline"
+                                    label="Final date and time"
+                                    minDate={finalTimestampMin}
+                                    maxDate={finalTimestampMax}
+                                    minDateMessage="Please repick the final date and time"
+                                    maxDateMessage="Please repick the final date and time"
                                     autoOk
                                     disablePast={true}
                                     hideTabs
