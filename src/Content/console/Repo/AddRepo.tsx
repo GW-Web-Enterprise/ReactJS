@@ -34,12 +34,11 @@ type Inps = { name: string; closeTimestamp: Date; finalTimestamp: Date; descript
 type Props = {
     facultyId: string;
     setAlertInfo: Dispatch<SetStateAction<AlertInfo>>;
-    onAdd: (data: RepoSave) => Promise<firebase.firestore.DocumentReference>;
 };
-export const AddRepo: VFC<Props> = ({ onAdd, facultyId, setAlertInfo }) => {
+const reposRef = firebase.firestore().collection('repos');
+export const AddRepo: VFC<Props> = ({ facultyId, setAlertInfo }) => {
     const { currentUser } = useAuth();
     const utils = useContext(MuiPickersContext);
-    const [loading, setLoading] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const { current: initialDate } = useRef(new Date()); // Not re-initialized on re-render
@@ -55,13 +54,14 @@ export const AddRepo: VFC<Props> = ({ onAdd, facultyId, setAlertInfo }) => {
     };
     const { control, handleSubmit, register, errors } = useForm<Inps>();
     const onSubmit = (data: Inps) => {
-        const repoToSave = {
+        const repoToSave: RepoSave = {
             ...data,
             closeTimestamp: firebase.firestore.Timestamp.fromDate(data.closeTimestamp),
             finalTimestamp: firebase.firestore.Timestamp.fromDate(data.finalTimestamp),
             facultyId: facultyId
         };
-        onAdd(repoToSave)
+        reposRef
+            .add(repoToSave)
             .then(() => setAlertInfo({ status: 'success', message: 'Repo created successfully' }))
             .catch(() => () => setAlertInfo({ status: 'error', message: 'Failed to create repo' }))
             .then(handleDialogClose);
@@ -142,14 +142,7 @@ export const AddRepo: VFC<Props> = ({ onAdd, facultyId, setAlertInfo }) => {
                                 />
                             )}
                         />
-                        <Button
-                            disabled={loading}
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            style={{ margin: '8px 0' }}
-                        >
+                        <Button type="submit" fullWidth variant="contained" color="primary" style={{ margin: '8px 0' }}>
                             Create
                         </Button>
                     </form>
