@@ -1,5 +1,6 @@
 import React, { Fragment, useState, VFC, Dispatch, SetStateAction } from 'react';
 import firebase from 'firebase/app';
+import 'firebase/firestore';
 import {
     Box,
     Button,
@@ -20,13 +21,14 @@ import { AlertInfo } from '@app/typings/components';
 type Props = {
     numbFaculties: number;
     setAlertInfo: Dispatch<SetStateAction<AlertInfo>>;
-    onCreate: (data: FacultySave) => Promise<firebase.firestore.DocumentReference>;
 };
-export const AddFaculty: VFC<Props> = ({ onCreate, setAlertInfo, numbFaculties }) => {
+const facultiesRef = firebase.firestore().collection('faculties');
+export const AddFaculty: VFC<Props> = ({ setAlertInfo, numbFaculties }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const { register, handleSubmit, errors } = useForm<FacultySave>();
-    const handleCreate = (data: FacultySave) =>
-        onCreate(data)
+    const handleCreate = ({ name, ...rest }: FacultySave) =>
+        facultiesRef
+            .add({ name: name.toLowerCase(), ...rest })
             .then(() => setAlertInfo({ status: 'success', message: 'Faculty added successfully' }))
             .catch(err => {
                 // Could be due to unique faculty name constraint or the number of faculties reach its maximum number

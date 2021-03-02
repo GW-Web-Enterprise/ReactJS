@@ -4,19 +4,15 @@ import React, { Fragment, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import { LinearProgress, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import { FacultyRead, FacultySave } from '@app/typings/schemas';
+import { FacultyRead } from '@app/typings/schemas';
 import { AlertInfo } from '@app/typings/components';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 
-const ref = firebase.firestore().collection('faculties');
+const facultiesRef = firebase.firestore().collection('faculties');
 export const Faculty: VFC = () => {
-    const { data, status } = useFirestoreQuery(ref);
+    const { data, status } = useFirestoreQuery(facultiesRef);
     const [alertInfo, setAlertInfo] = useState<AlertInfo>(null);
 
-    const addFaculty = ({ name, ...props }: FacultySave) => ref.add({ name: name.toLowerCase(), ...props });
-    const editFaculty = (id: string, { name, ...props }: FacultySave) =>
-        ref.doc(id).update({ name: name.toLowerCase(), ...props });
-    const deleteFaculty = (id: string) => ref.doc(id).delete();
     return (
         <Fragment>
             <Snackbar
@@ -30,17 +26,10 @@ export const Faculty: VFC = () => {
                 </Alert>
             </Snackbar>
             {status === 'loading' && <LinearProgress />}
-            {data && <AddFaculty onCreate={addFaculty} setAlertInfo={setAlertInfo} numbFaculties={data.length} />}
+            {data && <AddFaculty setAlertInfo={setAlertInfo} numbFaculties={data.length} />}
             {status === 'success' &&
-                data?.map(({ id, name }: FacultyRead) => (
-                    <FacultyListItem
-                        key={id}
-                        facultyId={id}
-                        name={name}
-                        onEdit={editFaculty}
-                        onDelete={deleteFaculty}
-                        setAlertInfo={setAlertInfo}
-                    />
+                data?.map(({ id, ...rest }: FacultyRead) => (
+                    <FacultyListItem key={id} facultyDoc={{ id, ...rest }} setAlertInfo={setAlertInfo} />
                 ))}
         </Fragment>
     );

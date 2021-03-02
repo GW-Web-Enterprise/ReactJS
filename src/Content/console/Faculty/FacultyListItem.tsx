@@ -1,5 +1,6 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
 import React, { Dispatch, SetStateAction, VFC } from 'react';
+import firebase from 'firebase/app';
 import {
     Box,
     ButtonGroup,
@@ -14,7 +15,7 @@ import {
 import { Delete, Edit } from '@material-ui/icons';
 import { PushPopMember } from '@app/Content/console/Faculty/PushPopMember';
 import { AlertInfo } from '@app/typings/components';
-import { FacultySave } from '@app/typings/schemas';
+import { FacultyRead, FacultySave } from '@app/typings/schemas';
 import { useForm } from 'react-hook-form';
 import { FACULTY_NAME_ERR } from '@app/constants/inputErrs';
 
@@ -28,23 +29,23 @@ const useStyles = makeStyles(() =>
 );
 
 type Props = {
-    facultyId: string;
-    name: string;
-    onEdit: (id: string, data: FacultySave) => Promise<void>;
-    onDelete: (id: string) => Promise<void>;
+    facultyDoc: FacultyRead;
     setAlertInfo: Dispatch<SetStateAction<AlertInfo>>;
 };
-export const FacultyListItem: VFC<Props> = ({ facultyId, name, onEdit, onDelete, setAlertInfo }) => {
+
+export const FacultyListItem: VFC<Props> = ({ facultyDoc, setAlertInfo }) => {
     const { register, handleSubmit, errors } = useForm<FacultySave>();
     const classes = useStyles();
-    const handleEdit = (toggle: () => void) => (data: FacultySave) =>
-        onEdit(facultyId, data)
+    const docRef = firebase.firestore().collection('faculties').doc(facultyDoc.id);
+    const handleEdit = (toggleEditForm: () => void) => ({ name, ...rest }: FacultySave) =>
+        docRef
+            .update({ name: name.toLowerCase(), ...rest })
             .then(() => setAlertInfo({ status: 'success', message: 'Faculty name is changed successfully' }))
             .catch(err => {
                 console.log(err);
                 setAlertInfo({ status: 'error', message: 'Faculty name already exists, please choose another name' });
             })
-            .then(() => toggle());
+            .then(() => toggleEditForm());
     return (
         <ButtonGroup color="inherit" style={{ margin: '8px' }}>
             {/* ⤵ View and add/remove faculty members */}
@@ -53,7 +54,7 @@ export const FacultyListItem: VFC<Props> = ({ facultyId, name, onEdit, onDelete,
                 renderToggle={(toggle, toggleEl) => (
                     <Tooltip title="Click to view faculty members" arrow>
                         <Button ref={toggleEl} onClick={toggle} className={classes.actionBtn}>
-                            {name}
+                            {facultyDoc.name}
                         </Button>
                     </Tooltip>
                 )}
@@ -108,7 +109,8 @@ export const FacultyListItem: VFC<Props> = ({ facultyId, name, onEdit, onDelete,
                             color="primary"
                             style={{ float: 'right' }}
                             onClick={() =>
-                                onDelete(facultyId)
+                                docRef
+                                    .delete()
                                     .then(() =>
                                         setAlertInfo({ status: 'success', message: 'Faculty deleted successfully' })
                                     )
