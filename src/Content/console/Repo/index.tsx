@@ -1,5 +1,6 @@
 import { AddRepo } from '@app/Content/console/Repo/AddRepo';
 import { FacultySelector } from '@app/Content/console/Repo/FacultySelector';
+import { RepoList } from '@app/Content/console/Repo/RepoList';
 import { AlertInfo } from '@app/typings/components';
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
@@ -24,6 +25,7 @@ export const Repo: VFC = () => {
                         </Alert>
                     </Snackbar>
                     <AddRepo facultyId={selectedFacultyId} setAlertInfo={setAlertInfo} />
+                    <RepoList facultyId={selectedFacultyId} />
                 </Fragment>
             )}
         </Fragment>
