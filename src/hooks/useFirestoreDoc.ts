@@ -46,7 +46,10 @@ export function useFirestoreDoc(query: firebase.firestore.DocumentReference) {
                 const data = getDocData(response);
                 dispatch({ type: 'success', payload: data });
             },
-            error => dispatch({ type: 'error', payload: error })
+            err => {
+                console.log(err);
+                dispatch({ type: 'error', payload: err });
+            }
         );
     }, [queryCached]);
     return queryState;
