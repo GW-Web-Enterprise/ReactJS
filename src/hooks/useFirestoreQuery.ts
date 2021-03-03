@@ -60,7 +60,6 @@ export function useFirestoreQuery(query: firebase.firestore.Query) {
 function getCollectionData(collection: firebase.firestore.QuerySnapshot): Array<any> {
     // A QuerySnapshot contains zero or more DocumentSnapshot objects representing the results of a query
     // It's not an error if there is 0 documents matched by the query
-    console.log(JSON.stringify(collection.docs));
     if (collection.empty) return [];
     return collection.docs.map(docSnapshot => ({ id: docSnapshot.id, ...docSnapshot.data() }));
 }
