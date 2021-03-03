@@ -1,4 +1,10 @@
 import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     IconButton,
     Link,
     List,
@@ -13,12 +19,14 @@ import {
     TableRow,
     Tooltip
 } from '@material-ui/core';
-import React, { useState, VFC } from 'react';
+import React, { Fragment, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 import { RepoRead } from '@app/typings/schemas';
 import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons';
 import { PopoverItem } from '@app/Components/PopoverItem';
+import { Alert } from '@material-ui/lab';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 
 type RepoListProps = { facultyId: string };
 const reposRef = firebase.firestore().collection('repos');
@@ -74,18 +82,59 @@ const Row: VFC<RowProps> = ({ repoDoc }) => {
                             <MoreVert />
                         </IconButton>
                     )}
-                    renderPopContent={() => (
-                        <List dense>
+                    renderPopContent={close => (
+                        <List component="nav" dense>
                             <ListItem button>
                                 <ListItemText primary="Edit repo" />
                             </ListItem>
                             <ListItem button>
-                                <ListItemText primary="Delete repo" />
+                                <DeleteRepo repoId={id} name={name} cleanup={close} />
                             </ListItem>
                         </List>
                     )}
                 />
             </TableCell>
         </TableRow>
+    );
+};
+
+type DeleteRepoProps = { repoId: string; name: string; cleanup: () => void };
+const DeleteRepo: VFC<DeleteRepoProps> = ({ repoId, name, cleanup }) => {
+    const { showAlert } = useGlobalUtils();
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+        cleanup();
+    };
+    const handleDelete = () =>
+        reposRef
+            .doc(repoId)
+            .delete()
+            .then(() => showAlert({ status: 'success', message: 'Repo deleted successfully' }))
+            .catch(() => showAlert({ status: 'error', message: 'Failed to delete repo' }))
+            .then(handleClose);
+    return (
+        <Fragment>
+            <ListItemText primary="Delete repo" onClick={handleOpen} />
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Delete Repo ?</DialogTitle>
+                <DialogContent>
+                    <Alert severity="error">
+                        After you have deleted a repo, all of its files will be permanently deleted. Repos and their
+                        files cannot be recovered.
+                    </Alert>
+                    <DialogContentText>{`Repo: ${name}`}</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Cancle
+                    </Button>
+                    <Button onClick={handleDelete} variant="contained" color="secondary">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Fragment>
     );
 };
