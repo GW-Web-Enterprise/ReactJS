@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment, SetStateAction, useContext, useRef, useState, VFC } from 'react';
+import React, { Fragment, useContext, useRef, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import {
     Avatar,
@@ -18,7 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useAuth } from '@app/hooks/useAuth';
 import { REPO_DESC_ERR, REPO_NAME_ERR } from '@app/constants/inputErrs';
 import { RepoSave } from '@app/typings/schemas';
-import { AlertInfo } from '@app/typings/components';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 
 const ColorButton = withStyles(() => ({
     root: {
@@ -33,10 +33,10 @@ const ColorButton = withStyles(() => ({
 type Inps = { name: string; closeTimestamp: Date; finalTimestamp: Date; description?: string };
 type Props = {
     facultyId: string;
-    setAlertInfo: Dispatch<SetStateAction<AlertInfo>>;
 };
 const reposRef = firebase.firestore().collection('repos');
-export const AddRepo: VFC<Props> = ({ facultyId, setAlertInfo }) => {
+export const AddRepo: VFC<Props> = ({ facultyId }) => {
+    const { showAlert } = useGlobalUtils();
     const { currentUser } = useAuth();
     const utils = useContext(MuiPickersContext);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -62,8 +62,8 @@ export const AddRepo: VFC<Props> = ({ facultyId, setAlertInfo }) => {
         };
         reposRef
             .add(repoToSave)
-            .then(() => setAlertInfo({ status: 'success', message: 'Repo created successfully' }))
-            .catch(() => () => setAlertInfo({ status: 'error', message: 'Failed to create repo' }))
+            .then(() => showAlert({ status: 'success', message: 'Repo created successfully' }))
+            .catch(() => () => showAlert({ status: 'error', message: 'Failed to create repo' }))
             .then(handleDialogClose);
     };
     return (

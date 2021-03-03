@@ -6,6 +6,7 @@ import { CssBaseline } from '@material-ui/core';
 import { ProvideAuth } from '@app/hooks/useAuth';
 import { ApTemplate, ConsoleTemplate } from '@app/Templates';
 import DateFnsUtils from '@date-io/date-fns';
+import { ProvideGlobalUtils } from '@app/hooks/useGlobalUtils';
 
 function App() {
     return (
@@ -13,14 +14,16 @@ function App() {
             <CssBaseline />
             <Router>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <ProvideAuth>
-                        <Switch>
-                            <Route exact path="/ap" render={() => <Redirect to="/ap/login" />} />
-                            <Route exact path="/console" render={() => <Redirect to="/console/overview" />} />
-                            <Route path="/ap" component={ApTemplate} />
-                            <Route path="/console" component={ConsoleTemplate} />
-                        </Switch>
-                    </ProvideAuth>
+                    <ProvideGlobalUtils>
+                        <ProvideAuth>
+                            <Switch>
+                                <Route exact path="/ap" render={() => <Redirect to="/ap/login" />} />
+                                <Route exact path="/console" render={() => <Redirect to="/console/overview" />} />
+                                <Route path="/ap" component={ApTemplate} />
+                                <Route path="/console" component={ConsoleTemplate} />
+                            </Switch>
+                        </ProvideAuth>
+                    </ProvideGlobalUtils>
                 </MuiPickersUtilsProvider>
             </Router>
         </React.Fragment>

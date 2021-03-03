@@ -1,4 +1,4 @@
-import React, { Fragment, useState, VFC, Dispatch, SetStateAction } from 'react';
+import { Fragment, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {
@@ -16,24 +16,24 @@ import { Add } from '@material-ui/icons';
 import { useForm } from 'react-hook-form';
 import { FACULTY_NAME_ERR } from '@app/constants/inputErrs';
 import { FacultySave } from '@app/typings/schemas';
-import { AlertInfo } from '@app/typings/components';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 
 type Props = {
     numbFaculties: number;
-    setAlertInfo: Dispatch<SetStateAction<AlertInfo>>;
 };
 const facultiesRef = firebase.firestore().collection('faculties');
-export const AddFaculty: VFC<Props> = ({ setAlertInfo, numbFaculties }) => {
+export const AddFaculty: VFC<Props> = ({ numbFaculties }) => {
+    const { showAlert } = useGlobalUtils();
     const [dialogOpen, setDialogOpen] = useState(false);
     const { register, handleSubmit, errors } = useForm<FacultySave>();
     const handleCreate = ({ name, ...rest }: FacultySave) =>
         facultiesRef
             .add({ name: name.toLowerCase(), ...rest })
-            .then(() => setAlertInfo({ status: 'success', message: 'Faculty added successfully' }))
+            .then(() => showAlert({ status: 'success', message: 'Faculty added successfully' }))
             .catch(err => {
                 // Could be due to unique faculty name constraint or the number of faculties reach its maximum number
                 console.log(err);
-                setAlertInfo({
+                showAlert({
                     status: 'error',
                     message:
                         numbFaculties === 20

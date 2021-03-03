@@ -1,5 +1,5 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
-import React, { Dispatch, SetStateAction, VFC } from 'react';
+import { VFC } from 'react';
 import firebase from 'firebase/app';
 import {
     Box,
@@ -14,10 +14,10 @@ import {
 } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import { PushPopMember } from '@app/Content/console/Faculty/PushPopMember';
-import { AlertInfo } from '@app/typings/components';
 import { FacultyRead, FacultySave } from '@app/typings/schemas';
 import { useForm } from 'react-hook-form';
 import { FACULTY_NAME_ERR } from '@app/constants/inputErrs';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -30,20 +30,20 @@ const useStyles = makeStyles(() =>
 
 type Props = {
     facultyDoc: FacultyRead;
-    setAlertInfo: Dispatch<SetStateAction<AlertInfo>>;
 };
 
-export const FacultyListItem: VFC<Props> = ({ facultyDoc, setAlertInfo }) => {
+export const FacultyListItem: VFC<Props> = ({ facultyDoc }) => {
+    const { showAlert } = useGlobalUtils();
     const { register, handleSubmit, errors } = useForm<FacultySave>();
     const classes = useStyles();
     const docRef = firebase.firestore().collection('faculties').doc(facultyDoc.id);
     const handleEdit = (toggleEditForm: () => void) => ({ name, ...rest }: FacultySave) =>
         docRef
             .update({ name: name.toLowerCase(), ...rest })
-            .then(() => setAlertInfo({ status: 'success', message: 'Faculty name is changed successfully' }))
+            .then(() => showAlert({ status: 'success', message: 'Faculty name is changed successfully' }))
             .catch(err => {
                 console.log(err);
-                setAlertInfo({ status: 'error', message: 'Faculty name already exists, please choose another name' });
+                showAlert({ status: 'error', message: 'Faculty name already exists, please choose another name' });
             })
             .then(() => toggleEditForm());
     return (
@@ -112,11 +112,11 @@ export const FacultyListItem: VFC<Props> = ({ facultyDoc, setAlertInfo }) => {
                                 docRef
                                     .delete()
                                     .then(() =>
-                                        setAlertInfo({ status: 'success', message: 'Faculty deleted successfully' })
+                                        showAlert({ status: 'success', message: 'Faculty deleted successfully' })
                                     )
                                     .catch(err => {
                                         console.log(err);
-                                        setAlertInfo({ status: 'error', message: 'Failed to delete faculty' });
+                                        showAlert({ status: 'error', message: 'Failed to delete faculty' });
                                     })
                             }
                         >
