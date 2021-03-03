@@ -5,11 +5,12 @@ interface PopoverItemProps {
     renderToggle: (toggle: () => void, toggleEl: MutableRefObject<null>) => ReactNode;
     /** A 'render prop' that returns the actual popover content */
     renderPopContent: (toggle: () => void) => ReactNode;
-    placement: 'top' | 'bottom';
+    placement: Placement;
+    padding?: number;
 }
 
 type PopoverPos = { anchorOrigin: PopoverOrigin; transformOrigin: PopoverOrigin };
-type Placement = 'top' | 'bottom';
+type Placement = 'top' | 'bottom' | 'bottomRight';
 const pos: Record<Placement, PopoverPos> = {
     top: {
         anchorOrigin: {
@@ -30,17 +31,27 @@ const pos: Record<Placement, PopoverPos> = {
             vertical: 'top',
             horizontal: 'center'
         }
+    },
+    bottomRight: {
+        anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'right'
+        },
+        transformOrigin: {
+            vertical: 'top',
+            horizontal: 'right'
+        }
     }
 };
 
-export const PopoverItem: VFC<PopoverItemProps> = ({ renderToggle, renderPopContent, placement }) => {
+export const PopoverItem: VFC<PopoverItemProps> = ({ renderToggle, renderPopContent, placement, padding = 16 }) => {
     const toggleEl = useRef(null);
     const [open, setOpen] = useState(false);
     return (
         <Fragment>
             {renderToggle(() => setOpen(!open), toggleEl)}
             <Popover open={open} anchorEl={toggleEl.current} onClose={() => setOpen(false)} {...pos[placement]}>
-                <Box style={{ padding: '16px' }}>{renderPopContent(() => setOpen(!open))}</Box>
+                <Box style={{ padding }}>{renderPopContent(() => setOpen(!open))}</Box>
             </Popover>
         </Fragment>
     );
