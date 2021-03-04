@@ -1,32 +1,36 @@
-import React from 'react';
+import { Fragment, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import '@app/App.css';
-import { CssBaseline } from '@material-ui/core';
+import { CircularProgress, CssBaseline } from '@material-ui/core';
 import { ProvideAuth } from '@app/hooks/useAuth';
-import { ApTemplate, ConsoleTemplate } from '@app/Templates';
 import DateFnsUtils from '@date-io/date-fns';
 import { ProvideGlobalUtils } from '@app/hooks/useGlobalUtils';
 
+const ApTemplate = lazy(() => import('@app/Templates/ApTemplate'));
+const ConsoleTemplate = lazy(() => import('@app/Templates/ConsoleTemplate'));
+
 function App() {
     return (
-        <React.Fragment>
+        <Fragment>
             <CssBaseline />
             <Router>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <ProvideGlobalUtils>
                         <ProvideAuth>
-                            <Switch>
-                                <Route exact path="/ap" render={() => <Redirect to="/ap/login" />} />
-                                <Route exact path="/console" render={() => <Redirect to="/console/overview" />} />
-                                <Route path="/ap" component={ApTemplate} />
-                                <Route path="/console" component={ConsoleTemplate} />
-                            </Switch>
+                            <Suspense fallback={<CircularProgress />}>
+                                <Switch>
+                                    <Route exact path="/ap" render={() => <Redirect to="/ap/login" />} />
+                                    <Route exact path="/console" render={() => <Redirect to="/console/overview" />} />
+                                    <Route path="/ap" component={ApTemplate} />
+                                    <Route path="/console" component={ConsoleTemplate} />
+                                </Switch>
+                            </Suspense>
                         </ProvideAuth>
                     </ProvideGlobalUtils>
                 </MuiPickersUtilsProvider>
             </Router>
-        </React.Fragment>
+        </Fragment>
     );
 }
 

@@ -1,13 +1,16 @@
 // 🚨 The purpose of this file is to define different isolated independent contents rendered based on different routes
 // All route props defined inside this file will be imported by the templates
-import { ForgotPasswordForm } from '@app/Content/ap/ForgotPasswordForm';
-import { LoginForm } from '@app/Content/ap/LoginForm';
-import { SignUpForm } from '@app/Content/ap/SignUpForm';
-import { Article } from '@app/Content/console/Article';
-import { Faculty } from '@app/Content/console/Faculty';
-import { Overview } from '@app/Content/console/Overview';
-import { Repo } from '@app/Content/console/Repo';
+
 import { CustomRouteProps } from '@app/typings/routes';
+import { lazy } from 'react';
+
+const ForgotPasswordForm = lazy(() => import('@app/Content/ap/ForgotPasswordForm'));
+const LoginForm = lazy(() => import('@app/Content/ap/LoginForm'));
+const SignUpForm = lazy(() => import('@app/Content/ap/SignUpForm'));
+const Article = lazy(() => import('@app/Content/console/Article'));
+const Faculty = lazy(() => import('@app/Content/console/Faculty'));
+const Overview = lazy(() => import('@app/Content/console/Overview'));
+const Repo = lazy(() => import('@app/Content/console/Repo'));
 
 // Each one will be mapped to <UnauthenticatedRoute>
 export const ACCESS_PORTAL_ROUTES: Array<CustomRouteProps> = [

@@ -9,7 +9,7 @@ import { PasswordField } from '@app/Components/PasswordField';
 import { useAuth } from '@app/hooks/useAuth';
 
 type Inps = { email: string; password: string };
-export const LoginForm: VFC = () => {
+const LoginForm: VFC = () => {
     const { loginWithGoogle } = useAuth();
     const [loading, setLoading] = useState(false);
     const { register, handleSubmit, errors } = useForm<Inps>();
@@ -60,3 +60,5 @@ export const LoginForm: VFC = () => {
         </Fragment>
     );
 };
+
+export default LoginForm;

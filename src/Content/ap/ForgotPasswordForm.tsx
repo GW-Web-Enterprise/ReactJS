@@ -4,7 +4,7 @@ import React, { useState, VFC } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
 
-export const ForgotPasswordForm: VFC = () => {
+const ForgotPasswordForm: VFC = () => {
     const [loading, setLoading] = useState(false);
     const { register, handleSubmit, errors } = useForm<{ email: string }>();
     const onSubmit = (data: { email: string }) => {
@@ -34,3 +34,5 @@ export const ForgotPasswordForm: VFC = () => {
         </form>
     );
 };
+
+export default ForgotPasswordForm;

@@ -7,7 +7,7 @@ import firebase from 'firebase/app';
 import { Fragment, VFC } from 'react';
 
 const facultiesRef = firebase.firestore().collection('faculties');
-export const Faculty: VFC = () => {
+const Faculty: VFC = () => {
     const { data, status } = useFirestoreQuery(facultiesRef);
     return (
         <Fragment>
@@ -20,3 +20,5 @@ export const Faculty: VFC = () => {
         </Fragment>
     );
 };
+
+export default Faculty;

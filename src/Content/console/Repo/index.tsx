@@ -3,7 +3,7 @@ import { FacultySelector } from '@app/Content/console/Repo/FacultySelector';
 import { RepoList } from '@app/Content/console/Repo/RepoList';
 import { Fragment, useState, VFC } from 'react';
 
-export const Repo: VFC = () => {
+const Repo: VFC = () => {
     const [selectedFacultyId, setFacultyId] = useState('');
     return (
         <Fragment>
@@ -17,3 +17,5 @@ export const Repo: VFC = () => {
         </Fragment>
     );
 };
+
+export default Repo;

@@ -5,6 +5,7 @@ import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { RepoDbSave } from '@app/typings/schemas';
 import { Button, withStyles } from '@material-ui/core';
 import firebase from 'firebase/app';
+import 'firebase/firestore';
 import React, { Fragment, useState, VFC } from 'react';
 
 const ColorButton = withStyles(() => ({

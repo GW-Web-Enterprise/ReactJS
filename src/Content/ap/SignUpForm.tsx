@@ -8,7 +8,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 type Inps = { email: string; password: string; fullname: string };
 
-export const SignUpForm: VFC = () => {
+const SignUpForm: VFC = () => {
     const [loading, setLoading] = useState(false);
     const { register, handleSubmit, errors } = useForm<Inps>();
     const onSubmit = (data: Inps) => {
@@ -42,3 +42,5 @@ export const SignUpForm: VFC = () => {
         </form>
     );
 };
+
+export default SignUpForm;

@@ -3,7 +3,7 @@ import { PrivateRoute } from '@app/Components/PrivateRoute';
 import { CONSOLE_ROUTES } from '@app/routes';
 import React, { VFC } from 'react';
 
-export const ConsoleTemplate: VFC = () => {
+const ConsoleTemplate: VFC = () => {
     return (
         <NavDrawer>
             {CONSOLE_ROUTES.map((routeProps, index) => (
@@ -12,3 +12,5 @@ export const ConsoleTemplate: VFC = () => {
         </NavDrawer>
     );
 };
+
+export default ConsoleTemplate;
