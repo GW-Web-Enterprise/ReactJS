@@ -1,5 +1,5 @@
 import { AddRepo } from '@app/Content/console/Repo/AddRepo';
-import { FacultySelector } from '@app/Content/console/Repo/FacultySelector';
+import { FacultySelector } from '@app/Components/FacultySelector';
 import { RepoList } from '@app/Content/console/Repo/RepoList';
 import { Fragment, useState, VFC } from 'react';
 

@@ -1,4 +1,5 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
+import { RepoColumns } from '@app/Components/RepoColumns';
 import { DeleteRepo } from '@app/Content/console/Repo/DeleteRepo';
 import { EditRepo } from '@app/Content/console/Repo/EditRepo';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
@@ -33,16 +34,7 @@ export const RepoList: VFC<RepoListProps> = ({ facultyId }) => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell></TableCell>
-                        <TableCell>
-                            <strong>Repo name</strong>
-                        </TableCell>
-                        <TableCell align="right">
-                            <strong>Close date and time</strong>
-                        </TableCell>
-                        <TableCell align="right">
-                            <strong>Final date and time</strong>
-                        </TableCell>
+                        <RepoColumns />
                         <TableCell></TableCell>
                     </TableRow>
                 </TableHead>
@@ -61,7 +53,7 @@ const Row: VFC<RowProps> = ({ repoDoc }) => {
     const { id, name, description, closeTimestamp, finalTimestamp } = repoDoc;
     return (
         <Fragment>
-            <TableRow key={id}>
+            <TableRow>
                 <TableCell>
                     <IconButton aria-label="Toggle list of articles" size="small" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
