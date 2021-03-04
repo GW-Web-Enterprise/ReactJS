@@ -1,4 +1,5 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
+import { RepoSaveDialog, RepoSaveFormData } from '@app/Content/console/Repo/RepoSaveDialog';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { RepoDbRead } from '@app/typings/schemas';
@@ -85,7 +86,7 @@ const Row: VFC<RowProps> = ({ repoDoc }) => {
                     renderPopContent={close => (
                         <List component="nav" dense>
                             <ListItem button>
-                                <ListItemText primary="Edit repo" />
+                                <EditRepo repoDoc={repoDoc} cleanup={close} />
                             </ListItem>
                             <ListItem button>
                                 <DeleteRepo repoId={id} name={name} cleanup={close} />
@@ -95,6 +96,29 @@ const Row: VFC<RowProps> = ({ repoDoc }) => {
                 />
             </TableCell>
         </TableRow>
+    );
+};
+
+type EditRepoProps = { repoDoc: RepoDbRead; cleanup: () => void };
+const EditRepo: VFC<EditRepoProps> = ({ repoDoc: { id, ...rest }, cleanup }) => {
+    const [open, setOpen] = useState(false);
+    const { showAlert } = useGlobalUtils();
+    const handleClose = () => {
+        setOpen(false);
+        cleanup();
+    };
+    const handleSubmit = (data: RepoSaveFormData) =>
+        reposRef
+            .doc(id)
+            .update(data)
+            .then(() => showAlert({ status: 'success', message: 'Repo edited successfully' }))
+            .catch(() => showAlert({ status: 'error', message: 'Failed to edit repo' }))
+            .then(handleClose);
+    return (
+        <Fragment>
+            <ListItemText primary="Edit repo" onClick={() => setOpen(true)} />
+            <RepoSaveDialog open={open} onClose={handleClose} onSubmit={handleSubmit} repoDoc={rest} />
+        </Fragment>
     );
 };
 
@@ -113,7 +137,6 @@ const DeleteRepo: VFC<DeleteRepoProps> = ({ repoId, name, cleanup }) => {
             .delete()
             .then(() => showAlert({ status: 'success', message: 'Repo deleted successfully' }))
             .catch(() => showAlert({ status: 'error', message: 'Failed to delete repo' }))
-            .then(handleClose);
     return (
         <Fragment>
             <ListItemText primary="Delete repo" onClick={handleOpen} />

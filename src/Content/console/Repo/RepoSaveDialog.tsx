@@ -1,5 +1,6 @@
 import { REPO_DESC_ERR, REPO_NAME_ERR } from '@app/constants/inputErrs';
 import { useAuth } from '@app/hooks/useAuth';
+import { RepoDbSave } from '@app/typings/schemas';
 import {
     Avatar,
     Box,
@@ -17,17 +18,13 @@ import { Controller, useForm } from 'react-hook-form';
 
 export type RepoSaveFormData = { name: string; closeTimestamp: Date; finalTimestamp: Date; description?: string };
 type Props = {
-    defaultCloseTimestamp?: Date;
-    defaultFinalTimestamp?: Date;
+    repoDoc?: RepoDbSave;
     onSubmit: (data: RepoSaveFormData) => void;
 } & Pick<DialogProps, 'open' | 'onClose'>;
-export const RepoSaveDialog: VFC<Props> = ({
-    defaultCloseTimestamp = null,
-    defaultFinalTimestamp = null,
-    onSubmit,
-    ...dialogProps
-}) => {
-    const [closeTimestamp, setcloseTimestamp] = useState<Date | null>(defaultCloseTimestamp);
+export const RepoSaveDialog: VFC<Props> = ({ onSubmit, repoDoc, ...dialogProps }) => {
+    const defaultCloseTs = !repoDoc ? null : repoDoc.closeTimestamp.toDate();
+    const defaultFinalTs = !repoDoc ? null : repoDoc.finalTimestamp.toDate();
+    const [closeTimestamp, setcloseTimestamp] = useState<Date | null>(defaultCloseTs);
     const { currentUser } = useAuth();
     const utils = useContext(MuiPickersContext);
     const { control, handleSubmit, register, errors } = useForm<RepoSaveFormData>();
@@ -42,6 +39,7 @@ export const RepoSaveDialog: VFC<Props> = ({
                         inputRef={register(REPO_NAME_ERR)}
                         name="name"
                         autoFocus
+                        defaultValue={repoDoc?.name}
                         margin="normal"
                         label="Repo name"
                         fullWidth
@@ -50,6 +48,7 @@ export const RepoSaveDialog: VFC<Props> = ({
                     <TextField
                         inputRef={register(REPO_DESC_ERR)}
                         name="description"
+                        defaultValue={repoDoc?.description}
                         margin="normal"
                         label="Short description (optional)"
                         fullWidth
@@ -58,7 +57,7 @@ export const RepoSaveDialog: VFC<Props> = ({
                     <Controller
                         name="closeTimestamp"
                         control={control}
-                        defaultValue={defaultCloseTimestamp}
+                        defaultValue={defaultCloseTs}
                         rules={{
                             validate: (selectedDate: Date) =>
                                 selectedDate > now || `Must be after the present time: ${now.toLocaleString()}`
@@ -71,7 +70,9 @@ export const RepoSaveDialog: VFC<Props> = ({
                                 label="Close date and time"
                                 helperText={
                                     errors.closeTimestamp ? (
-                                        <Box color="error.main">{errors.closeTimestamp.message}</Box>
+                                        <Box component="span" color="error.main">
+                                            {errors.closeTimestamp.message}
+                                        </Box>
                                     ) : (
                                         `Students cannot upload or delete files after this date and time (but can still rename the uploaded ones until the final date and time below)`
                                     )
@@ -92,8 +93,8 @@ export const RepoSaveDialog: VFC<Props> = ({
                     />
                     <Controller
                         name="finalTimestamp"
+                        defaultValue={defaultFinalTs}
                         control={control}
-                        defaultValue={defaultFinalTimestamp}
                         rules={{
                             validate: (selectedDate: Date) =>
                                 // if the value of closeTimestamp is null, it nevers passes the check above: null > new Date() = false
@@ -104,17 +105,13 @@ export const RepoSaveDialog: VFC<Props> = ({
                                 margin="normal"
                                 variant="dialog"
                                 label="Final date and time"
-                                helperText={
-                                    errors.finalTimestamp ? (
-                                        <Box color="error.main">{errors.finalTimestamp.message}</Box>
-                                    ) : (
-                                        ''
-                                    )
-                                }
                                 minDate={closeTimestamp}
                                 maxDate={utils?.addDays(now, 130)}
-                                minDateMessage="Please repick the final date and time"
-                                maxDateMessage="Please repick the final date and time"
+                                helperText={
+                                    <Box component="span" color="error.main">
+                                        {errors.finalTimestamp?.message}
+                                    </Box>
+                                }
                                 autoOk
                                 disablePast={true}
                                 hideTabs
@@ -124,7 +121,7 @@ export const RepoSaveDialog: VFC<Props> = ({
                         )}
                     />
                     <Button type="submit" fullWidth variant="contained" color="primary" style={{ margin: '8px 0' }}>
-                        Create
+                        Save
                     </Button>
                 </form>
             </DialogContent>
