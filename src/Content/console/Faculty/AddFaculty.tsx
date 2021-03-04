@@ -1,6 +1,6 @@
-import { Fragment, useState, VFC } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import { FACULTY_NAME_ERR } from '@app/constants/inputErrs';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { FacultyDbSave } from '@app/typings/schemas';
 import {
     Box,
     Button,
@@ -13,10 +13,10 @@ import {
     Tooltip
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import { Fragment, useState, VFC } from 'react';
 import { useForm } from 'react-hook-form';
-import { FACULTY_NAME_ERR } from '@app/constants/inputErrs';
-import { FacultySave } from '@app/typings/schemas';
-import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 
 type Props = {
     numbFaculties: number;
@@ -25,8 +25,8 @@ const facultiesRef = firebase.firestore().collection('faculties');
 export const AddFaculty: VFC<Props> = ({ numbFaculties }) => {
     const { showAlert } = useGlobalUtils();
     const [dialogOpen, setDialogOpen] = useState(false);
-    const { register, handleSubmit, errors } = useForm<FacultySave>();
-    const handleCreate = ({ name, ...rest }: FacultySave) =>
+    const { register, handleSubmit, errors } = useForm<FacultyDbSave>();
+    const handleCreate = ({ name, ...rest }: FacultyDbSave) =>
         facultiesRef
             .add({ name: name.toLowerCase(), ...rest })
             .then(() => showAlert({ status: 'success', message: 'Faculty added successfully' }))

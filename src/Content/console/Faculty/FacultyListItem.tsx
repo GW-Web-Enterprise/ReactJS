@@ -14,10 +14,10 @@ import {
 } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import { PushPopMember } from '@app/Content/console/Faculty/PushPopMember';
-import { FacultyRead, FacultySave } from '@app/typings/schemas';
 import { useForm } from 'react-hook-form';
 import { FACULTY_NAME_ERR } from '@app/constants/inputErrs';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { FacultyDbRead, FacultyDbSave } from '@app/typings/schemas';
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -29,15 +29,15 @@ const useStyles = makeStyles(() =>
 );
 
 type Props = {
-    facultyDoc: FacultyRead;
+    facultyDoc: FacultyDbRead;
 };
 
 export const FacultyListItem: VFC<Props> = ({ facultyDoc }) => {
     const { showAlert } = useGlobalUtils();
-    const { register, handleSubmit, errors } = useForm<FacultySave>();
+    const { register, handleSubmit, errors } = useForm<FacultyDbSave>();
     const classes = useStyles();
     const docRef = firebase.firestore().collection('faculties').doc(facultyDoc.id);
-    const handleEdit = (toggleEditForm: () => void) => ({ name, ...rest }: FacultySave) =>
+    const handleEdit = (toggleEditForm: () => void) => ({ name, ...rest }: FacultyDbSave) =>
         docRef
             .update({ name: name.toLowerCase(), ...rest })
             .then(() => showAlert({ status: 'success', message: 'Faculty name is changed successfully' }))

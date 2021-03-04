@@ -1,13 +1,13 @@
-export type FacultyRead = {
+export type FacultyDbRead = {
     id: string;
     name: string;
 };
 
-export type FacultySave = {
+export type FacultyDbSave = {
     name: string;
 };
 
-export type RepoRead = {
+export type RepoDbRead = {
     id: string;
     name: string;
     facultyId: string;
@@ -16,4 +16,4 @@ export type RepoRead = {
     description?: string;
 };
 
-export type RepoSave = Omit<RepoRead, 'id'>;
+export type RepoDbSave = Omit<RepoDbRead, 'id'>;

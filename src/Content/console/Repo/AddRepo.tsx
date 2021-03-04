@@ -1,11 +1,11 @@
-import React, { Fragment, useState, VFC } from 'react';
-import firebase from 'firebase/app';
-import { Button, withStyles } from '@material-ui/core';
 import repoIcon from '@app/assets/repo.svg';
 import { InlineIcon } from '@app/Components/InlineIcon';
-import { RepoSave } from '@app/typings/schemas';
-import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { RepoSaveDialog, RepoSaveFormData } from '@app/Content/console/Repo/RepoSaveDialog';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { RepoDbSave } from '@app/typings/schemas';
+import { Button, withStyles } from '@material-ui/core';
+import firebase from 'firebase/app';
+import React, { Fragment, useState, VFC } from 'react';
 
 const ColorButton = withStyles(() => ({
     root: {
@@ -26,7 +26,7 @@ export const AddRepo: VFC<Props> = ({ facultyId }) => {
     const { showAlert } = useGlobalUtils();
     const handleClose = () => setOpen(false);
     const handleSubmit = (data: RepoSaveFormData) => {
-        const repoToSave: RepoSave = {
+        const repoToSave: RepoDbSave = {
             ...data,
             closeTimestamp: firebase.firestore.Timestamp.fromDate(data.closeTimestamp),
             finalTimestamp: firebase.firestore.Timestamp.fromDate(data.finalTimestamp),

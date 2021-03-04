@@ -1,3 +1,7 @@
+import { PopoverItem } from '@app/Components/PopoverItem';
+import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { RepoDbRead } from '@app/typings/schemas';
 import {
     Button,
     Dialog,
@@ -19,14 +23,10 @@ import {
     TableRow,
     Tooltip
 } from '@material-ui/core';
-import React, { Fragment, useState, VFC } from 'react';
-import firebase from 'firebase/app';
-import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
-import { RepoRead } from '@app/typings/schemas';
 import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons';
-import { PopoverItem } from '@app/Components/PopoverItem';
 import { Alert } from '@material-ui/lab';
-import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import firebase from 'firebase/app';
+import React, { Fragment, useState, VFC } from 'react';
 
 type RepoListProps = { facultyId: string };
 const reposRef = firebase.firestore().collection('repos');
@@ -46,14 +46,14 @@ export const RepoList: VFC<RepoListProps> = ({ facultyId }) => {
                 </TableHead>
                 <TableBody>
                     {status === 'success' &&
-                        data.map((repoDoc: RepoRead) => <Row key={repoDoc.id} repoDoc={repoDoc} />)}
+                        data.map((repoDoc: RepoDbRead) => <Row key={repoDoc.id} repoDoc={repoDoc} />)}
                 </TableBody>
             </Table>
         </TableContainer>
     );
 };
 
-type RowProps = { repoDoc: RepoRead };
+type RowProps = { repoDoc: RepoDbRead };
 const Row: VFC<RowProps> = ({ repoDoc }) => {
     const [open, setOpen] = useState(false);
     const { id, name, description, closeTimestamp, finalTimestamp } = repoDoc;
