@@ -1,20 +1,13 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
-import { RepoSaveDialog, RepoSaveFormData } from '@app/Content/console/Repo/RepoSaveDialog';
+import { DeleteRepo } from '@app/Content/console/Repo/DeleteRepo';
+import { EditRepo } from '@app/Content/console/Repo/EditRepo';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
-import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { RepoDbRead } from '@app/typings/schemas';
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     IconButton,
     Link,
     List,
     ListItem,
-    ListItemText,
     Paper,
     Table,
     TableBody,
@@ -25,9 +18,8 @@ import {
     Tooltip
 } from '@material-ui/core';
 import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons';
-import { Alert } from '@material-ui/lab';
 import firebase from 'firebase/app';
-import React, { Fragment, useState, VFC } from 'react';
+import React, { useState, VFC } from 'react';
 
 type RepoListProps = { facultyId: string };
 const reposRef = firebase.firestore().collection('repos');
@@ -96,68 +88,5 @@ const Row: VFC<RowProps> = ({ repoDoc }) => {
                 />
             </TableCell>
         </TableRow>
-    );
-};
-
-type EditRepoProps = { repoDoc: RepoDbRead; cleanup: () => void };
-const EditRepo: VFC<EditRepoProps> = ({ repoDoc: { id, ...rest }, cleanup }) => {
-    const [open, setOpen] = useState(false);
-    const { showAlert } = useGlobalUtils();
-    const handleClose = () => {
-        setOpen(false);
-        cleanup();
-    };
-    const handleSubmit = (data: RepoSaveFormData) =>
-        reposRef
-            .doc(id)
-            .update(data)
-            .then(() => showAlert({ status: 'success', message: 'Repo edited successfully' }))
-            .catch(() => showAlert({ status: 'error', message: 'Failed to edit repo' }))
-            .then(handleClose);
-    return (
-        <Fragment>
-            <ListItemText primary="Edit repo" onClick={() => setOpen(true)} />
-            <RepoSaveDialog open={open} onClose={handleClose} onSubmit={handleSubmit} repoDoc={rest} />
-        </Fragment>
-    );
-};
-
-type DeleteRepoProps = { repoId: string; name: string; cleanup: () => void };
-const DeleteRepo: VFC<DeleteRepoProps> = ({ repoId, name, cleanup }) => {
-    const { showAlert } = useGlobalUtils();
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-        setOpen(false);
-        cleanup();
-    };
-    const handleDelete = () =>
-        reposRef
-            .doc(repoId)
-            .delete()
-            .then(() => showAlert({ status: 'success', message: 'Repo deleted successfully' }))
-            .catch(() => showAlert({ status: 'error', message: 'Failed to delete repo' }))
-    return (
-        <Fragment>
-            <ListItemText primary="Delete repo" onClick={handleOpen} />
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Delete Repo ?</DialogTitle>
-                <DialogContent>
-                    <Alert severity="error">
-                        After you have deleted a repo, all of its files will be permanently deleted. Repos and their
-                        files cannot be recovered.
-                    </Alert>
-                    <DialogContentText>{`Repo: ${name}`}</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancle
-                    </Button>
-                    <Button onClick={handleDelete} variant="contained" color="secondary">
-                        Delete
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </Fragment>
     );
 };
