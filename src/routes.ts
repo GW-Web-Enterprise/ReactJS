@@ -7,7 +7,7 @@ import { lazy } from 'react';
 const ForgotPasswordForm = lazy(() => import('@app/Content/ap/ForgotPasswordForm'));
 const LoginForm = lazy(() => import('@app/Content/ap/LoginForm'));
 const SignUpForm = lazy(() => import('@app/Content/ap/SignUpForm'));
-const Article = lazy(() => import('@app/Content/console/Article'));
+const Upload = lazy(() => import('@app/Content/console/Upload'));
 const Faculty = lazy(() => import('@app/Content/console/Faculty'));
 const Overview = lazy(() => import('@app/Content/console/Overview'));
 const Repo = lazy(() => import('@app/Content/console/Repo'));
@@ -43,7 +43,7 @@ export const CONSOLE_ROUTES: Array<CustomRouteProps> = [
         component: Repo
     },
     {
-        path: '/console/articles',
-        component: Article
+        path: '/console/upload',
+        component: Upload
     }
 ];

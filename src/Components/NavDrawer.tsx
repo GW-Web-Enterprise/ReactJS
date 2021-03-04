@@ -18,8 +18,8 @@ import {
 import React, { ReactNode, useState, VFC } from 'react';
 import { ChevronLeft, ChevronRight, Home, Menu, People } from '@material-ui/icons';
 import facultyIcon from '@app/assets/faculty-solid.svg';
-import articleIcon from '@app/assets/article.svg';
-import repoIcon from '@app/assets/folder-upload.svg';
+import uploadIcon from '@app/assets/cloud-upload.svg';
+import boxIcon from '@app/assets/box.svg';
 import keyIcon from '@app/assets/key.svg';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
@@ -105,7 +105,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
         overview,
         faculties,
         repos,
-        articles,
+        upload,
         users,
         roles
     }
@@ -198,9 +198,9 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         to={`/console/${PageToNavIndex[2]}`}
                     >
                         <ListItemIcon>
-                            <InlineIcon src={repoIcon} />
+                            <InlineIcon src={boxIcon} />
                         </ListItemIcon>
-                        <ListItemText primary="Publishing Repos" />
+                        <ListItemText primary="Repos" />
                     </ListItem>
                     <ListItem
                         selected={selectedIndex === 3}
@@ -210,9 +210,9 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         to={`/console/${PageToNavIndex[3]}`}
                     >
                         <ListItemIcon>
-                            <InlineIcon src={articleIcon} />
+                            <InlineIcon src={uploadIcon} />
                         </ListItemIcon>
-                        <ListItemText primary="Articles" />
+                        <ListItemText primary="Upload files" />
                     </ListItem>
                     <ListItem
                         selected={selectedIndex === 4}
