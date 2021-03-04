@@ -5,6 +5,7 @@ This repo follows the [Git commit message convention](https://github.com/kazupon
 + [Firebase BaaS](https://firebase.google.com/docs)
 + [Material UI](https://material-ui.com/)
 + [React Router Dom](https://reactrouter.com/web/guides/quick-start) to render UI dynamically based on current route
++ [React Hook Form](https://github.com/react-hook-form/react-hook-form) to validate input fields with ease and handle their errors gracefully
 + This ['usehooks'](https://github.com/gragland/usehooks) repo teaches me how to write React custom hooks
 # Getting Started with Create React App
 
