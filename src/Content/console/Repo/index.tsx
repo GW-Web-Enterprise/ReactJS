@@ -1,7 +1,8 @@
 import { AddRepo } from '@app/Content/console/Repo/AddRepo';
 import { FacultySelector } from '@app/Components/FacultySelector';
-import { RepoList } from '@app/Content/console/Repo/RepoList';
+import { RepoTable } from '@app/Components/RepoTable';
 import { Fragment, useState, VFC } from 'react';
+import { ReviewRepoRow } from '@app/Content/console/Repo/ReviewRepoRow';
 
 const Repo: VFC = () => {
     const [selectedFacultyId, setFacultyId] = useState('');
@@ -11,7 +12,7 @@ const Repo: VFC = () => {
             {selectedFacultyId && (
                 <Fragment>
                     <AddRepo facultyId={selectedFacultyId} />
-                    <RepoList facultyId={selectedFacultyId} />
+                    <RepoTable facultyId={selectedFacultyId} CollapsibleRow={ReviewRepoRow} />
                 </Fragment>
             )}
         </Fragment>
