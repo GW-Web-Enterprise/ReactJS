@@ -1,5 +1,5 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
-import { RepoColumns } from '@app/Components/RepoColumns';
+import { RepoTableHead } from '@app/Components/RepoTableHead';
 import { DeleteRepo } from '@app/Content/console/Repo/DeleteRepo';
 import { EditRepo } from '@app/Content/console/Repo/EditRepo';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core';
 import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons';
 import firebase from 'firebase/app';
-import React, { Fragment, useState, VFC } from 'react';
+import { Fragment, useState, VFC } from 'react';
 
 type RepoListProps = { facultyId: string };
 const reposRef = firebase.firestore().collection('repos');
@@ -32,12 +32,7 @@ export const RepoList: VFC<RepoListProps> = ({ facultyId }) => {
     return (
         <TableContainer component={Paper}>
             <Table>
-                <TableHead>
-                    <TableRow>
-                        <RepoColumns />
-                        <TableCell></TableCell>
-                    </TableRow>
-                </TableHead>
+                <RepoTableHead />
                 <TableBody>
                     {status === 'success' &&
                         data.map((repoDoc: RepoDbRead) => <Row key={repoDoc.id} repoDoc={repoDoc} />)}
@@ -95,7 +90,7 @@ const Row: VFC<RowProps> = ({ repoDoc }) => {
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box margin={1}>
                             <Typography variant="h6" gutterBottom component="div">
-                                Uploaded files
+                                Review files uploaded from students in the faculty
                             </Typography>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
