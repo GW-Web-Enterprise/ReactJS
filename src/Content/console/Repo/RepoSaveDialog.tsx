@@ -31,7 +31,7 @@ export const RepoSaveDialog: VFC<Props> = ({ onSubmit, repoDoc, ...dialogProps }
     const now = new Date();
     return (
         <Dialog {...dialogProps}>
-            <DialogTitle>New repo for faculty articles</DialogTitle>
+            <DialogTitle>Save faculty's repo</DialogTitle>
             <DialogContent>
                 <Chip avatar={<Avatar src={currentUser?.photoURL!} />} label={`${currentUser?.displayName} (Owner)`} />
                 <form noValidate autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
