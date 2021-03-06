@@ -60,7 +60,7 @@ export const RepoSaveDialog: VFC<Props> = ({ onSubmit, repoDoc, ...dialogProps }
                         defaultValue={defaultCloseTs}
                         rules={{
                             validate: (selectedDate: Date) =>
-                                selectedDate > now || `Must be after the present time: ${now.toLocaleString()}`
+                                selectedDate > now || `Must be after the present date and time: ${now.toLocaleString()}`
                         }}
                         render={({ ref, onChange, ...rest }) => (
                             <DateTimePicker
@@ -73,8 +73,10 @@ export const RepoSaveDialog: VFC<Props> = ({ onSubmit, repoDoc, ...dialogProps }
                                         <Box component="span" color="error.main">
                                             {errors.closeTimestamp.message}
                                         </Box>
+                                    ) : closeTimestamp && closeTimestamp < now ? ( // At first render, the initial closeTimestamp might be before the present time
+                                        `Must be after the present date and time: ${now.toLocaleString()}`
                                     ) : (
-                                        `Students cannot upload or delete files after this date and time (but can still rename the uploaded ones until the final date and time below)`
+                                        'Students cannot upload or delete files after this date and time (but can still rename the uploaded ones until the final date and time below)'
                                     )
                                 }
                                 autoOk
