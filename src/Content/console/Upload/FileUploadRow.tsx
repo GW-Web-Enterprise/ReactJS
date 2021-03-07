@@ -1,34 +1,20 @@
-import { PopoverItem } from '@app/Components/PopoverItem';
 import { getSizeOfFiles } from '@app/utils/getSizeOfFiles';
-import {
-    Box,
-    Button,
-    Collapse,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Typography
-} from '@material-ui/core';
-import { CloudUpload, Delete, Edit, GetApp, MoreVert } from '@material-ui/icons';
-import { ReactNode, useRef, useState, VFC } from 'react';
+import { Box, Button, Collapse, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
+import { CloudUpload } from '@material-ui/icons';
+import { useRef, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import { CustomFileList } from '@app/typings/files';
+import { FileRows } from '@app/Content/console/Upload/FileRows';
 
 const storageRef = firebase.storage().ref();
 
 type Props = { open: boolean };
 export const FileUploadRow: VFC<Props> = ({ open }) => {
-    const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of uploaded files
+    const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
     const fileInpRef = useRef<HTMLInputElement>(null);
     const [files, setFiles] = useState<CustomFileList>([]);
+    fileInpRef.current && (fileInpRef.current.value = ''); // clear the cache of file input when the 'files' state changes
     const handleLocalUpload = () => {
         // This function is invoked right after the user has uploaded at least one local file
         // File input is rendered so that the user can upload local files -> fileInpRef.current != null
@@ -88,64 +74,13 @@ export const FileUploadRow: VFC<Props> = ({ open }) => {
                                     <TableCell align="right"></TableCell>
                                 </TableRow>
                             </TableHead>
-                            <TableBody>{renderFileRows(files)}</TableBody>
+                            <TableBody>
+                                <FileRows filenameMemo={filenameMemo} files={files} setFiles={setFiles} />
+                            </TableBody>
                         </Table>
                     </Box>
                 </Collapse>
             </TableCell>
         </TableRow>
     );
-};
-
-const renderFileRows = (files: CustomFileList) => {
-    if (!files.length) return;
-    const rows: Array<ReactNode> = [];
-    files.forEach(({ name: filename }, i) => {
-        const extDot = filename.lastIndexOf('.');
-        const extension = filename.slice(extDot);
-        filename = filename.slice(0, extDot);
-        rows.push(
-            <TableRow key={i}>
-                <TableCell component="th" scope="row">
-                    {filename}
-                </TableCell>
-                <TableCell align="right">{extension}</TableCell>
-                <TableCell align="right">{new Date().toLocaleString()}</TableCell>
-                <TableCell>
-                    <PopoverItem
-                        placement="bottomRight"
-                        padding={0}
-                        renderToggle={(toggle, toggleEl) => (
-                            <IconButton aria-label="View more options" size="small" onClick={toggle} ref={toggleEl}>
-                                <MoreVert />
-                            </IconButton>
-                        )}
-                        renderPopContent={close => (
-                            <List component="nav" dense>
-                                <ListItem button>
-                                    <ListItemIcon>
-                                        <GetApp />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Download" />
-                                </ListItem>
-                                <ListItem button>
-                                    <ListItemIcon>
-                                        <Edit />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Rename" />
-                                </ListItem>
-                                <ListItem button>
-                                    <ListItemIcon>
-                                        <Delete />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Delete" />
-                                </ListItem>
-                            </List>
-                        )}
-                    />
-                </TableCell>
-            </TableRow>
-        );
-    });
-    return rows;
 };
