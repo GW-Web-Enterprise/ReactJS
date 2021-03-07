@@ -12,14 +12,14 @@ const storageRef = firebase.storage().ref();
 type Props = { open: boolean };
 export const FileUploadRow: VFC<Props> = ({ open }) => {
     const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
-    const fileInpRef = useRef<HTMLInputElement>(null);
+    const fileInput = useRef<HTMLInputElement>(null);
     const [files, setFiles] = useState<CustomFileList>([]);
-    fileInpRef.current && (fileInpRef.current.value = ''); // clear the cache of file input when the 'files' state changes
+    fileInput.current && (fileInput.current.value = ''); // clear the cache of file input when the 'files' state changes
     const handleLocalUpload = () => {
         // This function is invoked right after the user has uploaded at least one local file
-        // File input is rendered so that the user can upload local files -> fileInpRef.current != null
+        // File input is rendered so that the user can upload local files -> fileInput.current != null
         const validFiles: CustomFileList = [];
-        const uploadedFiles = fileInpRef.current!.files!;
+        const uploadedFiles = fileInput.current!.files!;
         for (let i = 0; i < uploadedFiles.length; i++) {
             const { name, type, size, lastModified } = uploadedFiles[i];
             if (!filenameMemo.current[name]) {
@@ -36,7 +36,7 @@ export const FileUploadRow: VFC<Props> = ({ open }) => {
                     <Box margin={1}>
                         <Typography variant="h6" gutterBottom>
                             Your dropbox
-                            <Box color="error.main" display="inline" fontSize="fontSize" ml={1}>
+                            <Box color="info.main" display="inline" fontSize="fontSize" ml={1}>
                                 <strong>Status:</strong> pending
                             </Box>
                         </Typography>
@@ -44,7 +44,7 @@ export const FileUploadRow: VFC<Props> = ({ open }) => {
                             variant="contained"
                             size="small"
                             startIcon={<CloudUpload />}
-                            onClick={() => fileInpRef.current?.click()}
+                            onClick={() => fileInput.current?.click()}
                         >
                             Upload file
                         </Button>
@@ -54,7 +54,7 @@ export const FileUploadRow: VFC<Props> = ({ open }) => {
                         <input
                             type="file"
                             multiple
-                            ref={fileInpRef}
+                            ref={fileInput}
                             accept="image/*, video/*, .pdf, .docx, .xlsx, .pptx, .txt, .zip , .zipx"
                             style={{ display: 'none' }}
                             onChange={handleLocalUpload}
@@ -64,9 +64,6 @@ export const FileUploadRow: VFC<Props> = ({ open }) => {
                                 <TableRow>
                                     <TableCell>
                                         <strong>Filename</strong>
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <strong>Extension</strong>
                                     </TableCell>
                                     <TableCell align="right">
                                         <strong>Uploaded at</strong>
