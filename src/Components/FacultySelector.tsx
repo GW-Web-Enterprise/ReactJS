@@ -7,7 +7,7 @@ import React, { Dispatch, Fragment, SetStateAction, useRef, useState, VFC } from
 type Props = { onSelect: Dispatch<SetStateAction<string>> };
 const db = firebase.firestore();
 export const FacultySelector: VFC<Props> = ({ onSelect }) => {
-    const facultySelectorRef = useRef(null);
+    const facultySelector = useRef(null);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [menuOpen, setMenuOpen] = useState(false);
     const handleFacSelect = (index: number, facultyId: string) => () => {
@@ -22,7 +22,7 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
             {status === 'success' && (
                 <Fragment>
                     <List component="nav" style={{ display: 'inline-block' }}>
-                        <ListItem button onClick={() => setMenuOpen(true)} innerRef={facultySelectorRef}>
+                        <ListItem button onClick={() => setMenuOpen(true)} innerRef={facultySelector}>
                             <ListItemText
                                 primary="Select a faculty to view its repos"
                                 secondary={`Chosen faculty: ${options[selectedIndex]?.name || 'none'}`}
@@ -30,7 +30,7 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
                         </ListItem>
                     </List>
                     <Menu
-                        anchorEl={facultySelectorRef.current}
+                        anchorEl={facultySelector.current}
                         open={menuOpen}
                         onClose={() => setMenuOpen(false)}
                         PaperProps={{ style: { maxHeight: 48 * 4.5 } }}
