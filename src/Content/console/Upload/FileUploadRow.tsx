@@ -1,5 +1,16 @@
 import { getSizeOfFiles } from '@app/utils/getSizeOfFiles';
-import { Box, Button, Collapse, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Collapse,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
 import { useRef, useState } from 'react';
 import firebase from 'firebase/app';
@@ -8,20 +19,20 @@ import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
 import { FileListRows } from '@app/Content/console/Upload/FileListRows';
 import { useAuth } from '@app/hooks/useAuth';
+import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
 
 const reposRef = firebase.firestore().collection('repos');
 const storageRef = firebase.storage().ref();
 
 export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) => {
     const { currentUser } = useAuth();
-    const { showAlert, showLoading } = useGlobalUtils();
+    const { showAlert } = useGlobalUtils();
     const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
     const fileInput = useRef<HTMLInputElement>(null);
     const [files, setFiles] = useState<CustomFileList>([]);
     const [wait, setWait] = useState(false);
     const handleLocalUpload = async () => {
         setWait(true);
-        showLoading('Uploading files, please wait...');
         // This function is invoked right after the user has uploaded at least one local file
         // File input is rendered so that the user can upload local files -> fileInput.current != null
         const validFiles: CustomFileList = [];
@@ -80,12 +91,15 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
         );
         setWait(false);
         validFiles.length && setFiles([...validFiles, ...files]);
-        showLoading('');
     };
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0, position: 'relative' }} colSpan={6}>
-                {wait && <div className="overlay" />}
+                {wait && (
+                    <LimitedBackdrop open={true}>
+                        <CircularProgress /> &nbsp; Uploading files, please wait...
+                    </LimitedBackdrop>
+                )}
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <Box margin={1}>
                         <Typography variant="h6" gutterBottom>
