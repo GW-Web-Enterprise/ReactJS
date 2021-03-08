@@ -1,6 +1,5 @@
 import { useEffect, useReducer } from 'react';
 import firebase from 'firebase/app';
-import 'firebase/firestore';
 import { useMemoCompare } from '@app/hooks/useMemoCompare';
 
 type QueryInfo =

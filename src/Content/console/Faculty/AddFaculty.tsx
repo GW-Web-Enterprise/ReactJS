@@ -14,7 +14,6 @@ import {
 } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
 import firebase from 'firebase/app';
-import 'firebase/firestore';
 import { Fragment, useState, VFC } from 'react';
 import { useForm } from 'react-hook-form';
 

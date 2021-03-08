@@ -3,7 +3,6 @@ import { Box, Button, Collapse, Table, TableBody, TableCell, TableHead, TableRow
 import { CloudUpload } from '@material-ui/icons';
 import { useRef, useState } from 'react';
 import firebase from 'firebase/app';
-import 'firebase/storage';
 import { CustomFileList } from '@app/typings/files';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { IRepoCollapsibleRow } from '@app/Components/RepoTable';

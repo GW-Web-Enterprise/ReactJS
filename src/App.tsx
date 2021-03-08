@@ -6,6 +6,8 @@ import { CircularProgress, CssBaseline } from '@material-ui/core';
 import { ProvideAuth } from '@app/hooks/useAuth';
 import DateFnsUtils from '@date-io/date-fns';
 import { ProvideGlobalUtils } from '@app/hooks/useGlobalUtils';
+import 'firebase/firestore';
+import 'firebase/storage';
 
 const ApTemplate = lazy(() => import('@app/Templates/ApTemplate'));
 const ConsoleTemplate = lazy(() => import('@app/Templates/ConsoleTemplate'));
