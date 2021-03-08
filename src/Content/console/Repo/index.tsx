@@ -12,7 +12,7 @@ const Repo: VFC = () => {
             {selectedFacultyId && (
                 <Fragment>
                     <AddRepo facultyId={selectedFacultyId} />
-                    <RepoTable facultyId={selectedFacultyId} CollapsibleRow={ReviewRepoRow} />
+                    <RepoTable facultyId={selectedFacultyId} RepoCollapsibleRow={ReviewRepoRow} />
                 </Fragment>
             )}
         </Fragment>

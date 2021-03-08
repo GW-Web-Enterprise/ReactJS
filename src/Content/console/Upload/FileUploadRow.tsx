@@ -7,11 +7,11 @@ import 'firebase/storage';
 import { CustomFileList } from '@app/typings/files';
 import { FileRows } from '@app/Content/console/Upload/FileRows';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
-import { ICollapsibleRow } from '@app/Components/RepoTable';
+import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
 
 const storageRef = firebase.storage().ref();
 
-export const FileUploadRow: ICollapsibleRow = ({ open }) => {
+export const FileUploadRow: IRepoCollapsibleRow = ({ open }) => {
     const { showAlert } = useGlobalUtils();
     const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
     const fileInput = useRef<HTMLInputElement>(null);

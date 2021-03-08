@@ -21,10 +21,10 @@ import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons
 import firebase from 'firebase/app';
 import { Fragment, useState, VFC } from 'react';
 
-export type ICollapsibleRow = VFC<{ open: boolean }>;
-type RepoTableProps = { facultyId: string; CollapsibleRow: ICollapsibleRow };
+export type IRepoCollapsibleRow = VFC<{ open: boolean }>;
+type RepoTableProps = { facultyId: string; RepoCollapsibleRow: IRepoCollapsibleRow };
 const reposRef = firebase.firestore().collection('repos');
-export const RepoTable: VFC<RepoTableProps> = ({ facultyId, CollapsibleRow }) => {
+export const RepoTable: VFC<RepoTableProps> = ({ facultyId, RepoCollapsibleRow }) => {
     const { data = [], status } = useFirestoreQuery(reposRef.where('facultyId', '==', facultyId));
     return (
         <TableContainer component={Paper}>
@@ -53,7 +53,7 @@ export const RepoTable: VFC<RepoTableProps> = ({ facultyId, CollapsibleRow }) =>
                                 key={repoDoc.id}
                                 facultyId={facultyId}
                                 repoDoc={repoDoc}
-                                CollapsibleRow={CollapsibleRow}
+                                RepoCollapsibleRow={RepoCollapsibleRow}
                             />
                         ))}
                 </TableBody>
@@ -66,9 +66,9 @@ type RepoRowProps = {
     facultyId: string;
     repoDoc: RepoDbRead;
     /** A collapsible row with the prop 'open' */
-    CollapsibleRow: ICollapsibleRow;
+    RepoCollapsibleRow: IRepoCollapsibleRow;
 };
-const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, CollapsibleRow }) => {
+const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, RepoCollapsibleRow }) => {
     const [open, setOpen] = useState(false);
     const { id, name, description, closeTimestamp, finalTimestamp } = repoDoc;
     return (
@@ -112,7 +112,7 @@ const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, CollapsibleRow }) => {
                     </TableCell>
                 )}
             </TableRow>
-            <CollapsibleRow open={open} />
+            <RepoCollapsibleRow open={open} />
         </Fragment>
     );
 };

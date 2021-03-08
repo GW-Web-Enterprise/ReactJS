@@ -1,5 +1,5 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
-import { ICollapsibleRow } from '@app/Components/RepoTable';
+import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
 import {
     Box,
     Collapse,
@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
 
-export const ReviewRepoRow: ICollapsibleRow = ({ open }) => {
+export const ReviewRepoRow: IRepoCollapsibleRow = ({ open }) => {
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

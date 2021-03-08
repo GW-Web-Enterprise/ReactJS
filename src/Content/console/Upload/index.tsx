@@ -8,7 +8,7 @@ const Upload: VFC = () => {
     return (
         <Fragment>
             <FacultySelector onSelect={setFacultyId} />
-            {selectedFacultyId && <RepoTable facultyId={selectedFacultyId} CollapsibleRow={FileUploadRow} />}
+            {selectedFacultyId && <RepoTable facultyId={selectedFacultyId} RepoCollapsibleRow={FileUploadRow} />}
         </Fragment>
     );
 };
