@@ -21,7 +21,7 @@ import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons
 import firebase from 'firebase/app';
 import { Fragment, useState, VFC } from 'react';
 
-type ICollapsibleRow = VFC<{ open: boolean }>;
+export type ICollapsibleRow = VFC<{ open: boolean }>;
 type RepoTableProps = { facultyId: string; CollapsibleRow: ICollapsibleRow };
 const reposRef = firebase.firestore().collection('repos');
 export const RepoTable: VFC<RepoTableProps> = ({ facultyId, CollapsibleRow }) => {
@@ -49,7 +49,12 @@ export const RepoTable: VFC<RepoTableProps> = ({ facultyId, CollapsibleRow }) =>
                 <TableBody>
                     {status === 'success' &&
                         data.map((repoDoc: RepoDbRead) => (
-                            <Row key={repoDoc.id} repoDoc={repoDoc} CollapsibleRow={CollapsibleRow} />
+                            <RepoRow
+                                key={repoDoc.id}
+                                facultyId={facultyId}
+                                repoDoc={repoDoc}
+                                CollapsibleRow={CollapsibleRow}
+                            />
                         ))}
                 </TableBody>
             </Table>
@@ -57,12 +62,13 @@ export const RepoTable: VFC<RepoTableProps> = ({ facultyId, CollapsibleRow }) =>
     );
 };
 
-type RowProps = {
+type RepoRowProps = {
+    facultyId: string;
     repoDoc: RepoDbRead;
     /** A collapsible row with the prop 'open' */
     CollapsibleRow: ICollapsibleRow;
 };
-const Row: VFC<RowProps> = ({ repoDoc, CollapsibleRow }) => {
+const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, CollapsibleRow }) => {
     const [open, setOpen] = useState(false);
     const { id, name, description, closeTimestamp, finalTimestamp } = repoDoc;
     return (

@@ -1,17 +1,17 @@
 import { getSizeOfFiles } from '@app/utils/getSizeOfFiles';
 import { Box, Button, Collapse, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
-import { useRef, useState, VFC } from 'react';
+import { useRef, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import { CustomFileList } from '@app/typings/files';
 import { FileRows } from '@app/Content/console/Upload/FileRows';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { ICollapsibleRow } from '@app/Components/RepoTable';
 
 const storageRef = firebase.storage().ref();
 
-type Props = { open: boolean };
-export const FileUploadRow: VFC<Props> = ({ open }) => {
+export const FileUploadRow: ICollapsibleRow = ({ open }) => {
     const { showAlert } = useGlobalUtils();
     const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
     const fileInput = useRef<HTMLInputElement>(null);

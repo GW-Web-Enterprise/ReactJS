@@ -1,4 +1,5 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
+import { ICollapsibleRow } from '@app/Components/RepoTable';
 import {
     Box,
     Collapse,
@@ -13,9 +14,8 @@ import {
     TableBody
 } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
-import { VFC } from 'react';
 
-export const ReviewRepoRow: VFC<{ open: boolean }> = ({ open }) => {
+export const ReviewRepoRow: ICollapsibleRow = ({ open }) => {
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
