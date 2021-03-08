@@ -6,15 +6,16 @@ import firebase from 'firebase/app';
 import 'firebase/storage';
 import { CustomFileList } from '@app/typings/files';
 import { FileRows } from '@app/Content/console/Upload/FileRows';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 
 const storageRef = firebase.storage().ref();
 
 type Props = { open: boolean };
 export const FileUploadRow: VFC<Props> = ({ open }) => {
+    const { showAlert } = useGlobalUtils();
     const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
     const fileInput = useRef<HTMLInputElement>(null);
     const [files, setFiles] = useState<CustomFileList>([]);
-    fileInput.current && (fileInput.current.value = ''); // clear the cache of file input when the 'files' state changes
     const handleLocalUpload = () => {
         // This function is invoked right after the user has uploaded at least one local file
         // File input is rendered so that the user can upload local files -> fileInput.current != null
@@ -26,6 +27,14 @@ export const FileUploadRow: VFC<Props> = ({ open }) => {
                 filenameMemo.current[name] = true;
                 validFiles.push({ name, size, type, lastModified, file: uploadedFiles[i] });
             }
+        }
+        fileInput.current!.value = ''; // clear the cache of file input after u have grabbed all the valid files from it
+        if (getSizeOfFiles([...files, ...validFiles])[1] > Math.pow(10, 7)) {
+            validFiles.forEach(({ name }) => delete filenameMemo.current[name]); // reset the filenameMemo to its original state on fail
+            return showAlert({
+                status: 'error',
+                message: 'Total file size is limited to 10 MB. Selected files cannot be uploaded'
+            });
         }
         validFiles.length && setFiles([...validFiles, ...files]);
     };
@@ -49,7 +58,7 @@ export const FileUploadRow: VFC<Props> = ({ open }) => {
                             Upload file
                         </Button>
                         <Typography variant="subtitle2" gutterBottom component="span" style={{ marginLeft: 8 }}>
-                            Total size of uploaded files: {getSizeOfFiles(files)}
+                            Total size of uploaded files: {getSizeOfFiles(files)[0]}
                         </Typography>
                         <input
                             type="file"
