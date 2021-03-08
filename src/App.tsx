@@ -2,7 +2,7 @@ import { Fragment, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import '@app/App.css';
-import { CircularProgress, CssBaseline } from '@material-ui/core';
+import { Backdrop, CircularProgress, CssBaseline } from '@material-ui/core';
 import { ProvideAuth } from '@app/hooks/useAuth';
 import DateFnsUtils from '@date-io/date-fns';
 import { ProvideGlobalUtils } from '@app/hooks/useGlobalUtils';
@@ -20,7 +20,13 @@ function App() {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <ProvideGlobalUtils>
                         <ProvideAuth>
-                            <Suspense fallback={<CircularProgress />}>
+                            <Suspense
+                                fallback={
+                                    <Backdrop open={true} style={{ zIndex: 1201, color: '#fff' }}>
+                                        <CircularProgress color="inherit" /> &nbsp; Loading content...
+                                    </Backdrop>
+                                }
+                            >
                                 <Switch>
                                     <Route exact path="/ap" render={() => <Redirect to="/ap/login" />} />
                                     <Route exact path="/console" render={() => <Redirect to="/console/overview" />} />
