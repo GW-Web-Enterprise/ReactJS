@@ -18,7 +18,9 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
     const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
     const fileInput = useRef<HTMLInputElement>(null);
     const [files, setFiles] = useState<CustomFileList>([]);
+    const [wait, setWait] = useState(false);
     const handleLocalUpload = async () => {
+        setWait(true);
         showLoading('Uploading files, please wait...');
         // This function is invoked right after the user has uploaded at least one local file
         // File input is rendered so that the user can upload local files -> fileInput.current != null
@@ -76,12 +78,14 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                 })
             )
         );
+        setWait(false);
         validFiles.length && setFiles([...validFiles, ...files]);
         showLoading('');
     };
     return (
         <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0, position: 'relative' }} colSpan={6}>
+                {wait && <div className="overlay" />}
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <Box margin={1}>
                         <Typography variant="h6" gutterBottom>
