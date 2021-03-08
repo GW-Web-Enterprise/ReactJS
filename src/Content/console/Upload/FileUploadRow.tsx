@@ -5,9 +5,9 @@ import { useRef, useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/storage';
 import { CustomFileList } from '@app/typings/files';
-import { FileRows } from '@app/Content/console/Upload/FileRows';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
+import { FileListRows } from '@app/Content/console/Upload/FileListRows';
 
 const storageRef = firebase.storage().ref();
 
@@ -81,7 +81,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open }) => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <FileRows filenameMemo={filenameMemo} files={files} setFiles={setFiles} />
+                                <FileListRows filenameMemo={filenameMemo} files={files} setFiles={setFiles} />
                             </TableBody>
                         </Table>
                     </Box>

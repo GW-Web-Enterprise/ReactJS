@@ -15,7 +15,7 @@ type IFileRowProps = {
     /** Change the FileList state of the parent */
     setFiles: Dispatch<SetStateAction<CustomFileList>>;
 };
-export const FileRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles }) => {
+export const FileListRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles }) => {
     const trackLastestEdit = useRef({
         filenameToEdit: '',
         fileIndexToRename: Number.NEGATIVE_INFINITY,
