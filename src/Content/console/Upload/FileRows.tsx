@@ -1,23 +1,9 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
+import { FileRenameDialog } from '@app/Content/console/Upload/FileRenameDialog';
 import { CustomFileList } from '@app/typings/files';
-import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    TableCell,
-    TableRow,
-    TextField
-} from '@material-ui/core';
+import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, TableCell, TableRow } from '@material-ui/core';
 import { Delete, Edit, GetApp, MoreVert } from '@material-ui/icons';
-import { Dispatch, Fragment, MutableRefObject, SetStateAction, useCallback, useRef, useState, VFC } from 'react';
+import { Dispatch, Fragment, MutableRefObject, SetStateAction, useRef, useState, VFC } from 'react';
 
 type IFileRowProps = {
     /** A cache of all the filenames of the parent */
@@ -30,21 +16,23 @@ type IFileRowProps = {
     setFiles: Dispatch<SetStateAction<CustomFileList>>;
 };
 export const FileRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles }) => {
-    const trackEdit = useRef({
-        fileToEdit: { name: '', fileIndexToRename: Number.NEGATIVE_INFINITY },
+    const trackLastestEdit = useRef({
+        filenameToEdit: '',
+        fileIndexToRename: Number.NEGATIVE_INFINITY,
         closePopover: () => {}
-    }); // never gets re-initilized on rerenders
+    }); // never gets re-initilized to default values on rerenders
     const [open, setOpen] = useState(false);
     if (!files.length) return null;
     const handleDialogClose = () => {
         setOpen(false);
-        trackEdit.current.closePopover();
+        trackLastestEdit.current.closePopover();
     };
-    const handleRename = (newName: string) => {
-        // FIXME: filenameMemo isn't modified on rename
-        const { fileIndexToRename } = trackEdit.current.fileToEdit;
+    const handleRename = (newName: string, oldName: string) => {
+        const { fileIndexToRename } = trackLastestEdit.current;
         const newFileList = files.slice();
         newFileList[fileIndexToRename].name = newName;
+        delete filenameMemo.current[oldName];
+        filenameMemo.current[newName] = true;
         setFiles(newFileList);
         handleDialogClose();
     };
@@ -54,10 +42,10 @@ export const FileRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles }) 
     };
     return (
         <Fragment>
-            <RenameFileDialog
+            <FileRenameDialog
                 open={open}
                 onClose={handleDialogClose}
-                filename={trackEdit.current.fileToEdit.name}
+                filename={trackLastestEdit.current.filenameToEdit}
                 onOkay={handleRename}
             />
             {files.map(({ name }, i) => {
@@ -93,9 +81,9 @@ export const FileRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles }) 
                                             <Box
                                                 display="flex"
                                                 onClick={() => {
-                                                    trackEdit.current.fileToEdit.name = name;
-                                                    trackEdit.current.fileToEdit.fileIndexToRename = i;
-                                                    trackEdit.current.closePopover = close;
+                                                    trackLastestEdit.current.filenameToEdit = name;
+                                                    trackLastestEdit.current.fileIndexToRename = i;
+                                                    trackLastestEdit.current.closePopover = close;
                                                     setOpen(true);
                                                 }}
                                                 px={2}
@@ -131,46 +119,5 @@ export const FileRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles }) 
                 );
             })}
         </Fragment>
-    );
-};
-
-type IRenameFileDialogProps = {
-    open: boolean;
-    onClose: () => void;
-    onOkay: (newName: string) => void;
-    filename: string;
-};
-const RenameFileDialog: VFC<IRenameFileDialogProps> = ({ open, onClose, filename, onOkay }) => {
-    const [node, setNode] = useState<HTMLInputElement | null>(null);
-    // This callback ref never gets re-initialized on re-render
-    const onRefChange = useCallback(
-        // Invoked with HTML DOM input element when the dialog is mounted
-        // and invoked with null when dialog is unmounted
-        (textInput: HTMLInputElement | null) => {
-            setNode(textInput); // lift the text input up so that the onClick handler of the 'Ok' btn can access it
-            textInput && textInput.setSelectionRange(0, filename.lastIndexOf('.'));
-        },
-        [filename]
-    );
-    return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
-            <DialogTitle id="form-dialog-title">Rename</DialogTitle>
-            <DialogContent>
-                <TextField
-                    name="name"
-                    margin="dense"
-                    autoFocus
-                    fullWidth
-                    inputRef={onRefChange}
-                    defaultValue={filename}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>Cancle</Button>
-                <Button variant="contained" color="primary" onClick={() => onOkay(node!.value)}>
-                    Ok
-                </Button>
-            </DialogActions>
-        </Dialog>
     );
 };
