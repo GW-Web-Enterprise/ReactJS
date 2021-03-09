@@ -64,6 +64,12 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                                         <strong>Filename</strong>
                                     </TableCell>
                                     <TableCell align="right">
+                                        <strong>Size</strong>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        <strong>Last Modified</strong>
+                                    </TableCell>
+                                    <TableCell align="right">
                                         <strong>Uploaded at</strong>
                                     </TableCell>
                                     <TableCell align="right"></TableCell>

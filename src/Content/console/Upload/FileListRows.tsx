@@ -1,6 +1,7 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
 import { FileRenameDialog } from '@app/Content/console/Upload/FileRenameDialog';
 import { CustomFileList } from '@app/typings/files';
+import { displayFileSize } from '@app/utils/displayFileSize';
 import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, TableCell, TableRow } from '@material-ui/core';
 import { Delete, Edit, GetApp, MoreVert } from '@material-ui/icons';
 import { Dispatch, Fragment, MutableRefObject, SetStateAction, useRef, useState, VFC } from 'react';
@@ -48,12 +49,14 @@ export const FileListRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles
                 filename={trackLastestEdit.current.filenameToEdit}
                 onOkay={handleRename}
             />
-            {files.map(({ name }, i) => {
+            {files.map(({ name, size, lastModified }, i) => {
                 return (
                     <TableRow key={i}>
                         <TableCell component="th" scope="row">
                             {name}
                         </TableCell>
+                        <TableCell align="right">{displayFileSize(size)}</TableCell>
+                        <TableCell align="right">{new Date(lastModified).toLocaleString()}</TableCell>
                         <TableCell align="right">{new Date().toLocaleString()}</TableCell>
                         <TableCell>
                             <PopoverItem
