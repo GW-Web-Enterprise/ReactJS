@@ -12,86 +12,17 @@ import {
     Typography
 } from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
-import { useRef, useState } from 'react';
-import firebase from 'firebase/app';
-import { CustomFileList } from '@app/typings/files';
-import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { useRef } from 'react';
 import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
 import { FileListRows } from '@app/Content/console/Upload/FileListRows';
-import { useAuth } from '@app/hooks/useAuth';
 import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
-
-const reposRef = firebase.firestore().collection('repos');
-const storageRef = firebase.storage().ref();
+import { useFileUpload } from '@app/hooks/useFileUpload';
 
 export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) => {
-    const { currentUser } = useAuth();
-    const { showAlert } = useGlobalUtils();
-    const filenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
     const fileInput = useRef<HTMLInputElement>(null);
-    const [files, setFiles] = useState<CustomFileList>([]);
-    const [wait, setWait] = useState(false);
-    const handleLocalUpload = async () => {
-        setWait(true);
-        // This function is invoked right after the user has uploaded at least one local file
-        // File input is rendered so that the user can upload local files -> fileInput.current != null
-        const validFiles: CustomFileList = [];
-        const uploadedFiles = fileInput.current!.files!;
-        for (let i = 0; i < uploadedFiles.length; i++) {
-            const { name, type, size, lastModified } = uploadedFiles[i];
-            if (!filenameMemo.current[name]) {
-                filenameMemo.current[name] = true;
-                validFiles.push({ name, size, type, lastModified, file: uploadedFiles[i] });
-            }
-        }
-        fileInput.current!.value = ''; // clear the cache of file input after u have grabbed all the valid files from it
-        if (getSizeOfFiles([...files, ...validFiles])[1] > Math.pow(10, 7)) {
-            validFiles.forEach(({ name }) => delete filenameMemo.current[name]); // reset the filenameMemo to its original state on fail
-            return showAlert({
-                status: 'error',
-                message: 'Total file size is limited to 10 MB. Selected files cannot be uploaded'
-            });
-        }
-        // 📌 Total file sizes from client <= 10MB, now let's upload files in parallel to the Cloud Storage
-        const pathToDropbox = `faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`;
-        const dropboxStorageRef = storageRef.child(pathToDropbox);
-        await Promise.all(validFiles.map(({ name, file }) => dropboxStorageRef.child(name).put(file)));
-
-        // 📌 Add file docs in parallel to the dropbox doc
-        const dropboxesDbRef = reposRef.doc(repoId).collection('dropboxes');
-        // First find the dropbox of this user in the faculty's repo. If no dropbox is found, add one.
-        const querySnapshot = await dropboxesDbRef.where('ownerId', '==', currentUser!.uid).get();
-        const dropboxId = querySnapshot.empty
-            ? (
-                  await dropboxesDbRef.add({
-                      facultyId,
-                      repoId,
-                      status: 'pending',
-                      ownerId: currentUser!.uid,
-                      ownerName: currentUser!.displayName,
-                      ownerEmail: currentUser!.email,
-                      created_at: firebase.firestore.FieldValue.serverTimestamp()
-                  })
-              ).id
-            : querySnapshot.docs[0].id;
-        // then add the uploaded files to this dropbox...
-        const filesDbRef = dropboxesDbRef.doc(dropboxId).collection('files');
-        await Promise.all(
-            validFiles.map(({ name, size, lastModified }) =>
-                filesDbRef.add({
-                    name,
-                    size,
-                    facultyId,
-                    repoId,
-                    dropboxId,
-                    ownerId: currentUser!.uid,
-                    lastModified: firebase.firestore.Timestamp.fromDate(new Date(lastModified))
-                })
-            )
-        );
-        setWait(false);
-        validFiles.length && setFiles([...validFiles, ...files]);
-    };
+    const [files, setFiles, setRawFileList, filenameMemo, wait] = useFileUpload(fileInput, facultyId, repoId);
+    // This function is invoked right after the user has uploaded at least one local file
+    const handleLocalUpload = async () => setRawFileList(fileInput.current!.files!); // File input is mounted so that the user can upload local files -> fileInput.current != null
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0, position: 'relative' }} colSpan={6}>
