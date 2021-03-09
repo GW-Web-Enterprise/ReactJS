@@ -1,7 +1,7 @@
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { CustomFileList } from '@app/typings/files';
 import { getSizeOfFiles } from '@app/utils/getSizeOfFiles';
-import { Dispatch, MutableRefObject, RefObject, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, MutableRefObject, RefObject, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 import firebase from 'firebase/app';
 import { useAuth } from '@app/hooks/useAuth';
 import { FilesDb } from '@app/typings/schemas';
@@ -24,13 +24,14 @@ export const useFileUpload = (
     const [wait, setWait] = useState(false);
     const { showAlert } = useGlobalUtils();
     const { currentUser } = useAuth();
-    useEffect(() => {
+
+    const handleLocalUpload = useCallback(async () => {
         if (!rawFileList) return;
         setWait(true);
         const validFiles = extractValidFiles(rawFileList, filenameMemo);
         fileInput.current!.value = ''; // clear the cache of the file input after all valid files have been grabbed from it
 
-        if (getSizeOfFiles([...files, ...validFiles])[1] > Math.pow(10, 7)) {
+        if (getSizeOfFiles([...files, ...validFiles])[1] > Math.pow(10, 9)) {
             validFiles.forEach(({ name }) => delete filenameMemo.current[name]); // reset the filenameMemo to its original state on fail
             showAlert({
                 status: 'error',
@@ -38,12 +39,17 @@ export const useFileUpload = (
             });
             return setWait(false);
         }
-        uploadToCloudStorage(facultyId, repoId, validFiles, currentUser!);
-        addFileDocsToDb(facultyId, repoId, validFiles, currentUser!);
-
+        if (validFiles.length) {
+            await uploadToCloudStorage(facultyId, repoId, validFiles, currentUser!);
+            await addFileDocsToDb(facultyId, repoId, validFiles, currentUser!);
+            setFiles([...validFiles, ...files]);
+        }
         setWait(false);
-        validFiles.length && setFiles([...validFiles, ...files]);
-    }, [rawFileList]); // Invoked every time new raw files are uploaded by the user
+    }, [rawFileList]); // Re-initilized with a new function object reference every time new raw files are uploaded by the user
+
+    useEffect(() => {
+        handleLocalUpload();
+    }, [handleLocalUpload]);
     return [files, setFiles, setRawFileList, filenameMemo, wait] as const;
 };
 
@@ -60,7 +66,7 @@ function extractValidFiles(rawFileList: FileList, filenameMemo: FilenameMemo) {
     return validFiles;
 }
 
-async function uploadToCloudStorage(
+function uploadToCloudStorage(
     facultyId: string,
     repoId: string,
     validFiles: CustomFileList,
@@ -68,7 +74,7 @@ async function uploadToCloudStorage(
 ) {
     const storageRef = firebase.storage().ref();
     const dropboxRef = storageRef.child(`faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser.uid}`);
-    return await Promise.all(validFiles.map(({ name, file }) => dropboxRef.child(name).put(file)));
+    return Promise.all(validFiles.map(({ name, file }) => dropboxRef.child(name).put(file)));
 }
 
 async function addFileDocsToDb(
@@ -103,5 +109,5 @@ async function addFileDocsToDb(
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date(lastModified))
             })
     );
-    return await dropboxesRef.doc(dropboxId).set({ files: files }, { merge: true });
+    return dropboxesRef.doc(dropboxId).set({ files: files }, { merge: true });
 }
