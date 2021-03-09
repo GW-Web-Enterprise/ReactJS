@@ -21,8 +21,6 @@ import { useFileUpload } from '@app/hooks/useFileUpload';
 export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) => {
     const fileInput = useRef<HTMLInputElement>(null);
     const [files, setFiles, setRawFileList, filenameMemo, wait] = useFileUpload(fileInput, facultyId, repoId);
-    // This function is invoked right after the user has uploaded at least one local file
-    const handleLocalUpload = async () => setRawFileList(fileInput.current!.files!); // File input is mounted so that the user can upload local files -> fileInput.current != null
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0, position: 'relative' }} colSpan={6}>
@@ -56,7 +54,8 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                             ref={fileInput}
                             accept="image/*, video/*, .pdf, .docx, .xlsx, .pptx, .txt, .zip , .zipx"
                             style={{ display: 'none' }}
-                            onChange={handleLocalUpload}
+                            // Invoke this when user has uploaded at least one file...
+                            onChange={() => setRawFileList(fileInput.current!.files!)}
                         />
                         <Table size="small">
                             <TableHead>

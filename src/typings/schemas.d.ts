@@ -17,3 +17,10 @@ export type RepoDbRead = {
 };
 
 export type RepoDbSave = Omit<RepoDbRead, 'id'>;
+
+export type FilesDb = {
+    [name: string]: {
+        size: number;
+        lastModified: firebase.default.firestore.Timestamp;
+    };
+};

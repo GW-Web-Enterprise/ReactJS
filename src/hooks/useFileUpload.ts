@@ -4,6 +4,7 @@ import { getSizeOfFiles } from '@app/utils/getSizeOfFiles';
 import { Dispatch, MutableRefObject, RefObject, SetStateAction, useEffect, useRef, useState } from 'react';
 import firebase from 'firebase/app';
 import { useAuth } from '@app/hooks/useAuth';
+import { FilesDb } from '@app/typings/schemas';
 
 type FilenameMemo = MutableRefObject<{
     [key: string]: boolean;
@@ -93,19 +94,14 @@ async function addFileDocsToDb(
               })
           ).id
         : querySnapshot.docs[0].id;
-    // then add the uploaded files to this dropbox...
-    const filesRef = dropboxesRef.doc(dropboxId).collection('files');
-    return await Promise.all(
-        validFiles.map(({ name, size, lastModified }) =>
-            filesRef.add({
-                name,
+    // then add a small list of uploaded files straight to this dropbox for easy reading
+    const files: FilesDb = {};
+    validFiles.forEach(
+        ({ name, size, lastModified }) =>
+            (files[name] = {
                 size,
-                facultyId,
-                repoId,
-                dropboxId,
-                ownerId: currentUser.uid,
                 lastModified: firebase.firestore.Timestamp.fromDate(new Date(lastModified))
             })
-        )
     );
+    return await dropboxesRef.doc(dropboxId).set({ files: files }, { merge: true });
 }
