@@ -31,7 +31,7 @@ export const useFileUpload = (
         const validFiles = extractValidFiles(rawFileList, filenameMemo);
         fileInput.current!.value = ''; // clear the cache of the file input after all valid files have been grabbed from it
 
-        if (getSizeOfFiles([...files, ...validFiles])[1] > Math.pow(10, 9)) {
+        if (getSizeOfFiles([...files, ...validFiles])[1] > Math.pow(10, 7)) {
             validFiles.forEach(({ name }) => delete filenameMemo.current[name]); // reset the filenameMemo to its original state on fail
             showAlert({
                 status: 'error',
