@@ -49,14 +49,14 @@ export const FileListRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles
                 filename={trackLastestEdit.current.filenameToEdit}
                 onOkay={handleRename}
             />
-            {files.map(({ name, size, lastModified }, i) => {
+            {files.map(({ name, size, updated }, i) => {
                 return (
                     <TableRow key={i}>
                         <TableCell component="th" scope="row">
                             {name}
                         </TableCell>
                         <TableCell align="right">{displayFileSize(size)}</TableCell>
-                        <TableCell align="right">{new Date(lastModified).toLocaleString()}</TableCell>
+                        <TableCell align="right">{new Date(updated).toLocaleString()}</TableCell>
                         <TableCell align="right">{new Date().toLocaleString()}</TableCell>
                         <TableCell>
                             <PopoverItem
