@@ -17,3 +17,15 @@ export type RepoDbRead = {
 };
 
 export type RepoDbSave = Omit<RepoDbRead, 'id'>;
+
+export type DropboxDb = {
+    id: string;
+    facultyId: string;
+    repoId: string;
+    status: 'pending' | 'approved' | 'rejected';
+    size: 0;
+    ownerId: string;
+    ownerName: string;
+    ownerEmail: string;
+    created_at: firebase.default.firestore.Timestamp;
+};
