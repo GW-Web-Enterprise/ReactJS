@@ -1,9 +1,9 @@
+import { useAuth } from '@app/hooks/useAuth';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { CustomFileList } from '@app/typings/files';
-import { getSizeOfFiles } from '@app/utils/getSizeOfFiles';
-import { Dispatch, MutableRefObject, RefObject, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
+import { getFileListSize } from '@app/utils/getFileListSize';
 import firebase from 'firebase/app';
-import { useAuth } from '@app/hooks/useAuth';
+import { Dispatch, MutableRefObject, RefObject, SetStateAction, useCallback, useEffect, useRef, useState } from 'react';
 
 type FilenameMemo = MutableRefObject<{
     [key: string]: boolean;
@@ -30,7 +30,7 @@ export const useFileUpload = (
         const validFiles = extractValidFiles(rawFileList, filenameMemo);
         fileInput.current!.value = ''; // clear the cache of the file input after all valid files have been grabbed from it
 
-        if (getSizeOfFiles([...files, ...validFiles])[1] > Math.pow(10, 7)) {
+        if (getFileListSize([...files, ...validFiles])[1] > Math.pow(10, 7)) {
             validFiles.forEach(({ name }) => delete filenameMemo.current[name]); // reset the filenameMemo to its original state on fail
             showAlert({
                 status: 'error',
@@ -92,6 +92,7 @@ async function addFileDocsToDb(
                   facultyId,
                   repoId,
                   status: 'pending',
+                  totalSize: 0,
                   ownerId: currentUser.uid,
                   ownerName: currentUser.displayName,
                   ownerEmail: currentUser.email,
@@ -99,11 +100,7 @@ async function addFileDocsToDb(
               })
           ).id
         : querySnapshot.docs[0].id;
-    // then add a small list of uploaded files straight to this dropbox for easy reading
+    // update the total size of this dropbox
     const dropboxDocRef = dropboxesRef.doc(dropboxId);
-    return Promise.all(
-        validFiles.map(({ name }) =>
-            dropboxDocRef.update({ filenames: firebase.firestore.FieldValue.arrayUnion(name) })
-        )
-    );
+    return dropboxDocRef.update({ totalSize: firebase.firestore.FieldValue.increment(getFileListSize(validFiles)[1]) });
 }
