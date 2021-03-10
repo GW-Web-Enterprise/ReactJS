@@ -102,6 +102,8 @@ async function addFileDocsToDb(
     // then add a small list of uploaded files straight to this dropbox for easy reading
     const dropboxDocRef = dropboxesRef.doc(dropboxId);
     return Promise.all(
-        validFiles.map(({ name }) => dropboxDocRef.update({ files: firebase.firestore.FieldValue.arrayUnion(name) }))
+        validFiles.map(({ name }) =>
+            dropboxDocRef.update({ filenames: firebase.firestore.FieldValue.arrayUnion(name) })
+        )
     );
 }
