@@ -30,7 +30,8 @@ export const useFileUpload = (
         const validFiles = extractValidFiles(rawFileList, filenameMemo);
         fileInput.current!.value = ''; // clear the cache of the file input after all valid files have been grabbed from it
 
-        if (getFileListSize([...files, ...validFiles])[1] > Math.pow(10, 7)) {
+        // TODO guarantee dropbox size never exceeds 10 MB
+        if (getFileListSize([...validFiles])[1] > Math.pow(10, 7)) {
             validFiles.forEach(({ name }) => delete filenameMemo.current[name]); // reset the filenameMemo to its original state on fail
             showAlert({
                 status: 'error',
@@ -39,9 +40,10 @@ export const useFileUpload = (
             return setWait(false);
         }
         if (validFiles.length) {
-            await uploadToCloudStorage(facultyId, repoId, validFiles, currentUser!);
-            await addFileDocsToDb(facultyId, repoId, validFiles, currentUser!);
-            setFiles([...validFiles, ...files]);
+            const uploadTasks = await uploadToCloudStorage(facultyId, repoId, validFiles, currentUser!);
+            const uploadedFiles = uploadTasks.map(({ metadata }) => metadata);
+            await updateDropboxSize(repoId, uploadedFiles, currentUser!);
+            setFiles([...uploadedFiles, ...files]);
         }
         setWait(false);
     }, [rawFileList]); // Re-initilized with a new function object reference every time new raw files are uploaded by the user
@@ -53,54 +55,31 @@ export const useFileUpload = (
 };
 
 function extractValidFiles(rawFileList: FileList, filenameMemo: FilenameMemo) {
-    const validFiles: CustomFileList = [];
-    for (let i = 0; i < rawFileList.length; i++) {
-        const { name, type, size, lastModified } = rawFileList[i];
+    const validFiles: Array<File> = [];
+    [...rawFileList].forEach(file => {
+        const { name } = file;
         if (!filenameMemo.current[name]) {
             // Only select the the files whose names do not exist in the current list of files => Avoid files with duplicate names
             filenameMemo.current[name] = true;
-            validFiles.push({ name, size, type, lastModified, file: rawFileList[i] });
+            validFiles.push(file);
         }
-    }
+    });
     return validFiles;
 }
 
-function uploadToCloudStorage(
-    facultyId: string,
-    repoId: string,
-    validFiles: CustomFileList,
-    currentUser: firebase.User
-) {
+function uploadToCloudStorage(facultyId: string, repoId: string, validFiles: File[], currentUser: firebase.User) {
     const storageRef = firebase.storage().ref();
     const dropboxRef = storageRef.child(`faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser.uid}`);
-    return Promise.all(validFiles.map(({ name, file }) => dropboxRef.child(name).put(file)));
+    return Promise.all(validFiles.map(file => dropboxRef.child(file.name).put(file)));
 }
 
-async function addFileDocsToDb(
-    facultyId: string,
-    repoId: string,
-    validFiles: CustomFileList,
-    currentUser: firebase.User
-) {
-    const reposRef = firebase.firestore().collection('repos');
-    const dropboxesRef = reposRef.doc(repoId).collection('dropboxes');
-    // First find the dropbox of this user in the faculty's repo. If no dropbox is found, add one for them.
-    const querySnapshot = await dropboxesRef.where('ownerId', '==', currentUser.uid).get();
-    const dropboxId = querySnapshot.empty
-        ? (
-              await dropboxesRef.add({
-                  facultyId,
-                  repoId,
-                  status: 'pending',
-                  totalSize: 0,
-                  ownerId: currentUser.uid,
-                  ownerName: currentUser.displayName,
-                  ownerEmail: currentUser.email,
-                  created_at: firebase.firestore.FieldValue.serverTimestamp()
-              })
-          ).id
-        : querySnapshot.docs[0].id;
-    // update the total size of this dropbox
-    const dropboxDocRef = dropboxesRef.doc(dropboxId);
-    return dropboxDocRef.update({ totalSize: firebase.firestore.FieldValue.increment(getFileListSize(validFiles)[1]) });
+async function updateDropboxSize(repoId: string, uploadedFiles: CustomFileList, currentUser: firebase.User) {
+    const db = firebase.firestore();
+    const dropboxesRef = db.collection('repos').doc(repoId).collection('dropboxes');
+    // Read first, then upload later. If student does not have a dropbox yet, one will be created for them on read
+    const querySnapshot = await dropboxesRef.where('ownerId', '==', currentUser!.uid).get();
+    const dropboxId = querySnapshot.docs[0].id;
+    return dropboxesRef
+        .doc(dropboxId)
+        .update({ size: firebase.firestore.FieldValue.increment(getFileListSize(uploadedFiles)[1]) });
 }

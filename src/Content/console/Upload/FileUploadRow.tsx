@@ -1,4 +1,10 @@
-import { getSizeOfFiles } from '@app/utils/getSizeOfFiles';
+import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
+import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
+import { FileListRows } from '@app/Content/console/Upload/FileListRows';
+import { useAuth } from '@app/hooks/useAuth';
+import { useFileUpload } from '@app/hooks/useFileUpload';
+import { CustomFileList } from '@app/typings/files';
+import { getFileListSize } from '@app/utils/getFileListSize';
 import {
     Box,
     Button,
@@ -12,15 +18,46 @@ import {
     Typography
 } from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
-import { useRef } from 'react';
-import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
-import { FileListRows } from '@app/Content/console/Upload/FileListRows';
-import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
-import { useFileUpload } from '@app/hooks/useFileUpload';
+import firebase from 'firebase/app';
+import { useCallback, useEffect, useRef } from 'react';
 
+const storageRef = firebase.storage();
+const db = firebase.firestore();
 export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) => {
     const fileInput = useRef<HTMLInputElement>(null);
+    const { currentUser } = useAuth();
     const [files, setFiles, setRawFileList, filenameMemo, wait] = useFileUpload(fileInput, facultyId, repoId);
+    const fetchFiles = useCallback(async () => {
+        const dropboxesRef = db.collection('repos').doc(repoId).collection('dropboxes');
+        // First find the dropbox for the logged-in user in the faculty's repo...
+        const querySnapshot = await dropboxesRef.where('ownerId', '==', currentUser!.uid).get();
+        // if no dropbox for the current user is found, create one for them (create on-demand)
+        if (querySnapshot.empty) {
+            await dropboxesRef.add({
+                facultyId,
+                repoId,
+                status: 'pending',
+                size: 0,
+                ownerId: currentUser!.uid,
+                ownerName: currentUser!.displayName,
+                ownerEmail: currentUser!.email,
+                created_at: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            // No dropbox -> no file -> terminate here
+            return setFiles([]);
+        }
+        // Now we know for sure that the current user already has a dropbox...
+        const pathToDropboxFiles = `faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`;
+        const items = (await storageRef.ref(pathToDropboxFiles).listAll()).items;
+        const tempFiles = (await Promise.all(items.map(item => item.getMetadata()))) as CustomFileList;
+        tempFiles.forEach(({ name }) => (filenameMemo.current[name] = true));
+        setFiles(tempFiles);
+    }, []);
+
+    useEffect(() => {
+        fetchFiles();
+    }, [fetchFiles]);
+
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0, position: 'relative' }} colSpan={6}>
@@ -46,7 +83,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                             Upload file
                         </Button>
                         <Typography variant="subtitle2" gutterBottom component="span" style={{ marginLeft: 8 }}>
-                            Total size of uploaded files: {getSizeOfFiles(files)[0]}
+                            Total size of uploaded files: {getFileListSize(files)[0]}
                         </Typography>
                         <input
                             type="file"
