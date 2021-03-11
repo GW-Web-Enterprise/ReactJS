@@ -2,12 +2,22 @@ import { PopoverItem } from '@app/Components/PopoverItem';
 import { FileRenameDialog } from '@app/Content/console/Upload/FileRenameDialog';
 import { CustomFileList } from '@app/typings/files';
 import { displayFileSize } from '@app/utils/displayFileSize';
-import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, TableCell, TableRow } from '@material-ui/core';
+import {
+    CircularProgress,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    TableCell,
+    TableRow
+} from '@material-ui/core';
 import { Delete, Edit, GetApp, MoreVert } from '@material-ui/icons';
-import { Dispatch, Fragment, MutableRefObject, SetStateAction, useRef, useState, VFC } from 'react';
+import { Dispatch, Fragment, MutableRefObject, SetStateAction, useEffect, useRef, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import { useAuth } from '@app/hooks/useAuth';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
 
 type FileListRowsProps = {
     facultyId: string;
@@ -23,13 +33,27 @@ type FileListRowsProps = {
 };
 export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filenameMemo, files, setFiles }) => {
     const { currentUser } = useAuth();
+    const { showAlert } = useGlobalUtils();
     const trackLastestEdit = useRef({
         filenameToEdit: '',
         fileIndexToRename: Number.NEGATIVE_INFINITY,
         closePopover: () => {}
     }); // never gets re-initilized to default values on rerenders
+    const dropbox = useRef(firebase.storage().ref(`faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`));
+    const [downloadUrls, setDownloadUrls] = useState<Array<string>>([]);
     const [open, setOpen] = useState(false);
-    const { showAlert } = useGlobalUtils();
+    useEffect(() => {
+        let ignore = false;
+        (async function () {
+            const urls: Array<string> = await Promise.all(
+                files.map(({ name }) => dropbox.current.child(name).getDownloadURL())
+            );
+            if (!ignore) setDownloadUrls(urls);
+        })();
+        return () => {
+            ignore = true;
+        };
+    }, [files]);
     if (!files.length) return null;
     const handleDialogClose = () => {
         setOpen(false);
@@ -47,8 +71,7 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
     const handleDelete = async (indexToDelete: number) => {
         const { name } = files[indexToDelete];
         delete filenameMemo.current[name];
-        const pathToDropbox = `faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`;
-        await firebase.storage().ref(pathToDropbox).child(name).delete();
+        await dropbox.current.child(name).delete();
         showAlert({ status: 'success', message: `'${name}' has been deleted successfully` });
         setFiles(files.filter((_file, index) => index !== indexToDelete));
     };
@@ -60,7 +83,7 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
                 filename={trackLastestEdit.current.filenameToEdit}
                 onOkay={handleRename}
             />
-            {files.map(({ name, size, updated, timeCreated }, i) => {
+            {files.map(({ name, size, updated, timeCreated }, index) => {
                 return (
                     <TableRow key={name}>
                         <TableCell component="th" scope="row">
@@ -85,45 +108,50 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
                                 )}
                                 renderPopContent={close => (
                                     <List component="nav" dense>
-                                        <ListItem button component="a">
+                                        <ListItem
+                                            button
+                                            component="a"
+                                            href={downloadUrls[index]}
+                                            target="_blank"
+                                            onClick={() => {
+                                                downloadUrls[index] && close();
+                                            }}
+                                        >
+                                            {!downloadUrls[index] && (
+                                                <LimitedBackdrop open={true}>
+                                                    <CircularProgress /> &nbsp; <strong>Hang on...</strong>
+                                                </LimitedBackdrop>
+                                            )}
                                             <ListItemIcon>
                                                 <GetApp />
                                             </ListItemIcon>
                                             <ListItemText primary="Download" />
                                         </ListItem>
-                                        <ListItem button style={{ padding: 0 }}>
-                                            <Box
-                                                display="flex"
-                                                onClick={() => {
-                                                    trackLastestEdit.current.filenameToEdit = name;
-                                                    trackLastestEdit.current.fileIndexToRename = i;
-                                                    trackLastestEdit.current.closePopover = close;
-                                                    setOpen(true);
-                                                }}
-                                                px={2}
-                                                py={0.5}
-                                            >
-                                                <ListItemIcon>
-                                                    <Edit />
-                                                </ListItemIcon>
-                                                <ListItemText primary="Rename" />
-                                            </Box>
+                                        <ListItem
+                                            button
+                                            onClick={() => {
+                                                trackLastestEdit.current.filenameToEdit = name;
+                                                trackLastestEdit.current.fileIndexToRename = index;
+                                                trackLastestEdit.current.closePopover = close;
+                                                setOpen(true);
+                                            }}
+                                        >
+                                            <ListItemIcon>
+                                                <Edit />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Rename" />
                                         </ListItem>
-                                        <ListItem button style={{ padding: 0 }}>
-                                            <Box
-                                                display="flex"
-                                                onClick={() => {
-                                                    close();
-                                                    handleDelete(i);
-                                                }}
-                                                px={2}
-                                                py={0.5}
-                                            >
-                                                <ListItemIcon>
-                                                    <Delete />
-                                                </ListItemIcon>
-                                                <ListItemText primary="Delete" />
-                                            </Box>
+                                        <ListItem
+                                            button
+                                            onClick={() => {
+                                                close();
+                                                handleDelete(index);
+                                            }}
+                                        >
+                                            <ListItemIcon>
+                                                <Delete />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Delete" />
                                         </ListItem>
                                     </List>
                                 )}

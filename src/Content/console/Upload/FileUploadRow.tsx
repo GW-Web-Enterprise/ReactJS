@@ -84,7 +84,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                             Upload file
                         </Button>
                         <Typography variant="subtitle2" gutterBottom component="span" style={{ marginLeft: 8 }}>
-                            Total size of uploaded files: {getFileListSize(files)[0]}
+                            Total size of uploaded files: {getFileListSize(files)[0]} (limited to 10 MB)
                         </Typography>
                         <input
                             type="file"
