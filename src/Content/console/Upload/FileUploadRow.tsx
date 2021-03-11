@@ -26,8 +26,9 @@ const db = firebase.firestore();
 export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) => {
     const fileInput = useRef<HTMLInputElement>(null);
     const { currentUser } = useAuth();
-    const [files, setFiles, setRawFileList, filenameMemo, wait] = useFileUpload(fileInput, facultyId, repoId);
+    const [files, setFiles, setRawFileList, filenameMemo, wait, setWait] = useFileUpload(fileInput, facultyId, repoId);
     const fetchFiles = useCallback(async () => {
+        setWait('Loading files, please wait...');
         const dropboxesRef = db.collection('repos').doc(repoId).collection('dropboxes');
         // First find the dropbox for the logged-in user in the faculty's repo...
         const querySnapshot = await dropboxesRef.where('ownerId', '==', currentUser!.uid).get();
@@ -51,6 +52,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
         const items = (await storageRef.ref(pathToDropboxFiles).listAll()).items;
         const tempFiles = (await Promise.all(items.map(item => item.getMetadata()))) as CustomFileList;
         tempFiles.forEach(({ name }) => (filenameMemo.current[name] = true));
+        setWait('');
         setFiles(tempFiles);
     }, []);
 
@@ -61,9 +63,10 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0, position: 'relative' }} colSpan={6}>
-                {wait && (
+                {/* Freeze the upload section during intial load */}
+                {!!wait && (
                     <LimitedBackdrop open={true}>
-                        <CircularProgress /> &nbsp; Uploading files, please wait...
+                        <CircularProgress /> &nbsp; <strong>{wait}</strong>
                     </LimitedBackdrop>
                 )}
                 <Collapse in={open} timeout="auto" unmountOnExit>

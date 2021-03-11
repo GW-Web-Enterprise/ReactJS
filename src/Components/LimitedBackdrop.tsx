@@ -7,7 +7,7 @@ export const LimitedBackdrop = withStyles({
         top: 0,
         left: 0,
         background: '#dcdcdc',
-        opacity: '0.5 !important',
+        opacity: '0.9 !important',
         cursor: 'wait',
         width: '100%',
         height: '100%',

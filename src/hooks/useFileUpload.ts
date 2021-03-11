@@ -11,6 +11,7 @@ type FilenameMemo = MutableRefObject<{
 // rawFileList in the file input's cache might contain invalid local files, the 'files' state only stores the valid ones
 type SetRawFileList = Dispatch<SetStateAction<FileList>>;
 type SetValidFiles = Dispatch<SetStateAction<CustomFileList>>;
+type SetWaitMsg = Dispatch<SetStateAction<string>>;
 export const useFileUpload = (
     fileInput: RefObject<HTMLInputElement>,
     facultyId: string,
@@ -20,13 +21,13 @@ export const useFileUpload = (
     const filenameMemo: FilenameMemo = useRef<{ [key: string]: boolean }>({}); // memoize the filenames of the uploaded files
     const [rawFileList, setRawFileList] = useState<FileList>() as [FileList, SetRawFileList];
     const [files, setFiles] = useState<CustomFileList>(initialFiles) as [CustomFileList, SetValidFiles];
-    const [wait, setWait] = useState(false);
+    const [wait, setWait] = useState('') as [string, SetWaitMsg];
     const { showAlert } = useGlobalUtils();
     const { currentUser } = useAuth();
 
     const handleLocalUpload = useCallback(async () => {
         if (!rawFileList) return;
-        setWait(true);
+        setWait('Uploading files, please wait...');
         const validFiles = extractValidFiles(rawFileList, filenameMemo);
         fileInput.current!.value = ''; // clear the cache of the file input after all valid files have been grabbed from it
 
@@ -37,7 +38,7 @@ export const useFileUpload = (
                 status: 'error',
                 message: 'Total file size is limited to 10 MB. Selected files cannot be uploaded'
             });
-            return setWait(false);
+            return setWait('');
         }
         if (validFiles.length) {
             const uploadTasks = await uploadToCloudStorage(facultyId, repoId, validFiles, currentUser!);
@@ -45,13 +46,13 @@ export const useFileUpload = (
             await updateDropboxSize(repoId, uploadedFiles, currentUser!);
             setFiles([...uploadedFiles, ...files]);
         }
-        setWait(false);
+        setWait('');
     }, [rawFileList]); // Re-initilized with a new function object reference every time new raw files are uploaded by the user
 
     useEffect(() => {
         handleLocalUpload();
     }, [handleLocalUpload]);
-    return [files, setFiles, setRawFileList, filenameMemo, wait] as const;
+    return [files, setFiles, setRawFileList, filenameMemo, wait, setWait] as const;
 };
 
 function extractValidFiles(rawFileList: FileList, filenameMemo: FilenameMemo) {
