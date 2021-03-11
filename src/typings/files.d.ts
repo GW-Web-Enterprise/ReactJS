@@ -1,5 +1,5 @@
 /** These are the only file's metadata that we care about */
-type FileMetaData = {
+export type FileMetaData = {
     name: string;
     size: number;
     /** In ISO 8601 format */

@@ -31,8 +31,7 @@ export const useFileUpload = (
         const validFiles = extractValidFiles(rawFileList, filenameMemo);
         fileInput.current!.value = ''; // clear the cache of the file input after all valid files have been grabbed from it
 
-        // TODO guarantee dropbox size never exceeds 10 MB
-        if (getFileListSize([...validFiles])[1] > Math.pow(10, 7)) {
+        if (getFileListSize([...validFiles, ...files])[1] > Math.pow(10, 7)) {
             validFiles.forEach(({ name }) => delete filenameMemo.current[name]); // reset the filenameMemo to its original state on fail
             showAlert({
                 status: 'error',

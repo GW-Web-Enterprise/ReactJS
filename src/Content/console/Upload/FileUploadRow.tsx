@@ -44,6 +44,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                 ownerEmail: currentUser!.email,
                 created_at: firebase.firestore.FieldValue.serverTimestamp()
             });
+            setWait('');
             // No dropbox -> no file -> terminate here
             return setFiles([]);
         }
@@ -81,7 +82,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                             variant="contained"
                             size="small"
                             startIcon={<CloudUpload />}
-                            onClick={() => fileInput.current?.click()}
+                            onClick={() => fileInput.current!.click()}
                         >
                             Upload file
                         </Button>
