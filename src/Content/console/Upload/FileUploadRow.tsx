@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
 import firebase from 'firebase/app';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const storageRef = firebase.storage();
 const db = firebase.firestore();
@@ -27,39 +27,37 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
     const fileInput = useRef<HTMLInputElement>(null);
     const { currentUser } = useAuth();
     const [files, setFiles, setRawFileList, filenameMemo, wait, setWait] = useFileUpload(fileInput, facultyId, repoId);
-    const fetchFiles = useCallback(async () => {
-        setWait('Loading files, please wait...');
-        const dropboxesRef = db.collection('repos').doc(repoId).collection('dropboxes');
-        // First find the dropbox for the logged-in user in the faculty's repo...
-        const querySnapshot = await dropboxesRef.where('ownerId', '==', currentUser!.uid).get();
-        // if no dropbox for the current user is found, create one for them (create on-demand)
-        if (querySnapshot.empty) {
-            await dropboxesRef.add({
-                facultyId,
-                repoId,
-                status: 'pending',
-                size: 0,
-                ownerId: currentUser!.uid,
-                ownerName: currentUser!.displayName,
-                ownerEmail: currentUser!.email,
-                created_at: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            setWait('');
-            // No dropbox -> no file -> terminate here
-            return setFiles([]);
-        }
-        // Now we know for sure that the current user already has a dropbox...
-        const pathToDropbox = `faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`;
-        const items = (await storageRef.ref(pathToDropbox).listAll()).items;
-        const tempFiles = (await Promise.all(items.map(item => item.getMetadata()))) as CustomFileList;
-        tempFiles.forEach(({ name }) => (filenameMemo.current[name] = true));
-        setWait('');
-        setFiles(tempFiles);
-    }, []);
-
     useEffect(() => {
-        fetchFiles();
-    }, [fetchFiles]);
+        const dropboxesRef = db.collection('repos').doc(repoId).collection('dropboxes');
+        (async function () {
+            setWait('Loading files, please wait...');
+            // First find the dropbox for the logged-in user in the faculty's repo...
+            const querySnapshot = await dropboxesRef.where('ownerId', '==', currentUser!.uid).get();
+            // if no dropbox for the current user is found, create one for them (create on-demand)
+            if (querySnapshot.empty) {
+                await dropboxesRef.add({
+                    facultyId,
+                    repoId,
+                    status: 'pending',
+                    size: 0,
+                    ownerId: currentUser!.uid,
+                    ownerName: currentUser!.displayName,
+                    ownerEmail: currentUser!.email,
+                    created_at: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                setWait('');
+                // No dropbox -> no file -> terminate here
+                return setFiles([]);
+            }
+            // Now we know for sure that the current user already has a dropbox...
+            const pathToDropbox = `faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`;
+            const items = (await storageRef.ref(pathToDropbox).listAll()).items;
+            const tempFiles = (await Promise.all(items.map(item => item.getMetadata()))) as CustomFileList;
+            tempFiles.forEach(({ name }) => (filenameMemo.current[name] = true));
+            setWait('');
+            setFiles(tempFiles);
+        })();
+    }, [currentUser, facultyId, filenameMemo, repoId, setFiles, setWait]);
 
     return (
         <TableRow>

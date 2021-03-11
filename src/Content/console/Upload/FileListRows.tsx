@@ -60,15 +60,15 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
                 filename={trackLastestEdit.current.filenameToEdit}
                 onOkay={handleRename}
             />
-            {files.map(({ name, size, updated }, i) => {
+            {files.map(({ name, size, updated, timeCreated }, i) => {
                 return (
-                    <TableRow key={i}>
+                    <TableRow key={name}>
                         <TableCell component="th" scope="row">
                             {name}
                         </TableCell>
                         <TableCell align="right">{displayFileSize(size)}</TableCell>
                         <TableCell align="right">{new Date(updated).toLocaleString()}</TableCell>
-                        <TableCell align="right">{new Date().toLocaleString()}</TableCell>
+                        <TableCell align="right">{new Date(timeCreated).toLocaleString()}</TableCell>
                         <TableCell>
                             <PopoverItem
                                 placement="bottomRight"
@@ -85,7 +85,7 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
                                 )}
                                 renderPopContent={close => (
                                     <List component="nav" dense>
-                                        <ListItem button>
+                                        <ListItem button component="a">
                                             <ListItemIcon>
                                                 <GetApp />
                                             </ListItemIcon>
