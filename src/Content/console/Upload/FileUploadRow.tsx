@@ -49,8 +49,8 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
             return setFiles([]);
         }
         // Now we know for sure that the current user already has a dropbox...
-        const pathToDropboxFiles = `faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`;
-        const items = (await storageRef.ref(pathToDropboxFiles).listAll()).items;
+        const pathToDropbox = `faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`;
+        const items = (await storageRef.ref(pathToDropbox).listAll()).items;
         const tempFiles = (await Promise.all(items.map(item => item.getMetadata()))) as CustomFileList;
         tempFiles.forEach(({ name }) => (filenameMemo.current[name] = true));
         setWait('');
@@ -64,7 +64,6 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
     return (
         <TableRow>
             <TableCell style={{ paddingBottom: 0, paddingTop: 0, position: 'relative' }} colSpan={6}>
-                {/* Freeze the upload section during intial load */}
                 {!!wait && (
                     <LimitedBackdrop open={true}>
                         <CircularProgress /> &nbsp; <strong>{wait}</strong>
@@ -117,7 +116,13 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <FileListRows filenameMemo={filenameMemo} files={files} setFiles={setFiles} />
+                                <FileListRows
+                                    facultyId={facultyId}
+                                    repoId={repoId}
+                                    filenameMemo={filenameMemo}
+                                    files={files}
+                                    setFiles={setFiles}
+                                />
                             </TableBody>
                         </Table>
                     </Box>

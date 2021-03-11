@@ -5,8 +5,13 @@ import { displayFileSize } from '@app/utils/displayFileSize';
 import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, TableCell, TableRow } from '@material-ui/core';
 import { Delete, Edit, GetApp, MoreVert } from '@material-ui/icons';
 import { Dispatch, Fragment, MutableRefObject, SetStateAction, useRef, useState, VFC } from 'react';
+import firebase from 'firebase/app';
+import { useAuth } from '@app/hooks/useAuth';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 
-type IFileRowProps = {
+type FileListRowsProps = {
+    facultyId: string;
+    repoId: string;
     /** A cache of all the filenames of the parent */
     filenameMemo: MutableRefObject<{
         [key: string]: boolean;
@@ -16,13 +21,15 @@ type IFileRowProps = {
     /** Change the FileList state of the parent */
     setFiles: Dispatch<SetStateAction<CustomFileList>>;
 };
-export const FileListRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles }) => {
+export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filenameMemo, files, setFiles }) => {
+    const { currentUser } = useAuth();
     const trackLastestEdit = useRef({
         filenameToEdit: '',
         fileIndexToRename: Number.NEGATIVE_INFINITY,
         closePopover: () => {}
     }); // never gets re-initilized to default values on rerenders
     const [open, setOpen] = useState(false);
+    const { showAlert } = useGlobalUtils();
     if (!files.length) return null;
     const handleDialogClose = () => {
         setOpen(false);
@@ -37,9 +44,13 @@ export const FileListRows: VFC<IFileRowProps> = ({ filenameMemo, files, setFiles
         setFiles(newFileList);
         handleDialogClose();
     };
-    const handleDelete = (fileIndexToRemove: number) => {
-        delete filenameMemo.current[files[fileIndexToRemove].name];
-        setFiles(files.filter((_file, index) => index !== fileIndexToRemove));
+    const handleDelete = async (indexToDelete: number) => {
+        const { name } = files[indexToDelete];
+        delete filenameMemo.current[name];
+        const pathToDropbox = `faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`;
+        await firebase.storage().ref(pathToDropbox).child(name).delete();
+        showAlert({ status: 'success', message: `'${name}' has been deleted successfully` });
+        setFiles(files.filter((_file, index) => index !== indexToDelete));
     };
     return (
         <Fragment>
