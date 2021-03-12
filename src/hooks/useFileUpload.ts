@@ -26,7 +26,7 @@ export const useFileUpload = (
     const { currentUser } = useAuth();
 
     const handleLocalUpload = useCallback(async () => {
-        if (!rawFileList) return;
+        if (!rawFileList || !fileInput.current?.files?.length) return;
         setWait('Uploading files, please wait...');
         const validFiles = extractValidFiles(rawFileList, filenameMemo);
         fileInput.current!.value = ''; // clear the cache of the file input after all valid files have been grabbed from it
@@ -42,11 +42,12 @@ export const useFileUpload = (
         if (validFiles.length) {
             const uploadTasks = await uploadToCloudStorage(facultyId, repoId, validFiles, currentUser!);
             const uploadedFiles = uploadTasks.map(({ metadata }) => metadata);
-            await updateDropboxSize(repoId, uploadedFiles, currentUser!);
             setFiles([...uploadedFiles, ...files]);
         }
         setWait('');
-    }, [rawFileList]); // Re-initilized with a new function object reference every time new raw files are uploaded by the user
+    }, [currentUser, facultyId, fileInput, files, rawFileList, repoId, showAlert]);
+    // Re-initilized with a new function object reference if any variable in the dependency array changes
+    // When file is renamed or deleted, the file input's cache is still empty -> fileInput.current.files.length = 0
 
     useEffect(() => {
         handleLocalUpload();
@@ -71,15 +72,4 @@ function uploadToCloudStorage(facultyId: string, repoId: string, validFiles: Fil
     const storageRef = firebase.storage().ref();
     const dropboxRef = storageRef.child(`faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser.uid}`);
     return Promise.all(validFiles.map(file => dropboxRef.child(file.name).put(file)));
-}
-
-async function updateDropboxSize(repoId: string, uploadedFiles: CustomFileList, currentUser: firebase.User) {
-    const db = firebase.firestore();
-    const dropboxesRef = db.collection('repos').doc(repoId).collection('dropboxes');
-    // Read first, then upload later. If student does not have a dropbox yet, one will be created for them on read
-    const querySnapshot = await dropboxesRef.where('ownerId', '==', currentUser!.uid).get();
-    const dropboxId = querySnapshot.docs[0].id;
-    return dropboxesRef
-        .doc(dropboxId)
-        .update({ size: firebase.firestore.FieldValue.increment(getFileListSize(uploadedFiles)[1]) });
 }
