@@ -59,14 +59,31 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
         setOpen(false);
         trackLastestEdit.current.closePopover();
     };
-    const handleRename = (newName: string, oldName: string) => {
-        const { fileIndexToRename } = trackLastestEdit.current;
-        const newFileList = files.slice();
-        newFileList[fileIndexToRename].name = newName;
-        delete filenameMemo.current[oldName];
-        filenameMemo.current[newName] = true;
-        setFiles(newFileList);
-        handleDialogClose();
+    const handleRename = async (newName: string) => {
+        const functions = firebase.app().functions('asia-southeast2');
+        const renameFile = functions.httpsCallable('renameFile');
+        const { fileIndexToRename, filenameToEdit } = trackLastestEdit.current;
+        if (newName === filenameToEdit) return handleDialogClose();
+        try {
+            await renameFile({
+                newName,
+                path: {
+                    facultyId,
+                    repoId,
+                    currentName: filenameToEdit
+                }
+            });
+            const newFileList = files.slice();
+            newFileList[fileIndexToRename].name = newName;
+            delete filenameMemo.current[filenameToEdit];
+            filenameMemo.current[newName] = true;
+            setFiles(newFileList);
+            showAlert({ status: 'success', message: 'File is renamed successfully' });
+            setOpen(false);
+        } catch ({ message }) {
+            showAlert({ status: 'error', message });
+            handleDialogClose();
+        }
     };
     const handleDelete = async (indexToDelete: number) => {
         const { name } = files[indexToDelete];

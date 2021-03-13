@@ -8,6 +8,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { ProvideGlobalUtils } from '@app/hooks/useGlobalUtils';
 import 'firebase/firestore';
 import 'firebase/storage';
+import 'firebase/functions';
 
 const ApTemplate = lazy(() => import('@app/Templates/ApTemplate'));
 const ConsoleTemplate = lazy(() => import('@app/Templates/ConsoleTemplate'));

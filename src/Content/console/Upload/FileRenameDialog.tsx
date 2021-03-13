@@ -1,14 +1,24 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
+import {
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField
+} from '@material-ui/core';
 import { useCallback, useState, VFC } from 'react';
 
 type IFileRenameDialogProps = {
     open: boolean;
     onClose: () => void;
-    onOkay: (newName: string, oldName: string) => void;
+    onOkay: (newName: string) => Promise<void>;
     filename: string;
 };
 export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, filename, onOkay }) => {
     const [node, setNode] = useState<HTMLInputElement | null>(null);
+    const [wait, setWait] = useState(false);
     // This callback ref never gets re-initialized on re-render
     const onRefChange = useCallback(
         // Invoked with HTML DOM input element when the dialog is mounted
@@ -19,8 +29,16 @@ export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, f
         },
         [filename]
     );
+    const handleClick = async () => {
+        setWait(true);
+        await onOkay(node!.value);
+        setWait(false);
+    };
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
+            <LimitedBackdrop open={wait}>
+                <CircularProgress /> &nbsp; <strong>Renaming file, please wait... </strong>
+            </LimitedBackdrop>
             <DialogTitle id="form-dialog-title">Rename</DialogTitle>
             <DialogContent>
                 <TextField
@@ -34,7 +52,7 @@ export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, f
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancle</Button>
-                <Button variant="contained" color="primary" onClick={() => onOkay(node!.value, filename)}>
+                <Button variant="contained" color="primary" onClick={handleClick}>
                     Ok
                 </Button>
             </DialogActions>
