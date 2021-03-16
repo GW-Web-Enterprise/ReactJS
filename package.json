@@ -28,8 +28,9 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "FAST_REFRESH=false react-app-rewired start",
-    "build": "react-app-rewired build",
+    "start": "npm run getconfig && FAST_REFRESH=false react-app-rewired start",
+    "build": "npm run getconfig && react-app-rewired build",
+    "getconfig": "firebase apps:sdkconfig web --json > ./src/firebase-config.json",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },

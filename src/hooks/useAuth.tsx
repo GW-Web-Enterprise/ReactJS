@@ -2,6 +2,7 @@ import { useContext, useState, useEffect, VFC, ReactNode, createContext } from '
 import { useHistory } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import firebaseConfig from '@app/firebase-config.json';
 
 type AuthFunc = (email: string, password: string) => Promise<firebase.auth.UserCredential>;
 type ChangeCreFunc = (newCredential: string) => Promise<void>;
@@ -16,15 +17,7 @@ interface AuthContextInterface {
     updatePassword: ChangeCreFunc;
 }
 
-firebase.initializeApp({
-    apiKey: 'AIzaSyBzHQIRDVJooBCRmF30kwrmU2o6OE4q2rQ',
-    authDomain: 'gw-enterprise.firebaseapp.com',
-    projectId: 'gw-enterprise',
-    storageBucket: 'gw-enterprise.appspot.com',
-    messagingSenderId: '268992275771',
-    appId: '1:268992275771:web:78231566281d6a84fb831e',
-    measurementId: 'G-BNDJYP9MPL'
-});
+firebase.initializeApp(firebaseConfig.result.sdkConfig);
 const auth = firebase.auth();
 
 // create a pipeline of data flowing from parent to deeply-nested children
