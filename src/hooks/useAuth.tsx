@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, VFC, ReactNode, createContext } from 'react';
+import { useContext, useState, useEffect, VFC, ReactNode, createContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -36,9 +36,9 @@ export const useAuth = () => useContext(AuthContext);
 // You can also use the Class.contextType or Context.Consumer API instead of useContext()
 
 export const ProvideAuth: VFC<{ children: ReactNode }> = ({ children }) => {
-    const [auth, loading] = useProvideAuth();
+    const [newAuth, loading] = useProvideAuth();
     // The child components subscribe to the AuthContext pipeline, re-render whenever the Provider’s 'value' prop changes
-    return <AuthContext.Provider value={auth}>{!loading && children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={newAuth}>{!loading && children}</AuthContext.Provider>;
 };
 
 function useProvideAuth() {
