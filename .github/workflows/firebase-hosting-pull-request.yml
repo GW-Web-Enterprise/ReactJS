@@ -8,11 +8,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - run: npm i && CI=false npm run build
             - uses: FirebaseExtended/action-hosting-deploy@v0
+            - run: npm i && CI=false npm run build
               with:
                   repoToken: '${{ secrets.GITHUB_TOKEN }}'
-                  firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_GW_ENTERPRISE }}'
+                  firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
                   projectId: gw-enterprise
               env:
                   FIREBASE_CLI_PREVIEWS: hostingchannels
