@@ -106,8 +106,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
         faculties,
         repos,
         upload,
-        users,
-        roles
+        users
     }
     const currentPath = window.location.pathname;
     const currentPage = currentPath.slice(currentPath.lastIndexOf('/') + 1);
@@ -224,19 +223,7 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         <ListItemIcon>
                             <People />
                         </ListItemIcon>
-                        <ListItemText primary="Users" />
-                    </ListItem>
-                    <ListItem
-                        selected={selectedIndex === 5}
-                        onClick={handleListItemClick(5)}
-                        button
-                        component={Link}
-                        to={`/console/${PageToNavIndex[5]}`}
-                    >
-                        <ListItemIcon>
-                            <InlineIcon src={keyIcon} />
-                        </ListItemIcon>
-                        <ListItemText primary="Roles & Permissions" />
+                        <ListItemText primary="Users & Roles" />
                     </ListItem>
                 </List>
             </Drawer>
