@@ -2,7 +2,7 @@ import { useMemoCompare } from '@app/hooks/useMemoCompare';
 import firebase from 'firebase/app';
 import { useEffect, useReducer } from 'react';
 
-type QueryInfo =
+type IQueryState =
     | { status: 'idle' | 'loading'; data: undefined; error: undefined }
     | { status: 'success'; data: Array<any>; error: undefined }
     | { status: 'error'; data: undefined; error: firebase.firestore.FirestoreError };
@@ -12,7 +12,7 @@ type ActionType =
     | { type: 'success'; payload: Array<any> }
     | { type: 'error'; payload: firebase.firestore.FirestoreError };
 
-const reducer = (queryState: QueryInfo, action: ActionType): QueryInfo => {
+const reducer = (queryState: IQueryState, action: ActionType): IQueryState => {
     switch (action.type) {
         case 'idle':
             return { status: 'idle', data: undefined, error: undefined };
@@ -34,7 +34,7 @@ const reducer = (queryState: QueryInfo, action: ActionType): QueryInfo => {
  * @example firebase.firestore().collection("cities").where("state", "==", "CA") // This refers to multiple docs
  */
 export function useFirestoreQuery(query: firebase.firestore.Query) {
-    const initialQueryState: QueryInfo = { status: query ? 'loading' : 'idle', data: undefined, error: undefined };
+    const initialQueryState: IQueryState = { status: query ? 'loading' : 'idle', data: undefined, error: undefined };
     const [queryState, dispatch] = useReducer(reducer, initialQueryState);
 
     const queryCached = useMemoCompare(query, prevQuery => prevQuery && query && query.isEqual(prevQuery));
