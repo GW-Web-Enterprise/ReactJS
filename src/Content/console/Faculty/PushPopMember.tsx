@@ -3,7 +3,7 @@ import React, { Fragment, useState, VFC } from 'react';
 import { MembersTabPanel } from '@app/Content/console/Faculty/MembersTabPanel';
 import { SysusersTabPanel } from '@app/Content/console/Faculty/SysusersTabPanel';
 
-export const PushPopMember: VFC = () => {
+export const PushPopMember: VFC<{ facultyId: string }> = ({ facultyId }) => {
     const [value, setValue] = useState(0);
     const handleChange = (_e: React.ChangeEvent<{}>, newValue: number) => setValue(newValue);
     return (
@@ -21,8 +21,8 @@ export const PushPopMember: VFC = () => {
                     <Tab label="System users" />
                 </Tabs>
             </Paper>
-            <MembersTabPanel value={value} />
-            <SysusersTabPanel value={value} />
+            <MembersTabPanel value={value} facultyId={facultyId} />
+            <SysusersTabPanel value={value} facultyId={facultyId} />
         </Fragment>
     );
 };

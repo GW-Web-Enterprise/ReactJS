@@ -1,3 +1,12 @@
+export type ISysuserDb = {
+    id: string;
+    photoURL: string;
+    email: string;
+    displayName: string;
+};
+
+export type IFacultyMemberDb = ISysuserDb & { role: string };
+
 export type FacultyDbRead = {
     id: string;
     name: string;

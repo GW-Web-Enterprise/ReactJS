@@ -58,7 +58,7 @@ export const FacultyListItem: VFC<Props> = ({ facultyDoc }) => {
                         </Button>
                     </Tooltip>
                 )}
-                renderPopContent={() => <PushPopMember />}
+                renderPopContent={() => <PushPopMember facultyId={facultyDoc.id} />}
             />
             {/* ⤵ Edit faculty name */}
             <PopoverItem
