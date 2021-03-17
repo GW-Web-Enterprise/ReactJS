@@ -11,9 +11,11 @@ import {
     TableCell,
     Typography,
     Table,
-    TableBody
+    TableBody,
+    ListItemText,
+    ListItemIcon
 } from '@material-ui/core';
-import { MoreVert } from '@material-ui/icons';
+import { AssignmentTurnedIn, CancelSharp, GetApp, MoreVert } from '@material-ui/icons';
 
 export const ReviewRepoRow: IRepoCollapsibleRow = ({ open }) => {
     return (
@@ -68,41 +70,24 @@ export const ReviewRepoRow: IRepoCollapsibleRow = ({ open }) => {
                                             )}
                                             renderPopContent={close => (
                                                 <List component="nav" dense>
-                                                    <ListItem button>Download to view</ListItem>
-                                                    <ListItem button>Approve</ListItem>
-                                                    <ListItem button>Reject</ListItem>
-                                                </List>
-                                            )}
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell component="th" scope="row">
-                                        Tim Apple
-                                    </TableCell>
-                                    <TableCell align="right">timapple@gmail.com</TableCell>
-                                    <TableCell align="right">
-                                        {new Date('2021-02-08T14:22:12Z').toLocaleString()}
-                                    </TableCell>
-                                    <TableCell align="right">Approved</TableCell>
-                                    <TableCell>
-                                        <PopoverItem
-                                            placement="bottomRight"
-                                            padding={0}
-                                            renderToggle={(toggle, toggleEl) => (
-                                                <IconButton
-                                                    aria-label="View more options"
-                                                    size="small"
-                                                    onClick={toggle}
-                                                    ref={toggleEl}
-                                                >
-                                                    <MoreVert />
-                                                </IconButton>
-                                            )}
-                                            renderPopContent={close => (
-                                                <List component="nav" dense>
-                                                    <ListItem button>Download to view</ListItem>
-                                                    <ListItem button>Reject</ListItem>
+                                                    <ListItem button>
+                                                        <ListItemIcon>
+                                                            <GetApp />
+                                                        </ListItemIcon>
+                                                        <ListItemText primary="Download to view" />
+                                                    </ListItem>
+                                                    <ListItem button>
+                                                        <ListItemIcon>
+                                                            <AssignmentTurnedIn />
+                                                        </ListItemIcon>
+                                                        <ListItemText primary="Approve" />
+                                                    </ListItem>
+                                                    <ListItem button>
+                                                        <ListItemIcon>
+                                                            <CancelSharp />
+                                                        </ListItemIcon>
+                                                        <ListItemText primary="Reject" />
+                                                    </ListItem>
                                                 </List>
                                             )}
                                         />

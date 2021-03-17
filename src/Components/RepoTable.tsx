@@ -8,6 +8,7 @@ import {
     Link,
     List,
     ListItem,
+    ListItemIcon,
     Paper,
     Table,
     TableBody,
@@ -17,7 +18,7 @@ import {
     TableRow,
     Tooltip
 } from '@material-ui/core';
-import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons';
+import { Delete, Edit, KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons';
 import firebase from 'firebase/app';
 import { Fragment, useState, VFC } from 'react';
 
@@ -88,7 +89,7 @@ const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, RepoCollapsibleRow }) 
                 </TableCell>
                 <TableCell align="right">{closeTimestamp.toDate().toLocaleString()}</TableCell>
                 <TableCell align="right">{finalTimestamp.toDate().toLocaleString()}</TableCell>
-                {window.location.pathname === '/console/repos' && (
+                {window.location.pathname === '/console/repos' && ( // UI components to edit and delete a repo
                     <TableCell>
                         <PopoverItem
                             placement="bottomRight"
@@ -101,9 +102,15 @@ const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, RepoCollapsibleRow }) 
                             renderPopContent={close => (
                                 <List component="nav" dense>
                                     <ListItem button>
+                                        <ListItemIcon>
+                                            <Edit />
+                                        </ListItemIcon>
                                         <EditRepo repoDoc={repoDoc} cleanup={close} />
                                     </ListItem>
                                     <ListItem button>
+                                        <ListItemIcon>
+                                            <Delete />
+                                        </ListItemIcon>
                                         <DeleteRepo repoId={id} name={name} cleanup={close} />
                                     </ListItem>
                                 </List>
