@@ -36,5 +36,5 @@ export type DropboxDb = {
     ownerId: string;
     ownerName: string;
     ownerEmail: string;
-    created_at: firebase.default.firestore.Timestamp;
+    createdAt: firebase.default.firestore.Timestamp;
 };

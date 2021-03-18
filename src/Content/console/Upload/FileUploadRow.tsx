@@ -43,7 +43,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                     ownerId: currentUser!.uid,
                     ownerName: currentUser!.displayName,
                     ownerEmail: currentUser!.email,
-                    created_at: firebase.firestore.FieldValue.serverTimestamp()
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 setWait('');
                 // No dropbox -> no file -> terminate here
