@@ -6,9 +6,15 @@ import { Backdrop, CircularProgress, CssBaseline } from '@material-ui/core';
 import { ProvideAuth } from '@app/hooks/useAuth';
 import DateFnsUtils from '@date-io/date-fns';
 import { ProvideGlobalUtils } from '@app/hooks/useGlobalUtils';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/functions';
+
+if (process.env.REACT_APP_USE_EMULATOR) {
+    firebase.firestore().useEmulator('localhost', 8080);
+    firebase.functions().useEmulator('localhost', 5001);
+}
 
 const ApTemplate = lazy(() => import('@app/Templates/ApTemplate'));
 const ConsoleTemplate = lazy(() => import('@app/Templates/ConsoleTemplate'));

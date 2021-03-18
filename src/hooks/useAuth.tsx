@@ -19,6 +19,7 @@ interface AuthContextInterface {
 
 firebase.initializeApp(firebaseConfig.result.sdkConfig);
 const auth = firebase.auth();
+if (process.env.REACT_APP_USE_EMULATOR) auth.useEmulator('http://localhost:9099');
 
 // create a pipeline of data flowing from parent to deeply-nested children
 const AuthContext = createContext({} as AuthContextInterface);
