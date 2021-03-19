@@ -1,8 +1,8 @@
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 import { FacultyDbRead } from '@app/typings/schemas';
-import { LinearProgress, List, ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core';
+import { Box, LinearProgress, List, ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core';
 import firebase from 'firebase/app';
-import React, { Dispatch, Fragment, SetStateAction, useRef, useState, VFC } from 'react';
+import { Dispatch, Fragment, SetStateAction, useRef, useState, VFC } from 'react';
 
 type Props = { onSelect: Dispatch<SetStateAction<string>> };
 const db = firebase.firestore();
@@ -50,6 +50,11 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
                                 {name}
                             </MenuItem>
                         ))}
+                        {!options.length && (
+                            <Box color="info.main" p={1}>
+                                No faculty is created yet
+                            </Box>
+                        )}
                     </Menu>
                 </Fragment>
             )}
