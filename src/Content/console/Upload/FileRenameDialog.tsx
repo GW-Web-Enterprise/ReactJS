@@ -47,12 +47,17 @@ export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, f
                     autoFocus
                     fullWidth
                     inputRef={onRefChange}
+                    helperText="If you cannot rename, please make sure the entered filename is in the right format 'filename.ext'"
                     defaultValue={filename}
                 />
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>Cancle</Button>
-                <Button variant="contained" color="primary" onClick={handleClick}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => /^[\w,\s-'’.]+\.[A-Za-z]{3,4}$/.test(node!.value) && handleClick()}
+                >
                     Ok
                 </Button>
             </DialogActions>

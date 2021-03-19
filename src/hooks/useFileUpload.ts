@@ -59,8 +59,9 @@ function extractValidFiles(rawFileList: FileList, filenameMemo: FilenameMemo) {
     const validFiles: Array<File> = [];
     [...rawFileList].forEach(file => {
         const { name } = file;
-        if (!filenameMemo.current[name]) {
+        if (/^[\w,\s-'’.]+\.[A-Za-z]{3,4}$/.test(name) && !filenameMemo.current[name]) {
             // Only select the the files whose names do not exist in the current list of files => Avoid files with duplicate names
+            // Files with names that are not in the right format 'filename.ext' will be rejected
             filenameMemo.current[name] = true;
             validFiles.push(file);
         }
