@@ -1,17 +1,7 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
 import { VFC } from 'react';
 import firebase from 'firebase/app';
-import {
-    Box,
-    ButtonGroup,
-    Button,
-    TextField,
-    Tooltip,
-    Typography,
-    FormControl,
-    makeStyles,
-    createStyles
-} from '@material-ui/core';
+import { Box, ButtonGroup, Button, TextField, Tooltip, FormControl, makeStyles, createStyles } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 import { PushPopMember } from '@app/Content/console/Faculty/PushPopMember';
 import { useForm } from 'react-hook-form';
@@ -33,7 +23,7 @@ type Props = {
 };
 
 export const FacultyListItem: VFC<Props> = ({ facultyDoc }) => {
-    const { showAlert } = useGlobalUtils();
+    const { showAlert, showDeleteDialog } = useGlobalUtils();
     const { register, handleSubmit, errors } = useForm<FacultyDbSave>();
     const classes = useStyles();
     const docRef = firebase.firestore().collection('faculties').doc(facultyDoc.id);
@@ -46,6 +36,14 @@ export const FacultyListItem: VFC<Props> = ({ facultyDoc }) => {
                 showAlert({ status: 'error', message: 'Faculty name already exists, please choose another name' });
             })
             .then(() => toggleEditForm());
+    const handleDelete = () =>
+        docRef
+            .delete()
+            .then(() => showAlert({ status: 'success', message: 'Faculty deleted successfully' }))
+            .catch(err => {
+                console.log(err);
+                showAlert({ status: 'error', message: 'Failed to delete faculty' });
+            });
     return (
         <ButtonGroup color="inherit" style={{ margin: '8px' }}>
             {/* ⤵ View and add/remove faculty members */}
@@ -87,44 +85,22 @@ export const FacultyListItem: VFC<Props> = ({ facultyDoc }) => {
                 )}
             />
             {/* ⤵ Delete faculty */}
-            <PopoverItem
-                placement="bottom"
-                renderToggle={(toggle, toggleEl) => (
-                    <Tooltip title="Delete faculty" arrow>
-                        <Button ref={toggleEl} onClick={toggle} className={classes.actionBtn}>
-                            <Delete />
-                        </Button>
-                    </Tooltip>
-                )}
-                renderPopContent={toggle => (
-                    <Box>
-                        <Typography variant="button" display="block" gutterBottom>
-                            Delete this faculty?
-                        </Typography>
-                        <Button variant="contained" onClick={toggle} color="secondary">
-                            No
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            style={{ float: 'right' }}
-                            onClick={() =>
-                                docRef
-                                    .delete()
-                                    .then(() =>
-                                        showAlert({ status: 'success', message: 'Faculty deleted successfully' })
-                                    )
-                                    .catch(err => {
-                                        console.log(err);
-                                        showAlert({ status: 'error', message: 'Failed to delete faculty' });
-                                    })
-                            }
-                        >
-                            Yes
-                        </Button>
-                    </Box>
-                )}
-            />
+            <Tooltip title="Delete faculty" arrow>
+                <Button
+                    className={classes.actionBtn}
+                    onClick={() =>
+                        showDeleteDialog({
+                            title: 'Delete faculty',
+                            redMsg: `After you have deleted a faculty, all of its assets will be permanently deleted.
+                            Faculties and their repos of files cannot be recovered.`,
+                            content: `Faculty: ${facultyDoc.name}`,
+                            handleDelete
+                        })
+                    }
+                >
+                    <Delete />
+                </Button>
+            </Tooltip>
         </ButtonGroup>
     );
 };

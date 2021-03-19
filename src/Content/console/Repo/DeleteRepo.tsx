@@ -19,7 +19,7 @@ export const DeleteRepo: VFC<DeleteRepoProps> = ({ repoId, name, cleanup }) => {
                 primary="Delete repo"
                 onClick={() =>
                     showDeleteDialog({
-                        title: 'Delete Repo ?',
+                        title: 'Delete repo',
                         redMsg: `After you have deleted a repo, all of its files will be permanently deleted. Repos and their
                         files cannot be recovered.`,
                         content: `Repo: ${name}`,

@@ -28,7 +28,7 @@ type IDeleteDialog = {
     content: string;
     handleDelete: () => void;
     /** Invoked when the Delete Dialog is closed */
-    cleanup: () => void;
+    cleanup?: () => void;
 } | null;
 export const ProvideGlobalUtils: VFC<{ children: ReactNode }> = ({ children }) => {
     const [alertInfo, showAlert] = useState<AlertInfo>(null);
@@ -58,7 +58,7 @@ export const ProvideGlobalUtils: VFC<{ children: ReactNode }> = ({ children }) =
                 open={!!deleteDialogParams}
                 onClose={() => {
                     showDeleteDialog(null);
-                    deleteDialogParams?.cleanup();
+                    deleteDialogParams?.cleanup && deleteDialogParams.cleanup();
                 }}
             >
                 <DialogTitle>{deleteDialogParams?.title}</DialogTitle>
@@ -70,7 +70,7 @@ export const ProvideGlobalUtils: VFC<{ children: ReactNode }> = ({ children }) =
                     <Button
                         onClick={() => {
                             showDeleteDialog(null);
-                            deleteDialogParams?.cleanup();
+                            deleteDialogParams?.cleanup && deleteDialogParams.cleanup();
                         }}
                         color="primary"
                     >
