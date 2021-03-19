@@ -77,6 +77,7 @@ export const SysusersTabPanel: VFC<IProps> = ({ value, facultyId }) => {
                                                 variant="contained"
                                                 color="primary"
                                                 onClick={() =>
+                                                    roleSelector.current?.value &&
                                                     facultiesRef
                                                         .doc(facultyId)
                                                         .collection('members')
