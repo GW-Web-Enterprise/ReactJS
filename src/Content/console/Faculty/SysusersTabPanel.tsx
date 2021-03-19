@@ -15,7 +15,9 @@ import {
     NativeSelect,
     FormHelperText,
     Button,
-    Typography
+    Typography,
+    Box,
+    CircularProgress
 } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
 import { useRef, VFC } from 'react';
@@ -36,6 +38,11 @@ export const SysusersTabPanel: VFC<IProps> = ({ value, facultyId }) => {
                     <Typography color="primary" style={{ paddingLeft: '16px' }}>
                         Users not in this faculty:
                     </Typography>
+                    {!data.length && (
+                        <Box display="flex" justifyContent="center" alignItems="center">
+                            <CircularProgress /> &nbsp; Loading users, please wait...
+                        </Box>
+                    )}
                     {data.map(({ id, displayName, email, photoURL }: ISysuserDb) => (
                         <ListItem key={id}>
                             <ListItemAvatar>
