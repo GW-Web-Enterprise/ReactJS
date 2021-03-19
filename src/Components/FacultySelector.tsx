@@ -52,7 +52,9 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
                         ))}
                         {!options.length && (
                             <Box color="info.main" p={1}>
-                                No faculty is created yet
+                                {window.location.pathname === '/console/upload' &&
+                                    'You are not a student of any faculty'}
+                                You are not a coordinator of any faculty or no faculty is created yet
                             </Box>
                         )}
                     </Menu>
