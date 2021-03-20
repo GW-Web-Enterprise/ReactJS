@@ -38,3 +38,5 @@ export type IDropboxDb = {
     ownerEmail: string;
     createdAt: firebase.default.firestore.Timestamp;
 };
+
+export type IDropboxReview = { dropboxId: string; status: 'rejected' | 'approved' } | null;
