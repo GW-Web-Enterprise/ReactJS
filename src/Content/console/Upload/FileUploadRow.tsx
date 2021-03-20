@@ -15,6 +15,7 @@ import {
     TableCell,
     TableHead,
     TableRow,
+    Tooltip,
     Typography
 } from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
@@ -75,14 +76,19 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                                 <strong>Status:</strong> pending
                             </Box>
                         </Typography>
-                        <Button
-                            variant="contained"
-                            size="small"
-                            startIcon={<CloudUpload />}
-                            onClick={() => fileInput.current!.click()}
+                        <Tooltip
+                            title="Only files with valid names are uploaded. Valid characters include: english character,
+                        space, digit, hyphen, underscore, comma, single quote, apostrophe, dot, exclamation mark, paranthesis, plus)"
                         >
-                            Upload file
-                        </Button>
+                            <Button
+                                variant="contained"
+                                size="small"
+                                startIcon={<CloudUpload />}
+                                onClick={() => fileInput.current!.click()}
+                            >
+                                Upload file
+                            </Button>
+                        </Tooltip>
                         <Typography variant="subtitle2" gutterBottom component="span" style={{ marginLeft: 8 }}>
                             Total size of uploaded files: {getFileListSize(files)[0]} (limited to 10 MB)
                         </Typography>

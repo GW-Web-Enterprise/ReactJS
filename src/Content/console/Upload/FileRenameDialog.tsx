@@ -56,7 +56,7 @@ export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, f
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => /^[\w,\s-'’.]+\.[A-Za-z]{3,4}$/.test(node!.value) && handleClick()}
+                    onClick={() => /^[\w,\s-'’!()+.]+\.[A-Za-z]{3,4}$/.test(node!.value) && handleClick()}
                 >
                     Ok
                 </Button>
