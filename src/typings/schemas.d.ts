@@ -27,7 +27,7 @@ export type RepoDbRead = {
 
 export type RepoDbSave = Omit<RepoDbRead, 'id'>;
 
-export type DropboxDb = {
+export type IDropboxDb = {
     id: string;
     facultyId: string;
     repoId: string;
