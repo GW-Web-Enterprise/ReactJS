@@ -21,7 +21,7 @@ import firebase from 'firebase/app';
 import { IDropboxDb } from '@app/typings/schemas';
 
 const db = firebase.firestore();
-export const ReviewRepoRow: IRepoCollapsibleRow = ({ open, repoId }) => {
+export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
     const { data = [], status } = useFirestoreQuery(db.collection('repos').doc(repoId).collection('dropboxes'));
     return (
         <TableRow>
