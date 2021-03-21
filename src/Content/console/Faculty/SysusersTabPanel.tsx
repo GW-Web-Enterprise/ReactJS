@@ -38,6 +38,9 @@ export const SysusersTabPanel: VFC<IProps> = ({ value, facultyId }) => {
                     <Typography color="primary" style={{ paddingLeft: '16px' }}>
                         Users not in this faculty:
                     </Typography>
+                    <Typography color="inherit" variant="caption" style={{ paddingLeft: '16px' }} gutterBottom>
+                        it might take some time to add new user to this list
+                    </Typography>
                     {!data.length && (
                         <Box display="flex" justifyContent="center" alignItems="center">
                             <CircularProgress /> &nbsp; Loading users, please wait...
