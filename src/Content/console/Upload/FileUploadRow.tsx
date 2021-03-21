@@ -79,6 +79,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                         <Tooltip
                             title="Only files with valid names are uploaded. Valid characters include: english character,
                         space, digit, hyphen, underscore, comma, single quote, apostrophe, dot, exclamation mark, paranthesis, plus)"
+                            arrow
                         >
                             <Button
                                 variant="contained"
