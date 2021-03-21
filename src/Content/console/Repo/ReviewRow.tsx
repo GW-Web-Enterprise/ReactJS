@@ -25,6 +25,7 @@ import { Fragment, useState } from 'react';
 import { ReviewSubmitDialog } from '@app/Content/console/Repo/ReviewSubmitDialog';
 import { STATUS_TO_JSX } from '@app/constants/dropboxStatus';
 import { displayFileSize } from '@app/utils/displayFileSize';
+import { downloadFolderAsZip } from '@app/utils/downloadFolderAsZip';
 
 const db = firebase.firestore();
 export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
@@ -72,6 +73,9 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                         {data.map(
                                             ({
                                                 id,
+                                                facultyId,
+                                                repoId,
+                                                ownerId,
                                                 ownerName,
                                                 ownerEmail,
                                                 createdAt,
@@ -125,7 +129,16 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                                 )}
                                                                 renderPopContent={close => (
                                                                     <List component="nav" dense>
-                                                                        <ListItem button>
+                                                                        <ListItem
+                                                                            button
+                                                                            onClick={() => {
+                                                                                downloadFolderAsZip(
+                                                                                    `faculty_${facultyId}/repo_${repoId}/dropbox_${ownerId}`,
+                                                                                    `${ownerName}_${ownerEmail}_${ownerId}.zip`
+                                                                                );
+                                                                                close();
+                                                                            }}
+                                                                        >
                                                                             <ListItemIcon>
                                                                                 <GetApp />
                                                                             </ListItemIcon>
