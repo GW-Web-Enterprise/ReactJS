@@ -37,6 +37,11 @@ export type IDropboxDb = {
     ownerName: string;
     ownerEmail: string;
     createdAt: firebase.default.firestore.Timestamp;
+    reviewerId?: string;
+    reviewerName?: string;
+    reviewerEmail?: string;
+    feedback?: string;
+    reviewedAt?: firebase.default.firestore.Timestamp;
 };
 
-export type IDropboxReview = { dropboxId: string; status: 'rejected' | 'approved' } | null;
+export type IDropboxReview = { id: string; status: 'rejected' | 'approved' } | null;
