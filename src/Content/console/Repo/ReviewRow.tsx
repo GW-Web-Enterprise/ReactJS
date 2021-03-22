@@ -15,7 +15,6 @@ import {
     TableBody,
     ListItemText,
     ListItemIcon,
-    Tooltip,
     Button
 } from '@material-ui/core';
 import { AssignmentTurnedIn, CancelSharp, GetApp, MoreVert } from '@material-ui/icons';
@@ -66,7 +65,7 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                 <strong>Size</strong>
                                             </TableCell>
                                             <TableCell align="right">
-                                                <strong>Status</strong> (hover to see more)
+                                                <strong>Status</strong> (click to see more)
                                             </TableCell>
                                             <TableCell align="right"></TableCell>
                                         </TableRow>
@@ -98,21 +97,32 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                     </TableCell>
                                                     <TableCell align="right">{displayFileSize(size)}</TableCell>
                                                     <TableCell align="right">
-                                                        <Tooltip
-                                                            title={
+                                                        <PopoverItem
+                                                            placement="bottom"
+                                                            renderToggle={(toggle, toggleEl) => (
+                                                                <Button type="button" ref={toggleEl} onClick={toggle}>
+                                                                    {STATUS_TO_JSX[status]}
+                                                                </Button>
+                                                            )}
+                                                            renderPopContent={() => (
                                                                 <Fragment>
-                                                                    <div>Reviewer's name: {reviewerName}</div>
-                                                                    <div>Reviewer's email: {reviewerEmail}</div>
                                                                     <div>
-                                                                        At: {reviewedAt?.toDate().toLocaleString()}
+                                                                        <strong>Reviewer's name:</strong> {reviewerName}
                                                                     </div>
-                                                                    <div>Feedback: {feedback}</div>
+                                                                    <div>
+                                                                        <strong>Reviewer's email:</strong>{' '}
+                                                                        {reviewerEmail}
+                                                                    </div>
+                                                                    <div>
+                                                                        <strong>At:</strong>{' '}
+                                                                        {reviewedAt?.toDate().toLocaleString()}
+                                                                    </div>
+                                                                    <div>
+                                                                        <strong>Feedback:</strong> {feedback}
+                                                                    </div>
                                                                 </Fragment>
-                                                            }
-                                                            arrow
-                                                        >
-                                                            <Button>{STATUS_TO_JSX[status]}</Button>
-                                                        </Tooltip>
+                                                            )}
+                                                        />
                                                     </TableCell>
                                                     <TableCell>
                                                         <PopoverItem
@@ -159,7 +169,7 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                                         <ListItemIcon>
                                                                             <AssignmentTurnedIn />
                                                                         </ListItemIcon>
-                                                                        <ListItemText primary="Approve" />
+                                                                        <ListItemText primary="Approve or edit feedback" />
                                                                     </ListItem>
                                                                     <ListItem
                                                                         button
@@ -175,7 +185,7 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                                         <ListItemIcon>
                                                                             <CancelSharp />
                                                                         </ListItemIcon>
-                                                                        <ListItemText primary="Reject" />
+                                                                        <ListItemText primary="Reject or edit feedback" />
                                                                     </ListItem>
                                                                 </List>
                                                             )}
