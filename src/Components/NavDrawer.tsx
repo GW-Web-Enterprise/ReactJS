@@ -1,5 +1,8 @@
 import {
     AppBar,
+    Avatar,
+    Badge,
+    Box,
     Button,
     createStyles,
     Divider,
@@ -15,16 +18,25 @@ import {
     Typography,
     useTheme
 } from '@material-ui/core';
-import React, { ReactNode, useState, VFC } from 'react';
-import { ChevronLeft, ChevronRight, Home, Menu, People } from '@material-ui/icons';
+import { Fragment, ReactNode, useState, VFC } from 'react';
+import {
+    AccountCircle,
+    ArrowDropDownCircle,
+    ChevronLeft,
+    ChevronRight,
+    ExitToApp,
+    Home,
+    Menu,
+    People
+} from '@material-ui/icons';
 import facultyIcon from '@app/assets/faculty-solid.svg';
 import uploadIcon from '@app/assets/cloud-upload.svg';
 import boxIcon from '@app/assets/box.svg';
-import keyIcon from '@app/assets/key.svg';
 import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 import { InlineIcon } from '@app/Components/InlineIcon';
 import { useAuth } from '@app/hooks/useAuth';
+import { PopoverItem } from '@app/Components/PopoverItem';
 
 const drawerWidth = 240;
 
@@ -99,7 +111,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
     const classes = useStyles();
     const theme = useTheme();
-    const { logout } = useAuth();
+    const { currentUser, logout } = useAuth();
     const [open, setOpen] = useState(window.innerWidth >= 768);
     enum PageToNavIndex {
         overview,
@@ -138,9 +150,37 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                     <Typography variant="h6" className={classes.title}>
                         System Console
                     </Typography>
-                    <Button color="inherit" onClick={logout}>
-                        Logout
-                    </Button>
+                    <PopoverItem
+                        placement="bottom"
+                        renderToggle={(toggle, toggleEl) => (
+                            <Button ref={toggleEl} onClick={toggle}>
+                                <Badge
+                                    overlap="circle"
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right'
+                                    }}
+                                    badgeContent={<ArrowDropDownCircle style={{ color: '#FFFFFF' }} />}
+                                >
+                                    <Avatar
+                                        alt={currentUser?.displayName || 'Guest account'}
+                                        src={currentUser?.photoURL || ''}
+                                    >
+                                        <AccountCircle />
+                                    </Avatar>
+                                </Badge>
+                            </Button>
+                        )}
+                        renderPopContent={() => (
+                            <Box display="flex" flexDirection="column" justifyContent="center">
+                                <div>{currentUser?.displayName || 'Guest account'}</div>
+                                <div>{currentUser?.email}</div>
+                                <Button color="inherit" onClick={logout}>
+                                    Logout <ExitToApp />
+                                </Button>
+                            </Box>
+                        )}
+                    />
                 </Toolbar>
             </AppBar>
 
