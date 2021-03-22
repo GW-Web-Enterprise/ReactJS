@@ -1,9 +1,12 @@
 import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
+import { PopoverItem } from '@app/Components/PopoverItem';
 import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
+import { STATUS_TO_JSX } from '@app/constants/dropboxStatus';
 import { FileListRows } from '@app/Content/console/Upload/FileListRows';
 import { useAuth } from '@app/hooks/useAuth';
 import { useFileUpload } from '@app/hooks/useFileUpload';
 import { CustomFileList } from '@app/typings/files';
+import { IDropboxDb } from '@app/typings/schemas';
 import { getFileListSize } from '@app/utils/getFileListSize';
 import {
     Box,
@@ -20,7 +23,7 @@ import {
 } from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
 import firebase from 'firebase/app';
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
 const storageRef = firebase.storage();
 const db = firebase.firestore();
@@ -28,6 +31,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
     const fileInput = useRef<HTMLInputElement>(null);
     const { currentUser } = useAuth();
     const [files, setFiles, setRawFileList, filenameMemo, wait, setWait] = useFileUpload(fileInput, facultyId, repoId);
+    const [dropbox, setDropbox] = useState<IDropboxDb | null>(null);
     useEffect(() => {
         const dropboxesRef = db.collection('repos').doc(repoId).collection('dropboxes');
         (async function () {
@@ -57,6 +61,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
             tempFiles.forEach(({ name }) => (filenameMemo.current[name] = true));
             setWait('');
             setFiles(tempFiles);
+            setDropbox(querySnapshot.docs[0].data() as IDropboxDb);
         })();
     }, [currentUser, facultyId, filenameMemo, repoId, setFiles, setWait]);
 
@@ -72,9 +77,34 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) 
                     <Box margin={1}>
                         <Typography variant="h6" gutterBottom>
                             Your dropbox
-                            <Box color="info.main" display="inline" fontSize="fontSize" ml={1}>
-                                <strong>Status:</strong> pending
-                            </Box>
+                            <PopoverItem
+                                placement="bottom"
+                                renderToggle={(toggle, toggleEl) => (
+                                    <Button type="button" ref={toggleEl} onClick={toggle}>
+                                        {STATUS_TO_JSX[dropbox?.status || 'pending']} &nbsp; (Click me to view more
+                                        details)
+                                    </Button>
+                                )}
+                                renderPopContent={() =>
+                                    (dropbox && dropbox.status !== 'pending' && (
+                                        <Fragment>
+                                            <div>
+                                                <strong>Reviewer's name:</strong> {dropbox.reviewerName}
+                                            </div>
+                                            <div>
+                                                <strong>Reviewer's email:</strong> {dropbox.reviewerEmail}
+                                            </div>
+                                            <div>
+                                                <strong>At:</strong> {dropbox.reviewedAt?.toDate().toLocaleString()}
+                                            </div>
+                                            <div style={{ whiteSpace: 'pre-line' }}>
+                                                <strong>Feedback:</strong> {dropbox.feedback}
+                                            </div>
+                                        </Fragment>
+                                    )) ||
+                                    'No one has reviewed this dropbox'
+                                }
+                            />
                         </Typography>
                         <Tooltip
                             title="Only files with valid names are uploaded. Valid characters include: english character,
