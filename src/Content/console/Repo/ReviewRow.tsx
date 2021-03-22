@@ -104,24 +104,28 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                                     {STATUS_TO_JSX[status]}
                                                                 </Button>
                                                             )}
-                                                            renderPopContent={() => (
-                                                                <Fragment>
-                                                                    <div>
-                                                                        <strong>Reviewer's name:</strong> {reviewerName}
-                                                                    </div>
-                                                                    <div>
-                                                                        <strong>Reviewer's email:</strong>{' '}
-                                                                        {reviewerEmail}
-                                                                    </div>
-                                                                    <div>
-                                                                        <strong>At:</strong>{' '}
-                                                                        {reviewedAt?.toDate().toLocaleString()}
-                                                                    </div>
-                                                                    <div>
-                                                                        <strong>Feedback:</strong> {feedback}
-                                                                    </div>
-                                                                </Fragment>
-                                                            )}
+                                                            renderPopContent={() =>
+                                                                (status !== 'pending' && (
+                                                                    <Fragment>
+                                                                        <div>
+                                                                            <strong>Reviewer's name:</strong>{' '}
+                                                                            {reviewerName}
+                                                                        </div>
+                                                                        <div>
+                                                                            <strong>Reviewer's email:</strong>{' '}
+                                                                            {reviewerEmail}
+                                                                        </div>
+                                                                        <div>
+                                                                            <strong>At:</strong>{' '}
+                                                                            {reviewedAt?.toDate().toLocaleString()}
+                                                                        </div>
+                                                                        <div style={{ whiteSpace: 'pre-line' }}>
+                                                                            <strong>Feedback:</strong> {feedback}
+                                                                        </div>
+                                                                    </Fragment>
+                                                                )) ||
+                                                                'No one has reviewed this dropbox'
+                                                            }
                                                         />
                                                     </TableCell>
                                                     <TableCell>
@@ -161,7 +165,8 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                                             close();
                                                                             setDropbox({
                                                                                 id,
-                                                                                status: 'approved'
+                                                                                status: 'approved',
+                                                                                feedback
                                                                             });
                                                                             setDialogOpen(true);
                                                                         }}
@@ -177,7 +182,8 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                                             close();
                                                                             setDropbox({
                                                                                 id,
-                                                                                status: 'rejected'
+                                                                                status: 'rejected',
+                                                                                feedback
                                                                             });
                                                                             setDialogOpen(true);
                                                                         }}

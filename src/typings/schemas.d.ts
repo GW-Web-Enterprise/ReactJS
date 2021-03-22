@@ -44,4 +44,4 @@ export type IDropboxDb = {
     reviewedAt?: firebase.default.firestore.Timestamp;
 };
 
-export type IDropboxReview = { id: string; status: 'rejected' | 'approved' } | null;
+export type IDropboxReview = { id: string; status: 'rejected' | 'approved'; feedback?: string } | null;

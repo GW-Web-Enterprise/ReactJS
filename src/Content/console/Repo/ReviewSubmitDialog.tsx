@@ -45,6 +45,7 @@ export const ReviewSubmitDialog: VFC<Props> = ({ open, repoId, dropbox, onClose 
                     id="standard-textarea"
                     inputRef={textInput}
                     inputProps={{ maxLength: 500 }}
+                    defaultValue={dropbox?.feedback || ''}
                     margin="normal"
                     placeholder="Please explain why you come to this decision"
                     helperText="Text can span multiple lines, you can hit the enter key to find out"
