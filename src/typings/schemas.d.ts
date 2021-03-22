@@ -16,6 +16,15 @@ export type FacultyDbSave = {
     name: string;
 };
 
+export type IUserFacultyDbLink = {
+    id: string;
+    userId: string;
+    role: 'student' | 'coordinator';
+    facultyId: string;
+    facultyName: string;
+    createdAt: firebase.default.firestore.Timestamp;
+};
+
 export type RepoDbRead = {
     id: string;
     name: string;

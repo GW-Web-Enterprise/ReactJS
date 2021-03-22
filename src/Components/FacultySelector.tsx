@@ -1,5 +1,6 @@
+import { useAuth } from '@app/hooks/useAuth';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
-import { FacultyDbRead } from '@app/typings/schemas';
+import { IUserFacultyDbLink } from '@app/typings/schemas';
 import { Box, LinearProgress, List, ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core';
 import firebase from 'firebase/app';
 import { Dispatch, Fragment, SetStateAction, useRef, useState, VFC } from 'react';
@@ -7,6 +8,7 @@ import { Dispatch, Fragment, SetStateAction, useRef, useState, VFC } from 'react
 type Props = { onSelect: Dispatch<SetStateAction<string>> };
 const db = firebase.firestore();
 export const FacultySelector: VFC<Props> = ({ onSelect }) => {
+    const { currentUser } = useAuth();
     const facultySelector = useRef(null);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -15,7 +17,10 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
         setMenuOpen(false);
         setSelectedIndex(index);
     };
-    const { data: options = [], status } = useFirestoreQuery(db.collection('faculties'));
+    const role = window.location.pathname === '/console/upload' ? 'student' : 'coordinator';
+    const { data: options = [], status } = useFirestoreQuery(
+        db.collection('user_faculties').where('userId', '==', currentUser!.uid).where('role', '==', role)
+    );
     return (
         <Fragment>
             {status === 'loading' && <LinearProgress />}
@@ -45,9 +50,9 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
                             horizontal: 'center'
                         }}
                     >
-                        {options.map(({ id, name }: FacultyDbRead, index) => (
+                        {options.map(({ id, facultyName }: IUserFacultyDbLink, index) => (
                             <MenuItem key={id} selected={index === selectedIndex} onClick={handleFacSelect(index, id)}>
-                                {name}
+                                {facultyName}
                             </MenuItem>
                         ))}
                         {!options.length && (
