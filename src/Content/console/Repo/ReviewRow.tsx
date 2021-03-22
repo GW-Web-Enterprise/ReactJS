@@ -31,7 +31,9 @@ const db = firebase.firestore();
 export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dropbox, setDropbox] = useState<IDropboxReview>(null);
-    const { data = [], status } = useFirestoreQuery(db.collection('repos').doc(repoId).collection('dropboxes'));
+    const { data = [], status } = useFirestoreQuery(
+        db.collection('repos').doc(repoId).collection('dropboxes').where('size', '!=', 0)
+    );
     return (
         <Fragment>
             <ReviewSubmitDialog
@@ -85,103 +87,102 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
                                                 reviewerEmail,
                                                 reviewedAt,
                                                 feedback
-                                            }: IDropboxDb) =>
-                                                (size && (
-                                                    <TableRow key={id}>
-                                                        <TableCell component="th" scope="row">
-                                                            {ownerName}
-                                                        </TableCell>
-                                                        <TableCell align="right">{ownerEmail}</TableCell>
-                                                        <TableCell align="right">
-                                                            {createdAt.toDate().toLocaleString()}
-                                                        </TableCell>
-                                                        <TableCell align="right">{displayFileSize(size)}</TableCell>
-                                                        <TableCell align="right">
-                                                            <Tooltip
-                                                                title={
-                                                                    <Fragment>
-                                                                        <div>Reviewer's name: {reviewerName}</div>
-                                                                        <div>Reviewer's email: {reviewerEmail}</div>
-                                                                        <div>
-                                                                            At: {reviewedAt?.toDate().toLocaleString()}
-                                                                        </div>
-                                                                        <div>Feedback: {feedback}</div>
-                                                                    </Fragment>
-                                                                }
-                                                                arrow
-                                                            >
-                                                                <Button>{STATUS_TO_JSX[status]}</Button>
-                                                            </Tooltip>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <PopoverItem
-                                                                placement="bottomRight"
-                                                                padding={0}
-                                                                renderToggle={(toggle, toggleEl) => (
-                                                                    <IconButton
-                                                                        aria-label="View more options"
-                                                                        size="small"
-                                                                        onClick={toggle}
-                                                                        ref={toggleEl}
+                                            }: IDropboxDb) => (
+                                                <TableRow key={id}>
+                                                    <TableCell component="th" scope="row">
+                                                        {ownerName}
+                                                    </TableCell>
+                                                    <TableCell align="right">{ownerEmail}</TableCell>
+                                                    <TableCell align="right">
+                                                        {createdAt.toDate().toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell align="right">{displayFileSize(size)}</TableCell>
+                                                    <TableCell align="right">
+                                                        <Tooltip
+                                                            title={
+                                                                <Fragment>
+                                                                    <div>Reviewer's name: {reviewerName}</div>
+                                                                    <div>Reviewer's email: {reviewerEmail}</div>
+                                                                    <div>
+                                                                        At: {reviewedAt?.toDate().toLocaleString()}
+                                                                    </div>
+                                                                    <div>Feedback: {feedback}</div>
+                                                                </Fragment>
+                                                            }
+                                                            arrow
+                                                        >
+                                                            <Button>{STATUS_TO_JSX[status]}</Button>
+                                                        </Tooltip>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <PopoverItem
+                                                            placement="bottomRight"
+                                                            padding={0}
+                                                            renderToggle={(toggle, toggleEl) => (
+                                                                <IconButton
+                                                                    aria-label="View more options"
+                                                                    size="small"
+                                                                    onClick={toggle}
+                                                                    ref={toggleEl}
+                                                                >
+                                                                    <MoreVert />
+                                                                </IconButton>
+                                                            )}
+                                                            renderPopContent={close => (
+                                                                <List component="nav" dense>
+                                                                    <ListItem
+                                                                        button
+                                                                        onClick={() => {
+                                                                            downloadFolderAsZip(
+                                                                                `faculty_${facultyId}/repo_${repoId}/dropbox_${ownerId}`,
+                                                                                `${ownerName}_${ownerEmail}_${ownerId}.zip`
+                                                                            );
+                                                                            close();
+                                                                        }}
                                                                     >
-                                                                        <MoreVert />
-                                                                    </IconButton>
-                                                                )}
-                                                                renderPopContent={close => (
-                                                                    <List component="nav" dense>
-                                                                        <ListItem
-                                                                            button
-                                                                            onClick={() => {
-                                                                                downloadFolderAsZip(
-                                                                                    `faculty_${facultyId}/repo_${repoId}/dropbox_${ownerId}`,
-                                                                                    `${ownerName}_${ownerEmail}_${ownerId}.zip`
-                                                                                );
-                                                                                close();
-                                                                            }}
-                                                                        >
-                                                                            <ListItemIcon>
-                                                                                <GetApp />
-                                                                            </ListItemIcon>
-                                                                            <ListItemText primary="Download to view" />
-                                                                        </ListItem>
-                                                                        <ListItem
-                                                                            button
-                                                                            onClick={() => {
-                                                                                close();
-                                                                                setDropbox({
-                                                                                    id,
-                                                                                    status: 'approved'
-                                                                                });
-                                                                                setDialogOpen(true);
-                                                                            }}
-                                                                        >
-                                                                            <ListItemIcon>
-                                                                                <AssignmentTurnedIn />
-                                                                            </ListItemIcon>
-                                                                            <ListItemText primary="Approve" />
-                                                                        </ListItem>
-                                                                        <ListItem
-                                                                            button
-                                                                            onClick={() => {
-                                                                                close();
-                                                                                setDropbox({
-                                                                                    id,
-                                                                                    status: 'rejected'
-                                                                                });
-                                                                                setDialogOpen(true);
-                                                                            }}
-                                                                        >
-                                                                            <ListItemIcon>
-                                                                                <CancelSharp />
-                                                                            </ListItemIcon>
-                                                                            <ListItemText primary="Reject" />
-                                                                        </ListItem>
-                                                                    </List>
-                                                                )}
-                                                            />
-                                                        </TableCell>
-                                                    </TableRow>
-                                                )) || <Fragment key={id} />
+                                                                        <ListItemIcon>
+                                                                            <GetApp />
+                                                                        </ListItemIcon>
+                                                                        <ListItemText primary="Download to view" />
+                                                                    </ListItem>
+                                                                    <ListItem
+                                                                        button
+                                                                        onClick={() => {
+                                                                            close();
+                                                                            setDropbox({
+                                                                                id,
+                                                                                status: 'approved'
+                                                                            });
+                                                                            setDialogOpen(true);
+                                                                        }}
+                                                                    >
+                                                                        <ListItemIcon>
+                                                                            <AssignmentTurnedIn />
+                                                                        </ListItemIcon>
+                                                                        <ListItemText primary="Approve" />
+                                                                    </ListItem>
+                                                                    <ListItem
+                                                                        button
+                                                                        onClick={() => {
+                                                                            close();
+                                                                            setDropbox({
+                                                                                id,
+                                                                                status: 'rejected'
+                                                                            });
+                                                                            setDialogOpen(true);
+                                                                        }}
+                                                                    >
+                                                                        <ListItemIcon>
+                                                                            <CancelSharp />
+                                                                        </ListItemIcon>
+                                                                        <ListItemText primary="Reject" />
+                                                                    </ListItem>
+                                                                </List>
+                                                            )}
+                                                        />
+                                                    </TableCell>
+                                                </TableRow>
+                                            )
                                         )}
                                     </TableBody>
                                 </Table>
