@@ -30,7 +30,7 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
                         <ListItem button onClick={() => setMenuOpen(true)} innerRef={facultySelector}>
                             <ListItemText
                                 primary="Select a faculty to view its repos"
-                                secondary={`Chosen faculty: ${options[selectedIndex]?.name || 'none'}`}
+                                secondary={`Chosen faculty: ${options[selectedIndex]?.facultyName || 'none'}`}
                             />
                         </ListItem>
                     </List>
@@ -50,8 +50,12 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
                             horizontal: 'center'
                         }}
                     >
-                        {options.map(({ id, facultyName }: IUserFacultyDbLink, index) => (
-                            <MenuItem key={id} selected={index === selectedIndex} onClick={handleFacSelect(index, id)}>
+                        {options.map(({ id, facultyName, facultyId }: IUserFacultyDbLink, index) => (
+                            <MenuItem
+                                key={id}
+                                selected={index === selectedIndex}
+                                onClick={handleFacSelect(index, facultyId)}
+                            >
                                 {facultyName}
                             </MenuItem>
                         ))}
