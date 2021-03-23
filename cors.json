@@ -1,10 +1,13 @@
 [
     {
         "origin": [
-            "http://localhost:3000/, https://gw-enterprise.web.app/, https://gw-enterprise.firebaseapp.com/"
+            "http://localhost:3000/",
+            "https://gw-enterprise.web.app/",
+            "https://gw-enterprise.firebaseapp.com/"
         ],
         "method": [
-            "GET"
+            "GET",
+            "HEAD"
         ],
         "maxAgeSeconds": 3600
     }
