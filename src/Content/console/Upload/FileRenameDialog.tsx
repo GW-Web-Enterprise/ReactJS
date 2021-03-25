@@ -1,4 +1,5 @@
 import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
+import { REGEX_FILENAME } from '@app/constants/regexes';
 import {
     Button,
     CircularProgress,
@@ -56,7 +57,7 @@ export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, f
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => /^[\w,\s-'’!()+.]+\.[A-Za-z]{3,4}$/.test(node!.value) && handleClick()}
+                    onClick={() => REGEX_FILENAME.test(node!.value) && handleClick()}
                 >
                     Ok
                 </Button>

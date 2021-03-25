@@ -1,3 +1,4 @@
+import { REGEX_FILENAME } from '@app/constants/regexes';
 import { useAuth } from '@app/hooks/useAuth';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { CustomFileList } from '@app/typings/files';
@@ -59,7 +60,7 @@ function extractValidFiles(rawFileList: FileList, filenameMemo: FilenameMemo) {
     const validFiles: Array<File> = [];
     [...rawFileList].forEach(file => {
         const { name } = file;
-        if (/^[\w,\s-'’!()+.]+\.[A-Za-z]{3,4}$/.test(name) && !filenameMemo.current[name]) {
+        if (REGEX_FILENAME.test(name) && !filenameMemo.current[name]) {
             // Only select the the files whose names do not exist in the current list of files => Avoid files with duplicate names
             // Files with names that are not in the right format 'filename.ext' will be rejected
             filenameMemo.current[name] = true;
