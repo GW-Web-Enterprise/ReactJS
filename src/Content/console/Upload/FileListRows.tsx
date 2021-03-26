@@ -61,7 +61,7 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
     };
     const handleRename = async (newName: string) => {
         const functions = firebase.app().functions('asia-southeast2');
-        const renameFile = functions.httpsCallable('renameFile');
+        const renameFile = functions.httpsCallable('default-renameFile');
         const { fileIndexToRename, filenameToEdit } = trackLastestEdit.current;
         if (newName === filenameToEdit) return handleDialogClose();
         try {
