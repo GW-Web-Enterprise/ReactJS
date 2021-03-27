@@ -25,7 +25,7 @@ export const EMAIL_INP_ERR: RegisterOptions = {
     maxLength: { value: 50, message: emailErr },
     pattern: { value: REGEX_EMAIL, message: emailErr }
 };
-const passwordErr = 'Your password must contain between 4 and 60 characters';
+const passwordErr = 'Your password must contain between 6 and 60 characters';
 export const PASSWORD_INP_ERR: RegisterOptions = {
     required: passwordErr,
     minLength: { value: 6, message: passwordErr },
