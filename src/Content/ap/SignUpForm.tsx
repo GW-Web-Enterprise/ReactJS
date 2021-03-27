@@ -33,7 +33,7 @@ const SignUpForm: VFC = () => {
         await user!.linkWithCredential(credential);
         showAlert({
             status: 'success',
-            message: 'Account is linked successfully, you can now use this email and password to login'
+            message: 'Account is linked successfully, you can use this email and password to login from now on'
         });
     };
     const onSubmit = (data: Inps) =>
