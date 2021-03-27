@@ -50,7 +50,8 @@ function useProvideAuth() {
 
     const logout = () => auth.signOut();
 
-    const resetPassword: ChangeCreFunc = email => auth.sendPasswordResetEmail(email);
+    const resetPassword: ChangeCreFunc = email =>
+        auth.sendPasswordResetEmail(email, { url: 'https://gw-enterprise.web.app/ap/login' });
 
     const updatePassword: ChangeCreFunc = password => currentUser.updatePassword(password);
 
