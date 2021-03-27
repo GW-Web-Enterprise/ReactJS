@@ -9,7 +9,7 @@ type ChangeCreFunc = (newCredential: string) => Promise<void>;
 interface AuthContextInterface {
     currentUser: firebase.User | null;
     lazyLogin: () => Promise<firebase.auth.UserCredential>;
-    login: AuthFunc;
+    loginWithPassword: AuthFunc;
     loginWithGoogle: () => Promise<firebase.auth.UserCredential>;
     signup: AuthFunc;
     logout: () => Promise<void>;
@@ -46,7 +46,7 @@ function useProvideAuth() {
 
     const loginWithGoogle = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
 
-    const login: AuthFunc = (email, password) => auth.signInWithEmailAndPassword(email, password);
+    const loginWithPassword: AuthFunc = (email, password) => auth.signInWithEmailAndPassword(email, password);
 
     const logout = () => auth.signOut();
 
@@ -72,7 +72,7 @@ function useProvideAuth() {
         {
             currentUser,
             lazyLogin,
-            login,
+            loginWithPassword,
             loginWithGoogle,
             signup,
             logout,
