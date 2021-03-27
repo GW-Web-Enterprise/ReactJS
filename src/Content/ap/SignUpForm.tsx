@@ -16,9 +16,11 @@ const SignUpForm: VFC = () => {
     const { signup, loginWithGoogle } = useAuth();
     const { showAlert, showActionBar } = useGlobalUtils();
     const { register, handleSubmit, errors } = useForm<Inps>();
-    const createUser = async ({ email, password }: Inps) => {
+    const createUser = async ({ email, password, fullname }: Inps) => {
         setLoading(true);
-        await signup(email, password);
+        const { user } = await signup(email, password);
+        await user!.updateProfile({ displayName: fullname });
+        showAlert({ status: 'success', message: 'Account is created successfully' });
     };
     const linkToGoogleAcc = async (email: string, password: string) => {
         const credential = firebase.auth.EmailAuthProvider.credential(email, password);
@@ -46,8 +48,8 @@ const SignUpForm: VFC = () => {
                         message: `An account already exists with the e-mail ${email}`
                     });
                 showActionBar({
-                    message: 'There is already a Google account with this email address',
-                    hint: 'Link account',
+                    message: 'A Google account with this email address already exists',
+                    hint: 'Link account now',
                     actionFunc: () => linkToGoogleAcc(email, password)
                 });
             }
