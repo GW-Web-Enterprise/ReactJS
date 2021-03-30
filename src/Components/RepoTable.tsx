@@ -1,6 +1,7 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
 import { DeleteRepo } from '@app/Content/console/Repo/DeleteRepo';
 import { EditRepo } from '@app/Content/console/Repo/EditRepo';
+import { useAuth } from '@app/hooks/useAuth';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 import { RepoDbRead } from '@app/typings/schemas';
 import {
@@ -26,6 +27,7 @@ export type IRepoCollapsibleRow = VFC<{ open: boolean; facultyId: string; repoId
 type RepoTableProps = { facultyId: string; RepoCollapsibleRow: IRepoCollapsibleRow };
 const reposRef = firebase.firestore().collection('repos');
 export const RepoTable: VFC<RepoTableProps> = ({ facultyId, RepoCollapsibleRow }) => {
+    const { userRole } = useAuth();
     const { data = [], status } = useFirestoreQuery(reposRef.where('facultyId', '==', facultyId));
     return (
         <TableContainer component={Paper}>
@@ -44,7 +46,9 @@ export const RepoTable: VFC<RepoTableProps> = ({ facultyId, RepoCollapsibleRow }
                             <strong>Final date and time</strong>
                         </TableCell>
                         {/* The last column holds the button to edit and delete a repo */}
-                        {window.location.pathname === '/console/repos' && <TableCell></TableCell>}
+                        {window.location.pathname === '/console/repos' && userRole === 'admin' && (
+                            <TableCell></TableCell>
+                        )}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -70,6 +74,7 @@ type RepoRowProps = {
     RepoCollapsibleRow: IRepoCollapsibleRow;
 };
 const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, RepoCollapsibleRow }) => {
+    const { userRole } = useAuth();
     const [open, setOpen] = useState(false);
     const { id, name, description, closeTimestamp, finalTimestamp } = repoDoc;
     return (
@@ -89,35 +94,41 @@ const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, RepoCollapsibleRow }) 
                 </TableCell>
                 <TableCell align="right">{closeTimestamp.toDate().toLocaleString()}</TableCell>
                 <TableCell align="right">{finalTimestamp.toDate().toLocaleString()}</TableCell>
-                {window.location.pathname === '/console/repos' && ( // UI components to edit and delete a repo
-                    <TableCell>
-                        <PopoverItem
-                            placement="bottomRight"
-                            padding={0}
-                            renderToggle={(toggle, toggleEl) => (
-                                <IconButton aria-label="View more options" size="small" onClick={toggle} ref={toggleEl}>
-                                    <MoreVert />
-                                </IconButton>
-                            )}
-                            renderPopContent={close => (
-                                <List component="nav" dense>
-                                    <ListItem button>
-                                        <ListItemIcon>
-                                            <Edit />
-                                        </ListItemIcon>
-                                        <EditRepo repoDoc={repoDoc} cleanup={close} />
-                                    </ListItem>
-                                    <ListItem button>
-                                        <ListItemIcon>
-                                            <Delete />
-                                        </ListItemIcon>
-                                        <DeleteRepo repoId={id} name={name} cleanup={close} />
-                                    </ListItem>
-                                </List>
-                            )}
-                        />
-                    </TableCell>
-                )}
+                {window.location.pathname === '/console/repos' &&
+                    userRole === 'admin' && ( // UI components to edit and delete a repo
+                        <TableCell>
+                            <PopoverItem
+                                placement="bottomRight"
+                                padding={0}
+                                renderToggle={(toggle, toggleEl) => (
+                                    <IconButton
+                                        aria-label="View more options"
+                                        size="small"
+                                        onClick={toggle}
+                                        ref={toggleEl}
+                                    >
+                                        <MoreVert />
+                                    </IconButton>
+                                )}
+                                renderPopContent={close => (
+                                    <List component="nav" dense>
+                                        <ListItem button>
+                                            <ListItemIcon>
+                                                <Edit />
+                                            </ListItemIcon>
+                                            <EditRepo repoDoc={repoDoc} cleanup={close} />
+                                        </ListItem>
+                                        <ListItem button>
+                                            <ListItemIcon>
+                                                <Delete />
+                                            </ListItemIcon>
+                                            <DeleteRepo repoId={id} name={name} cleanup={close} />
+                                        </ListItem>
+                                    </List>
+                                )}
+                            />
+                        </TableCell>
+                    )}
             </TableRow>
             <RepoCollapsibleRow open={open} facultyId={facultyId} repoId={repoDoc.id} />
         </Fragment>

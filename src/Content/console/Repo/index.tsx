@@ -5,8 +5,10 @@ import { Fragment, useEffect, useState, VFC } from 'react';
 import firebase from 'firebase/app';
 import { ReviewRow } from '@app/Content/console/Repo/ReviewRow';
 import { getUserRole } from '@app/utils/getUserRole';
+import { useAuth } from '@app/hooks/useAuth';
 
 const Repo: VFC = () => {
+    const { userRole } = useAuth();
     const [selectedFacultyId, setFacultyId] = useState('');
     const [query, setQuery] = useState<firebase.firestore.Query | null>(null);
     useEffect(() => {
@@ -18,7 +20,7 @@ const Repo: VFC = () => {
                 <FacultySelector onSelect={setFacultyId} query={query} />
                 {selectedFacultyId && (
                     <Fragment>
-                        <AddRepo facultyId={selectedFacultyId} />
+                        {userRole === 'admin' && <AddRepo facultyId={selectedFacultyId} />}
                         <RepoTable facultyId={selectedFacultyId} RepoCollapsibleRow={ReviewRow} />
                     </Fragment>
                 )}

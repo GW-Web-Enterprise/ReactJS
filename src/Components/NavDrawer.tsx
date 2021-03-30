@@ -118,7 +118,7 @@ enum PageToNavIndex {
 export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
     const classes = useStyles();
     const theme = useTheme();
-    const { currentUser, logout } = useAuth();
+    const { currentUser, userRole, logout } = useAuth();
     const [open, setOpen] = useState(window.innerWidth >= 768);
     const onRefChange = useCallback(async (roleDisplay: HTMLSpanElement | null) => {
         roleDisplay && (roleDisplay.innerText = await getUserRole());
@@ -224,18 +224,20 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         </ListItemIcon>
                         <ListItemText primary="Overview" />
                     </ListItem>
-                    <ListItem
-                        selected={selectedIndex === 1}
-                        onClick={handleListItemClick(1)}
-                        button
-                        component={Link}
-                        to={`/console/${PageToNavIndex[1]}`}
-                    >
-                        <ListItemIcon>
-                            <InlineIcon src={facultyIcon} />
-                        </ListItemIcon>
-                        <ListItemText primary="Faculties" />
-                    </ListItem>
+                    {userRole === 'admin' && (
+                        <ListItem
+                            selected={selectedIndex === 1}
+                            onClick={handleListItemClick(1)}
+                            button
+                            component={Link}
+                            to={`/console/${PageToNavIndex[1]}`}
+                        >
+                            <ListItemIcon>
+                                <InlineIcon src={facultyIcon} />
+                            </ListItemIcon>
+                            <ListItemText primary="Faculties" />
+                        </ListItem>
+                    )}
                     <ListItem
                         selected={selectedIndex === 2}
                         onClick={handleListItemClick(2)}
@@ -260,18 +262,20 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                         </ListItemIcon>
                         <ListItemText primary="Upload files" />
                     </ListItem>
-                    <ListItem
-                        selected={selectedIndex === 4}
-                        onClick={handleListItemClick(4)}
-                        button
-                        component={Link}
-                        to={`/console/${PageToNavIndex[4]}`}
-                    >
-                        <ListItemIcon>
-                            <People />
-                        </ListItemIcon>
-                        <ListItemText primary="Users & Roles" />
-                    </ListItem>
+                    {userRole === 'admin' && (
+                        <ListItem
+                            selected={selectedIndex === 4}
+                            onClick={handleListItemClick(4)}
+                            button
+                            component={Link}
+                            to={`/console/${PageToNavIndex[4]}`}
+                        >
+                            <ListItemIcon>
+                                <People />
+                            </ListItemIcon>
+                            <ListItemText primary="Users & Roles" />
+                        </ListItem>
+                    )}
                 </List>
             </Drawer>
             <main className={classes.content}>

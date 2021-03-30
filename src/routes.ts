@@ -36,7 +36,8 @@ export const CONSOLE_ROUTES: Array<CustomRouteProps> = [
     },
     {
         path: '/console/faculties',
-        component: Faculty
+        component: Faculty,
+        role: 'admin'
     },
     {
         path: '/console/repos',
