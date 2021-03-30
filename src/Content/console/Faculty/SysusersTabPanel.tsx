@@ -24,10 +24,12 @@ import { useRef, VFC } from 'react';
 import firebase from 'firebase/app';
 import { ISysuserDb } from '@app/typings/schemas';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { useAuth } from '@app/hooks/useAuth';
 
 const facultiesRef = firebase.firestore().collection('faculties');
 type IProps = { value: number; facultyId: string };
 export const SysusersTabPanel: VFC<IProps> = ({ value, facultyId }) => {
+    const { currentUser } = useAuth();
     const { data = [], status } = useFirestoreQuery(facultiesRef.doc(facultyId).collection('sysusers'));
     const { showAlert } = useGlobalUtils();
     const roleSelector = useRef<HTMLSelectElement | null>(null);
@@ -51,70 +53,80 @@ export const SysusersTabPanel: VFC<IProps> = ({ value, facultyId }) => {
                             <ListItemAvatar>
                                 <Avatar alt={displayName} src={photoURL} />
                             </ListItemAvatar>
-                            <ListItemText primary={displayName} secondary={email} />
-                            <ListItemSecondaryAction>
-                                <PopoverItem
-                                    placement="top"
-                                    renderToggle={(toggle, toggleEl) => (
-                                        <Tooltip title="Add this user to the faculty" arrow>
-                                            <IconButton edge="end" aria-label="delete" onClick={toggle} ref={toggleEl}>
-                                                <AddCircle />
-                                            </IconButton>
-                                        </Tooltip>
-                                    )}
-                                    renderPopContent={close => (
-                                        <FormControl>
-                                            <InputLabel>Faculty role</InputLabel>
-                                            <NativeSelect
-                                                inputRef={roleSelector}
-                                                inputProps={{
-                                                    name: 'role'
-                                                }}
-                                            >
-                                                <option value="" />
-                                                <option value="student">student</option>
-                                                <option value="coordinator">coordinator</option>
-                                            </NativeSelect>
-                                            <FormHelperText>What this member will be allowed to do?</FormHelperText>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={() =>
-                                                    roleSelector.current?.value &&
-                                                    facultiesRef
-                                                        .doc(facultyId)
-                                                        .collection('members')
-                                                        .doc(id)
-                                                        .set(
-                                                            {
-                                                                displayName,
-                                                                email,
-                                                                photoURL,
-                                                                role: roleSelector.current!.value
-                                                            },
-                                                            { merge: true }
-                                                        )
-                                                        .then(() =>
-                                                            showAlert({
-                                                                status: 'success',
-                                                                message: `User ${displayName} has become a member of this faculty`
-                                                            })
-                                                        )
-                                                        .catch(() =>
-                                                            showAlert({
-                                                                status: 'error',
-                                                                message: 'Failed to add memmber to this faculty'
-                                                            })
-                                                        )
-                                                        .then(close)
-                                                }
-                                            >
-                                                Add
-                                            </Button>
-                                        </FormControl>
-                                    )}
-                                />
-                            </ListItemSecondaryAction>
+                            <ListItemText
+                                primary={`${currentUser!.email === email ? '(This is you)' : displayName}`}
+                                secondary={email}
+                            />
+                            {currentUser!.email !== email && (
+                                <ListItemSecondaryAction>
+                                    <PopoverItem
+                                        placement="top"
+                                        renderToggle={(toggle, toggleEl) => (
+                                            <Tooltip title="Add this user to the faculty" arrow>
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="delete"
+                                                    onClick={toggle}
+                                                    ref={toggleEl}
+                                                >
+                                                    <AddCircle />
+                                                </IconButton>
+                                            </Tooltip>
+                                        )}
+                                        renderPopContent={close => (
+                                            <FormControl>
+                                                <InputLabel>Faculty role</InputLabel>
+                                                <NativeSelect
+                                                    inputRef={roleSelector}
+                                                    inputProps={{
+                                                        name: 'role'
+                                                    }}
+                                                >
+                                                    <option value="" />
+                                                    <option value="student">student</option>
+                                                    <option value="coordinator">coordinator</option>
+                                                </NativeSelect>
+                                                <FormHelperText>What this member will be allowed to do?</FormHelperText>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() =>
+                                                        roleSelector.current?.value &&
+                                                        facultiesRef
+                                                            .doc(facultyId)
+                                                            .collection('members')
+                                                            .doc(id)
+                                                            .set(
+                                                                {
+                                                                    displayName,
+                                                                    email,
+                                                                    photoURL,
+                                                                    role: roleSelector.current!.value
+                                                                },
+                                                                { merge: true }
+                                                            )
+                                                            .then(() =>
+                                                                showAlert({
+                                                                    status: 'success',
+                                                                    message: `User ${displayName} has become a member of this faculty`
+                                                                })
+                                                            )
+                                                            .catch(() =>
+                                                                showAlert({
+                                                                    status: 'error',
+                                                                    message: 'Failed to add memmber to this faculty'
+                                                                })
+                                                            )
+                                                            .then(close)
+                                                    }
+                                                >
+                                                    Add
+                                                </Button>
+                                            </FormControl>
+                                        )}
+                                    />
+                                </ListItemSecondaryAction>
+                            )}
                         </ListItem>
                     ))}
                 </List>
