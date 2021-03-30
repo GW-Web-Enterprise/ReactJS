@@ -30,7 +30,7 @@ const LoginForm: VFC = () => {
                     message: `A Google account with the email ${data.email} already exists, please
                     login with this Google account or sign up for a new account with this email`
                 });
-            (code === 'auth/invalid-email' || 'auth/user-not-found') &&
+            (code === 'auth/invalid-email' || code === 'auth/user-not-found') &&
                 showAlert({ status: 'error', message: 'We cannot find an account with this email address' });
             code === 'auth/wrong-password' && showAlert({ status: 'error', message: 'Your password is incorrect' });
         });
