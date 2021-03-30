@@ -3,11 +3,14 @@ import { useHistory } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import firebaseConfig from '@app/firebase-config.json';
+import { getUserRole } from '@app/utils/getUserRole';
 
 type AuthFunc = (email: string, password: string) => Promise<firebase.auth.UserCredential>;
 type ChangeCreFunc = (newCredential: string) => Promise<void>;
+type UserRole = 'guest' | 'admin' | 'manager';
 interface AuthContextInterface {
     currentUser: firebase.User | null;
+    userRole: UserRole;
     lazyLogin: () => Promise<firebase.auth.UserCredential>;
     loginWithPassword: AuthFunc;
     loginWithGoogle: () => Promise<firebase.auth.UserCredential>;
@@ -38,6 +41,7 @@ export const ProvideAuth: VFC<{ children: ReactNode }> = ({ children }) => {
 function useProvideAuth() {
     const [currentUser, setCurrentUser] = useState<firebase.User>(null!);
     const [loading, setLoading] = useState(true);
+    const [userRole, setUserRole] = useState<UserRole>('guest');
     const history = useHistory();
 
     const signup: AuthFunc = (email, password) => auth.createUserWithEmailAndPassword(email, password);
@@ -58,6 +62,7 @@ function useProvideAuth() {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user!);
+            getUserRole().then(setUserRole);
             const currentPath = window.location.pathname;
             // If the user is logged in, then they must be at the system console
             if (user) if (!/^\/console/.test(currentPath)) history.push('/console/overview');
@@ -72,6 +77,7 @@ function useProvideAuth() {
     return [
         {
             currentUser,
+            userRole,
             lazyLogin,
             loginWithPassword,
             loginWithGoogle,

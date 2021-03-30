@@ -1,15 +1,12 @@
 import { useAuth } from '@app/hooks/useAuth';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
-import { IUserFacultyDbLink } from '@app/typings/schemas';
 import { Box, LinearProgress, List, ListItem, ListItemText, Menu, MenuItem } from '@material-ui/core';
-import firebase from 'firebase/app';
 import { Dispatch, Fragment, SetStateAction, useRef, useState, VFC } from 'react';
 
-type Props = { onSelect: Dispatch<SetStateAction<string>> };
-const db = firebase.firestore();
-export const FacultySelector: VFC<Props> = ({ onSelect }) => {
-    const { currentUser } = useAuth();
+type Props = { onSelect: Dispatch<SetStateAction<string>>; query: firebase.default.firestore.Query; viewAll?: boolean };
+export const FacultySelector: VFC<Props> = ({ onSelect, query, viewAll }) => {
     const facultySelector = useRef(null);
+    const { userRole } = useAuth();
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [menuOpen, setMenuOpen] = useState(false);
     const handleFacSelect = (index: number, facultyId: string) => () => {
@@ -17,10 +14,7 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
         setMenuOpen(false);
         setSelectedIndex(index);
     };
-    const role = window.location.pathname === '/console/upload' ? 'student' : 'coordinator';
-    const { data: options = [], status } = useFirestoreQuery(
-        db.collection('user_faculties').where('userId', '==', currentUser!.uid).where('role', '==', role)
-    );
+    const { data: options = [], status } = useFirestoreQuery(query);
     return (
         <Fragment>
             {status === 'loading' && <LinearProgress />}
@@ -30,7 +24,9 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
                         <ListItem button onClick={() => setMenuOpen(true)} innerRef={facultySelector}>
                             <ListItemText
                                 primary="Select a faculty to view its repos"
-                                secondary={`Chosen faculty: ${options[selectedIndex]?.facultyName || 'none'}`}
+                                secondary={`Chosen faculty: ${
+                                    options[selectedIndex]?.facultyName || options[selectedIndex]?.name || 'none'
+                                }`}
                             />
                         </ListItem>
                     </List>
@@ -50,20 +46,27 @@ export const FacultySelector: VFC<Props> = ({ onSelect }) => {
                             horizontal: 'center'
                         }}
                     >
-                        {options.map(({ id, facultyName, facultyId }: IUserFacultyDbLink, index) => (
-                            <MenuItem
-                                key={id}
-                                selected={index === selectedIndex}
-                                onClick={handleFacSelect(index, facultyId)}
-                            >
-                                {facultyName}
-                            </MenuItem>
-                        ))}
+                        {options.map(
+                            (
+                                { id, ...doc }: { id: string; name?: string; facultyId?: string; facultyName?: string },
+                                index
+                            ) => (
+                                <MenuItem
+                                    key={id}
+                                    selected={index === selectedIndex}
+                                    onClick={handleFacSelect(index, doc.facultyId || id)}
+                                >
+                                    {doc.name || doc.facultyName}
+                                </MenuItem>
+                            )
+                        )}
                         {!options.length && (
                             <Box color="info.main" p={1}>
-                                {window.location.pathname === '/console/upload' &&
-                                    'You are not a student of any faculty'}
-                                You are not a coordinator of any faculty or no faculty is created yet
+                                {window.location.pathname === '/console/upload'
+                                    ? 'We cannot find any faculty that you are a student of'
+                                    : userRole === 'admin' || userRole === 'manager'
+                                    ? 'No faculty is created yet'
+                                    : 'We cannot find any faculty that you are a coordinator of'}
                             </Box>
                         )}
                     </Menu>
