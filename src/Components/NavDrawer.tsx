@@ -18,7 +18,7 @@ import {
     Typography,
     useTheme
 } from '@material-ui/core';
-import { Fragment, ReactNode, useState, VFC } from 'react';
+import { ReactNode, useCallback, useState, VFC } from 'react';
 import {
     AccountCircle,
     ArrowDropDownCircle,
@@ -37,6 +37,7 @@ import { Link } from 'react-router-dom';
 import { InlineIcon } from '@app/Components/InlineIcon';
 import { useAuth } from '@app/hooks/useAuth';
 import { PopoverItem } from '@app/Components/PopoverItem';
+import { getUserRole } from '@app/utils/getUserRole';
 
 const drawerWidth = 240;
 
@@ -107,19 +108,22 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     })
 );
-
+enum PageToNavIndex {
+    overview,
+    faculties,
+    repos,
+    upload,
+    users
+}
 export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
     const classes = useStyles();
     const theme = useTheme();
     const { currentUser, logout } = useAuth();
     const [open, setOpen] = useState(window.innerWidth >= 768);
-    enum PageToNavIndex {
-        overview,
-        faculties,
-        repos,
-        upload,
-        users
-    }
+    const onRefChange = useCallback(async (roleDisplay: HTMLSpanElement | null) => {
+        roleDisplay && (roleDisplay.innerText = await getUserRole());
+    }, []);
+
     const currentPath = window.location.pathname;
     const currentPage = currentPath.slice(currentPath.lastIndexOf('/') + 1);
     const [selectedIndex, setSelectedIndex] = useState(PageToNavIndex[currentPage as keyof typeof PageToNavIndex]);
@@ -175,6 +179,9 @@ export const NavDrawer: VFC<{ children: ReactNode }> = ({ children }) => {
                             <Box display="flex" flexDirection="column" justifyContent="center">
                                 <div>{currentUser?.displayName || 'Guest account'}</div>
                                 <div>{currentUser?.email}</div>
+                                <div>
+                                    Global role: <span ref={onRefChange}></span>
+                                </div>
                                 <Button color="inherit" onClick={logout}>
                                     Logout <ExitToApp />
                                 </Button>
