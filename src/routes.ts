@@ -11,6 +11,7 @@ const Upload = lazy(() => import('@app/Content/console/Upload'));
 const Faculty = lazy(() => import('@app/Content/console/Faculty'));
 const Overview = lazy(() => import('@app/Content/console/Overview'));
 const Repo = lazy(() => import('@app/Content/console/Repo'));
+const User = lazy(() => import('@app/Content/console/User'));
 
 // Each one will be mapped to <UnauthenticatedRoute>
 export const ACCESS_PORTAL_ROUTES: Array<CustomRouteProps> = [
@@ -46,5 +47,10 @@ export const CONSOLE_ROUTES: Array<CustomRouteProps> = [
     {
         path: '/console/upload',
         component: Upload
+    },
+    {
+        path: '/console/users',
+        component: User,
+        role: 'admin'
     }
 ];
