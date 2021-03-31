@@ -31,16 +31,18 @@ export const ReviewSubmitDialog: VFC<Props> = ({ open, repoId, dropbox, onClose 
                 reviewedAt: firebase.firestore.FieldValue.serverTimestamp()
             })
             .then(() => showAlert({ status: 'success', message: 'Review is submitted successfully' }))
-            .catch(() => showAlert({ status: 'error', message: 'Failed to submit review' }))
+            .catch(() =>
+                showAlert({
+                    status: 'error',
+                    message: 'Operation is not allowed because you are not a coordinator of this faculty'
+                })
+            )
             .then(onClose);
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
             <DialogTitle id="form-dialog-title">Feedback on the entire coursework</DialogTitle>
             <DialogContent>
-                <Chip
-                    avatar={<Avatar src={currentUser!.photoURL!} />}
-                    label={`${currentUser!.displayName} (Coordinator)`}
-                />
+                <Chip avatar={<Avatar src={currentUser!.photoURL!} />} label={`${currentUser!.displayName}`} />
                 <TextField
                     id="standard-textarea"
                     inputRef={textInput}
