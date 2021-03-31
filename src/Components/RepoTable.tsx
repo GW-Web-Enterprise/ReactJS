@@ -1,6 +1,6 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
-import { DeleteRepo } from '@app/Content/console/Repo/DeleteRepo';
-import { EditRepo } from '@app/Content/console/Repo/EditRepo';
+import { DeleteRepoListItem } from '@app/Content/console/Repo/DeleteRepoListItem';
+import { EditRepoListItem } from '@app/Content/console/Repo/EditRepoListItem';
 import { useAuth } from '@app/hooks/useAuth';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 import { RepoDbRead } from '@app/typings/schemas';
@@ -8,8 +8,6 @@ import {
     IconButton,
     Link,
     List,
-    ListItem,
-    ListItemIcon,
     Paper,
     Table,
     TableBody,
@@ -19,7 +17,7 @@ import {
     TableRow,
     Tooltip
 } from '@material-ui/core';
-import { Delete, Edit, KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons';
+import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons';
 import firebase from 'firebase/app';
 import { Fragment, useState, VFC } from 'react';
 
@@ -112,18 +110,8 @@ const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, RepoCollapsibleRow }) 
                                 )}
                                 renderPopContent={close => (
                                     <List component="nav" dense>
-                                        <ListItem button>
-                                            <ListItemIcon>
-                                                <Edit />
-                                            </ListItemIcon>
-                                            <EditRepo repoDoc={repoDoc} cleanup={close} />
-                                        </ListItem>
-                                        <ListItem button>
-                                            <ListItemIcon>
-                                                <Delete />
-                                            </ListItemIcon>
-                                            <DeleteRepo repoId={id} name={name} cleanup={close} />
-                                        </ListItem>
+                                        <EditRepoListItem repoDoc={repoDoc} cleanup={close} />
+                                        <DeleteRepoListItem repoId={id} name={name} cleanup={close} />
                                     </List>
                                 )}
                             />
