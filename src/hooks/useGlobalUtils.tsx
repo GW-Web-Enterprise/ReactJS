@@ -53,7 +53,7 @@ export const ProvideGlobalUtils: VFC<{ children: ReactNode }> = ({ children }) =
             <Snackbar
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 open={!!alertInfo}
-                autoHideDuration={8000}
+                autoHideDuration={10000}
                 onClose={() => showAlert(null)}
             >
                 <Alert onClose={() => showAlert(null)} severity={alertInfo?.status}>
@@ -66,7 +66,7 @@ export const ProvideGlobalUtils: VFC<{ children: ReactNode }> = ({ children }) =
                     horizontal: 'center'
                 }}
                 open={!!actionBarParams}
-                autoHideDuration={8000}
+                autoHideDuration={10000}
                 onClose={() => showActionBar(null)}
                 message={actionBarParams?.message}
                 TransitionComponent={(props: Omit<SlideProps, 'direction'>) => <Slide {...props} direction="up" />}
