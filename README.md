@@ -1,4 +1,12 @@
 This repo follows the [Git commit message convention](https://github.com/kazupon/git-commit-message-convention) extended from Angular style
+
+# Accounts to login to the web app
+
+| Global role | Faculty role                    | Email                       | Password |
+| ----------- | ------------------------------- | --------------------------- | -------- |
+| Admin       | None                            | ns7193w@greenwich.ac.uk     | 123456   |
+| Manager     | Coordinator of computer science | sonnxgcs18261@fpt.edu.vn    | 123456   |
+| Guest       | Student of computer science     | xuansonnguyen2000@gmail.com | 123456   |
 # Techniques, Technologies, Libraries used in the project
 + [Context API & UseContext Hook](https://reactjs.org/docs/context.html) to propagate the info of the authenticated user to all UI components
 + ['Render props'](https://reactjs.org/docs/render-props.html)
