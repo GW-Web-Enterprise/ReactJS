@@ -31,6 +31,7 @@ type FileListRowsProps = {
     /** Change the FileList state of the parent */
     setFiles: Dispatch<SetStateAction<CustomFileList>>;
 };
+const functions = firebase.app().functions('asia-southeast2');
 export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filenameMemo, files, setFiles }) => {
     const { currentUser } = useAuth();
     const { showAlert } = useGlobalUtils();
@@ -60,7 +61,6 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
         trackLastestEdit.current.closePopover();
     };
     const handleRename = async (newName: string) => {
-        const functions = firebase.app().functions('asia-southeast2');
         const renameFile = functions.httpsCallable('default-renameFile');
         const { fileIndexToRename, filenameToEdit } = trackLastestEdit.current;
         if (newName === filenameToEdit) return handleDialogClose();
@@ -87,10 +87,15 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
     };
     const handleDelete = async (indexToDelete: number) => {
         const { name } = files[indexToDelete];
-        delete filenameMemo.current[name];
-        await dropbox.current.child(name).delete();
-        showAlert({ status: 'success', message: `'${name}' has been deleted successfully` });
-        setFiles(files.filter((_file, index) => index !== indexToDelete));
+        const deleteFile = functions.httpsCallable('default-deleteFile');
+        try {
+            await deleteFile({ facultyId, repoId, filename: name });
+            delete filenameMemo.current[name];
+            showAlert({ status: 'success', message: `'${name}' has been deleted successfully` });
+            setFiles(files.filter((_file, index) => index !== indexToDelete));
+        } catch (error) {
+            showAlert({ status: 'error', message: 'Failed to delete file' });
+        }
     };
     return (
         <Fragment>
@@ -136,7 +141,7 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
                                         >
                                             {!downloadUrls[index] && (
                                                 <LimitedBackdrop open={true}>
-                                                    <CircularProgress /> &nbsp; <strong>Hang on...</strong>
+                                                    <CircularProgress size={30} /> &nbsp; <strong>Hang on...</strong>
                                                 </LimitedBackdrop>
                                             )}
                                             <ListItemIcon>
