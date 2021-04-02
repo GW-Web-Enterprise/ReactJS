@@ -1,0 +1,226 @@
+:root {
+    --color__opacity--2: rgba(0, 0, 0, 0.12);
+    --color__core__accent: #0061ff;
+    --color__black: #000;
+    --color__white: #fff;
+    --color__standard__text: var(--color__black);
+    --color__inverse__standard__text: var(--color__white);
+    --color__inverse__opacity--2: hsla(0, 0%, 100%, 0.15);
+}
+:root {
+    --dig-Spinner-size: 36px;
+    --dig-Spinner-dot_size: calc(var(--dig-Spinner-size) * 0.25);
+    --dig-Spinner-offset: calc(var(--dig-Spinner-size) - var(--dig-Spinner-dot_size));
+    --dig-Spinner-offset_half: calc(var(--dig-Spinner-offset) / 2);
+    --dig-Spinner-offset_half_negated: calc(var(--dig-Spinner-offset_half) * -1);
+    --dig-Spinner-offset_negated: calc(var(--dig-Spinner-offset) * -1);
+    --dig-Spinner-squash_and_stretch_scale: 2.5;
+    --dig-Spinner-animation: ease-in 2250ms infinite;
+}
+@keyframes digSpinnerDotOne {
+    0% {
+        transform: translate(0);
+    }
+    7% {
+        transform: translate(0);
+    }
+    12.5% {
+        transform: translateY(13.5px) scaleY(2.5);
+        transform: translateY(var(--dig-Spinner-offset_half)) scaleY(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    18% {
+        transform: translateY(27px);
+        transform: translateY(var(--dig-Spinner-offset));
+    }
+    24.5% {
+        transform: translate(13.5px, 27px) scaleX(2.5);
+        transform: translate(var(--dig-Spinner-offset_half), var(--dig-Spinner-offset))
+            scaleX(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    31% {
+        transform: translate(27px, 27px);
+        transform: translate(var(--dig-Spinner-offset), var(--dig-Spinner-offset));
+    }
+    38.3% {
+        transform: translate(27px, 13.5px) scaleY(2.5);
+        transform: translate(var(--dig-Spinner-offset), var(--dig-Spinner-offset_half))
+            scaleY(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    45.3% {
+        transform: translate(27px);
+        transform: translate(var(--dig-Spinner-offset));
+    }
+    50.4% {
+        transform: translate(13.5px) scaleX(2.5);
+        transform: translate(var(--dig-Spinner-offset_half)) scaleX(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    55.5% {
+        transform: translate(0);
+    }
+    66% {
+        transform: translate(0);
+    }
+    72.5% {
+        transform: translate(13.5px) scaleX(2.5);
+        transform: translate(var(--dig-Spinner-offset_half)) scaleX(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    79% {
+        transform: translate(27px);
+        transform: translate(var(--dig-Spinner-offset));
+    }
+    87% {
+        transform: translate(27px);
+        transform: translate(var(--dig-Spinner-offset));
+    }
+    93% {
+        transform: translate(13.5px) scaleX(2.5);
+        transform: translate(var(--dig-Spinner-offset_half)) scaleX(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    to {
+        transform: translateX(0) translateY(0);
+    }
+}
+@keyframes digSpinnerDotTwo {
+    0% {
+        transform: translate(0);
+    }
+    4.5% {
+        transform: translate(-13.5px) scaleX(2.5);
+        transform: translate(var(--dig-Spinner-offset_half_negated)) scaleX(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    9% {
+        transform: translate(-27px);
+        transform: translate(var(--dig-Spinner-offset_negated));
+    }
+    18% {
+        transform: translate(-27px);
+        transform: translate(var(--dig-Spinner-offset_negated));
+    }
+    24.5% {
+        transform: translate(-13.5px) scaleX(2.5);
+        transform: translate(var(--dig-Spinner-offset_half_negated)) scaleX(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    31% {
+        transform: translate(0);
+    }
+    38% {
+        transform: translate(0);
+    }
+    42.25% {
+        transform: translate(-13.5px) scaleX(2.5);
+        transform: translate(var(--dig-Spinner-offset_half_negated)) scaleX(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    52.5% {
+        transform: translate(-27px);
+        transform: translate(var(--dig-Spinner-offset_negated));
+    }
+    59.25% {
+        transform: translate(-27px, -13.5px) scaleY(2.5);
+        transform: translate(var(--dig-Spinner-offset_negated), var(--dig-Spinner-offset_half_negated))
+            scaleY(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    66% {
+        transform: translate(-27px, -27px);
+        transform: translate(var(--dig-Spinner-offset_negated), var(--dig-Spinner-offset_negated));
+    }
+    72.5% {
+        transform: translate(-13.5px, -27px) scaleX(2.5);
+        transform: translate(var(--dig-Spinner-offset_half_negated), var(--dig-Spinner-offset_negated))
+            scaleX(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    79% {
+        transform: translateY(-27px);
+        transform: translateY(var(--dig-Spinner-offset_negated));
+    }
+    87.5% {
+        transform: translateY(-13.5px) scaleY(2.5);
+        transform: translateY(var(--dig-Spinner-offset_half_negated))
+            scaleY(var(--dig-Spinner-squash_and_stretch_scale));
+    }
+    96% {
+        transform: translate(0);
+    }
+    to {
+        transform: translate(0);
+    }
+}
+.dig-Spinner {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    width: var(--dig-Spinner-size);
+    height: 36px;
+    height: var(--dig-Spinner-size);
+    vertical-align: middle;
+}
+.dig-Spinner-content {
+    width: 36px;
+    height: 36px;
+    transform-origin: top left;
+}
+.dig-Spinner--xsmall {
+    width: 20px;
+    height: 20px;
+}
+.dig-Spinner--xsmall .dig-Spinner-content {
+    transform: scale(0.55);
+}
+.dig-Spinner--small {
+    width: 24px;
+    height: 24px;
+}
+.dig-Spinner--small .dig-Spinner-content {
+    transform: scale(0.66);
+}
+.dig-Spinner--standard {
+    width: 36px;
+    height: 36px;
+}
+.dig-Spinner--standard .dig-Spinner-content {
+    transform: scale(1);
+}
+.dig-Spinner--large {
+    width: 48px;
+    height: 48px;
+}
+.dig-Spinner--large .dig-Spinner-content {
+    transform: scale(1.33);
+}
+.dig-Spinner--track rect {
+    stroke: rgba(0, 0, 0, 0.12);
+    stroke: var(--color__opacity--2);
+}
+.dig-Spinner-dot {
+    position: absolute;
+    width: 9px;
+    width: var(--dig-Spinner-dot_size);
+    height: 9px;
+    height: var(--dig-Spinner-dot_size);
+    background-color: #0061ff;
+    background-color: var(--color__core__accent);
+}
+.dig-Spinner-dot--one {
+    top: 0;
+    left: 0;
+    animation: digSpinnerDotOne 2.25s ease-in infinite;
+    animation: digSpinnerDotOne var(--dig-Spinner-animation);
+}
+.dig-Spinner-dot--two {
+    bottom: 0;
+    right: 0;
+    animation: digSpinnerDotTwo 2.25s ease-in infinite;
+    animation: digSpinnerDotTwo var(--dig-Spinner-animation);
+}
+.dig-Spinner--monochromatic .dig-Spinner-dot {
+    background-color: #000;
+    background-color: var(--color__standard__text);
+}
+.dig-Spinner--inverse.dig-Spinner--monochromatic .dig-Spinner-dot,
+.dig-Spinner--inverse .dig-Spinner-dot {
+    background-color: #fff;
+    background-color: var(--color__inverse__standard__text);
+}
+.dig-Spinner--inverse .dig-Spinner--track rect {
+    stroke: hsla(0, 0%, 100%, 0.15);
+    stroke: var(--color__inverse__opacity--2);
+}
