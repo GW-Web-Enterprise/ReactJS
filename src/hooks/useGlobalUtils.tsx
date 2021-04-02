@@ -1,5 +1,5 @@
+import { DigSpinner } from '@app/Components/DigSpinner';
 import {
-    CircularProgress,
     Snackbar,
     Button,
     Dialog,
@@ -9,7 +9,8 @@ import {
     DialogTitle,
     IconButton,
     Slide,
-    SlideProps
+    SlideProps,
+    Fade
 } from '@material-ui/core';
 import { Close } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
@@ -88,11 +89,19 @@ export const ProvideGlobalUtils: VFC<{ children: ReactNode }> = ({ children }) =
                     </Fragment>
                 }
             />
-            <Snackbar open={!!loadingMsg}>
-                <Fragment>
-                    <CircularProgress size={40} /> &nbsp; {loadingMsg}
-                </Fragment>
-            </Snackbar>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center'
+                }}
+                open={!!loadingMsg}
+                TransitionComponent={Fade}
+                message={
+                    <Fragment>
+                        <DigSpinner /> &nbsp; {loadingMsg}
+                    </Fragment>
+                }
+            ></Snackbar>
             <Dialog
                 open={!!deleteDialogParams}
                 onClose={() => {
