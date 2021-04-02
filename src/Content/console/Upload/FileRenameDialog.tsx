@@ -1,14 +1,5 @@
-import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
 import { REGEX_FILENAME } from '@app/constants/regexes';
-import {
-    Button,
-    CircularProgress,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    TextField
-} from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core';
 import { useCallback, useState, VFC } from 'react';
 
 type IFileRenameDialogProps = {
@@ -19,7 +10,6 @@ type IFileRenameDialogProps = {
 };
 export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, filename, onOkay }) => {
     const [node, setNode] = useState<HTMLInputElement | null>(null);
-    const [wait, setWait] = useState(false);
     // This callback ref never gets re-initialized on re-render
     const onRefChange = useCallback(
         // Invoked with HTML DOM input element when the dialog is mounted
@@ -30,16 +20,8 @@ export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, f
         },
         [filename]
     );
-    const handleClick = async () => {
-        setWait(true);
-        await onOkay(node!.value);
-        setWait(false);
-    };
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xl">
-            <LimitedBackdrop open={wait}>
-                <CircularProgress /> &nbsp; <strong>Renaming file, please wait... </strong>
-            </LimitedBackdrop>
             <DialogTitle id="form-dialog-title">Rename</DialogTitle>
             <DialogContent>
                 <TextField
@@ -57,7 +39,7 @@ export const FileRenameDialog: VFC<IFileRenameDialogProps> = ({ open, onClose, f
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => REGEX_FILENAME.test(node!.value) && handleClick()}
+                    onClick={() => REGEX_FILENAME.test(node!.value) && onOkay(node!.value) && onClose()}
                 >
                     Ok
                 </Button>

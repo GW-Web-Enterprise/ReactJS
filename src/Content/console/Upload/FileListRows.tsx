@@ -34,11 +34,10 @@ type FileListRowsProps = {
 const functions = firebase.app().functions('asia-southeast2');
 export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filenameMemo, files, setFiles }) => {
     const { currentUser } = useAuth();
-    const { showAlert } = useGlobalUtils();
+    const { showAlert, showLoading } = useGlobalUtils();
     const trackLastestEdit = useRef({
         filenameToEdit: '',
-        fileIndexToRename: Number.NEGATIVE_INFINITY,
-        closePopover: () => {}
+        fileIndexToRename: Number.NEGATIVE_INFINITY
     }); // never gets re-initilized to default values on rerenders
     const dropbox = useRef(firebase.storage().ref(`faculty_${facultyId}/repo_${repoId}/dropbox_${currentUser!.uid}`));
     const [downloadUrls, setDownloadUrls] = useState<Array<string>>([]);
@@ -56,14 +55,11 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
         };
     }, [files]);
     if (!files.length) return null;
-    const handleDialogClose = () => {
-        setOpen(false);
-        trackLastestEdit.current.closePopover();
-    };
     const handleRename = async (newName: string) => {
+        showLoading('Renaming...');
         const renameFile = functions.httpsCallable('default-renameFile');
         const { fileIndexToRename, filenameToEdit } = trackLastestEdit.current;
-        if (newName === filenameToEdit) return handleDialogClose();
+        if (newName === filenameToEdit) return setOpen(false);
         try {
             await renameFile({
                 newName,
@@ -79,11 +75,11 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
             filenameMemo.current[newName] = true;
             setFiles(newFileList);
             showAlert({ status: 'success', message: 'File is renamed successfully' });
-            setOpen(false);
         } catch ({ message }) {
             showAlert({ status: 'error', message });
-            handleDialogClose();
         }
+        setOpen(false);
+        showLoading('');
     };
     const handleDelete = async (indexToDelete: number) => {
         const { name } = files[indexToDelete];
@@ -93,15 +89,16 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
             delete filenameMemo.current[name];
             showAlert({ status: 'success', message: `'${name}' has been deleted successfully` });
             setFiles(files.filter((_file, index) => index !== indexToDelete));
-        } catch (error) {
-            showAlert({ status: 'error', message: 'Failed to delete file' });
+        } catch ({ message }) {
+            showAlert({ status: 'error', message });
         }
+        showLoading('');
     };
     return (
         <Fragment>
             <FileRenameDialog
                 open={open}
-                onClose={handleDialogClose}
+                onClose={() => setOpen(false)}
                 filename={trackLastestEdit.current.filenameToEdit}
                 onOkay={handleRename}
             />
@@ -154,7 +151,7 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
                                             onClick={() => {
                                                 trackLastestEdit.current.filenameToEdit = name;
                                                 trackLastestEdit.current.fileIndexToRename = index;
-                                                trackLastestEdit.current.closePopover = close;
+                                                close();
                                                 setOpen(true);
                                             }}
                                         >
@@ -166,6 +163,7 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
                                         <ListItem
                                             button
                                             onClick={() => {
+                                                showLoading('Deleting...');
                                                 close();
                                                 handleDelete(index);
                                             }}
