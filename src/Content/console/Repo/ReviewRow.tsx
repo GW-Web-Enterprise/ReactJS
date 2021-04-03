@@ -27,7 +27,8 @@ import { displayFileSize } from '@app/utils/displayFileSize';
 import { downloadFolderAsZip } from '@app/utils/downloadFolderAsZip';
 
 const db = firebase.firestore();
-export const ReviewRow: IRepoCollapsibleRow = ({ open, repoId }) => {
+export const ReviewRow: IRepoCollapsibleRow = ({ open, repoDoc }) => {
+    const { id: repoId } = repoDoc;
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dropbox, setDropbox] = useState<IDropboxReview>(null);
     const { data = [], status } = useFirestoreQuery(

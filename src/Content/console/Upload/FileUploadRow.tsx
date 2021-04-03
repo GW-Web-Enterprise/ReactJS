@@ -27,7 +27,8 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 
 const storageRef = firebase.storage();
 const db = firebase.firestore();
-export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoId }) => {
+export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoDoc }) => {
+    const { id: repoId } = repoDoc;
     const fileInput = useRef<HTMLInputElement>(null);
     const { currentUser } = useAuth();
     const [files, setFiles, setRawFileList, filenameMemo, wait, setWait] = useFileUpload(fileInput, facultyId, repoId);

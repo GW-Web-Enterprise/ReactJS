@@ -21,7 +21,6 @@ import { KeyboardArrowDown, KeyboardArrowUp, MoreVert } from '@material-ui/icons
 import firebase from 'firebase/app';
 import { Fragment, useState, VFC } from 'react';
 
-export type IRepoCollapsibleRow = VFC<{ open: boolean; facultyId: string; repoId: string }>;
 type RepoTableProps = { facultyId: string; RepoCollapsibleRow: IRepoCollapsibleRow };
 const reposRef = firebase.firestore().collection('repos');
 export const RepoTable: VFC<RepoTableProps> = ({ facultyId, RepoCollapsibleRow }) => {
@@ -65,6 +64,7 @@ export const RepoTable: VFC<RepoTableProps> = ({ facultyId, RepoCollapsibleRow }
     );
 };
 
+export type IRepoCollapsibleRow = VFC<{ open: boolean; facultyId: string; repoDoc: RepoDbRead }>;
 type RepoRowProps = {
     facultyId: string;
     repoDoc: RepoDbRead;
@@ -118,7 +118,7 @@ const RepoRow: VFC<RepoRowProps> = ({ facultyId, repoDoc, RepoCollapsibleRow }) 
                         </TableCell>
                     )}
             </TableRow>
-            <RepoCollapsibleRow open={open} facultyId={facultyId} repoId={repoDoc.id} />
+            <RepoCollapsibleRow open={open} facultyId={facultyId} repoDoc={repoDoc} />
         </Fragment>
     );
 };
