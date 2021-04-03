@@ -66,7 +66,7 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoDoc }) => {
                                                 <strong>Size</strong>
                                             </TableCell>
                                             <TableCell align="right">
-                                                <strong>Status</strong> (click to see more)
+                                                <strong>Status</strong> (click the status text at each row to see more)
                                             </TableCell>
                                             <TableCell align="right"></TableCell>
                                         </TableRow>
