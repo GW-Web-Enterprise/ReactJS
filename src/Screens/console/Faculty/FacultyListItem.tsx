@@ -1,13 +1,13 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
-import { VFC } from 'react';
-import firebase from 'firebase/app';
-import { Box, ButtonGroup, Button, TextField, Tooltip, FormControl, makeStyles, createStyles } from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
-import { PushPopMember } from '@app/Content/console/Faculty/PushPopMember';
-import { useForm } from 'react-hook-form';
 import { FACULTY_NAME_ERR } from '@app/constants/inputErrs';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { PushPopMember } from '@app/Screens/console/Faculty/PushPopMember';
 import { FacultyDbRead, FacultyDbSave } from '@app/typings/schemas';
+import { Box, Button, ButtonGroup, createStyles, FormControl, makeStyles, TextField, Tooltip } from '@material-ui/core';
+import { Delete, Edit } from '@material-ui/icons';
+import firebase from 'firebase/app';
+import { VFC } from 'react';
+import { useForm } from 'react-hook-form';
 
 const useStyles = makeStyles(() =>
     createStyles({

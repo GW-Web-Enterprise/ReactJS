@@ -1,11 +1,11 @@
-import { AddRepo } from '@app/Content/console/Repo/AddRepo';
 import { FacultySelector } from '@app/Components/FacultySelector';
 import { RepoTable } from '@app/Components/RepoTable';
-import { Fragment, useEffect, useState, VFC } from 'react';
-import firebase from 'firebase/app';
-import { ReviewRow } from '@app/Content/console/Repo/ReviewRow';
-import { getUserRole } from '@app/utils/getUserRole';
 import { useAuth } from '@app/hooks/useAuth';
+import { AddRepo } from '@app/Screens/console/Repo/AddRepo';
+import { ReviewRow } from '@app/Screens/console/Repo/ReviewRow';
+import { getUserRole } from '@app/utils/getUserRole';
+import firebase from 'firebase/app';
+import { Fragment, useEffect, useState, VFC } from 'react';
 
 const Repo: VFC = () => {
     const { userRole } = useAuth();

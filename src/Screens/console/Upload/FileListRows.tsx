@@ -1,6 +1,10 @@
+import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
 import { PopoverItem } from '@app/Components/PopoverItem';
-import { FileRenameDialog } from '@app/Content/console/Upload/FileRenameDialog';
+import { useAuth } from '@app/hooks/useAuth';
+import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { FileRenameDialog } from '@app/Screens/console/Upload/FileRenameDialog';
 import { CustomFileList } from '@app/typings/files';
+import { RepoDbRead } from '@app/typings/schemas';
 import { displayFileSize } from '@app/utils/displayFileSize';
 import {
     CircularProgress,
@@ -13,12 +17,8 @@ import {
     TableRow
 } from '@material-ui/core';
 import { Delete, Edit, GetApp, MoreVert } from '@material-ui/icons';
-import { Dispatch, Fragment, MutableRefObject, SetStateAction, useEffect, useRef, useState, VFC } from 'react';
 import firebase from 'firebase/app';
-import { useAuth } from '@app/hooks/useAuth';
-import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
-import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
-import { RepoDbRead } from '@app/typings/schemas';
+import { Dispatch, Fragment, MutableRefObject, SetStateAction, useEffect, useRef, useState, VFC } from 'react';
 
 type FileListRowsProps = {
     facultyId: string;

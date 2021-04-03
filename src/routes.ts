@@ -4,14 +4,14 @@
 import { CustomRouteProps } from '@app/typings/routes';
 import { lazy } from 'react';
 
-const ForgotPasswordForm = lazy(() => import('@app/Content/ap/ForgotPasswordForm'));
-const LoginForm = lazy(() => import('@app/Content/ap/LoginForm'));
-const SignUpForm = lazy(() => import('@app/Content/ap/SignUpForm'));
-const Upload = lazy(() => import('@app/Content/console/Upload'));
-const Faculty = lazy(() => import('@app/Content/console/Faculty'));
-const Overview = lazy(() => import('@app/Content/console/Overview'));
-const Repo = lazy(() => import('@app/Content/console/Repo'));
-const User = lazy(() => import('@app/Content/console/User'));
+const ForgotPasswordForm = lazy(() => import('@app/Screens/ap/ForgotPasswordForm'));
+const LoginForm = lazy(() => import('@app/Screens/ap/LoginForm'));
+const SignUpForm = lazy(() => import('@app/Screens/ap/SignUpForm'));
+const Upload = lazy(() => import('@app/Screens/console/Upload'));
+const Faculty = lazy(() => import('@app/Screens/console/Faculty'));
+const Overview = lazy(() => import('@app/Screens/console/Overview'));
+const Repo = lazy(() => import('@app/Screens/console/Repo'));
+const User = lazy(() => import('@app/Screens/console/User'));
 
 // Each one will be mapped to <UnauthenticatedRoute>
 export const ACCESS_PORTAL_ROUTES: Array<CustomRouteProps> = [

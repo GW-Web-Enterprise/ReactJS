@@ -1,10 +1,10 @@
-import { RepoSaveDialog, RepoSaveFormData } from '@app/Content/console/Repo/RepoSaveDialog';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { RepoSaveDialog, RepoSaveFormData } from '@app/Screens/console/Repo/RepoSaveDialog';
 import { RepoDbRead } from '@app/typings/schemas';
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import { Fragment, useState, VFC } from 'react';
-import firebase from 'firebase/app';
 import { Edit } from '@material-ui/icons';
+import firebase from 'firebase/app';
+import { Fragment, useState, VFC } from 'react';
 
 type EditRepoProps = { repoDoc: RepoDbRead; cleanup: () => void };
 const reposRef = firebase.firestore().collection('repos');

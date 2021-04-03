@@ -1,7 +1,7 @@
-import { Tab, Tabs, Paper } from '@material-ui/core';
+import { MembersTabPanel } from '@app/Screens/console/Faculty/MembersTabPanel';
+import { SysusersTabPanel } from '@app/Screens/console/Faculty/SysusersTabPanel';
+import { Paper, Tab, Tabs } from '@material-ui/core';
 import React, { Fragment, useState, VFC } from 'react';
-import { MembersTabPanel } from '@app/Content/console/Faculty/MembersTabPanel';
-import { SysusersTabPanel } from '@app/Content/console/Faculty/SysusersTabPanel';
 
 export const PushPopMember: VFC<{ facultyId: string }> = ({ facultyId }) => {
     const [value, setValue] = useState(0);

@@ -1,30 +1,30 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
 import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
+import { STATUS_TO_JSX } from '@app/constants/dropboxStatus';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
+import { ReviewSubmitDialog } from '@app/Screens/console/Repo/ReviewSubmitDialog';
+import { IDropboxDb, IDropboxReview } from '@app/typings/schemas';
+import { displayFileSize } from '@app/utils/displayFileSize';
+import { downloadFolderAsZip } from '@app/utils/downloadFolderAsZip';
 import {
     Box,
+    Button,
     Collapse,
     IconButton,
     List,
     ListItem,
-    TableHead,
-    TableRow,
-    TableCell,
-    Typography,
+    ListItemIcon,
+    ListItemText,
     Table,
     TableBody,
-    ListItemText,
-    ListItemIcon,
-    Button
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
 } from '@material-ui/core';
 import { AssignmentTurnedIn, CancelSharp, GetApp, MoreVert } from '@material-ui/icons';
 import firebase from 'firebase/app';
-import { IDropboxDb, IDropboxReview } from '@app/typings/schemas';
 import { Fragment, useState } from 'react';
-import { ReviewSubmitDialog } from '@app/Content/console/Repo/ReviewSubmitDialog';
-import { STATUS_TO_JSX } from '@app/constants/dropboxStatus';
-import { displayFileSize } from '@app/utils/displayFileSize';
-import { downloadFolderAsZip } from '@app/utils/downloadFolderAsZip';
 
 const db = firebase.firestore();
 export const ReviewRow: IRepoCollapsibleRow = ({ open, repoDoc }) => {

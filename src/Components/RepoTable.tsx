@@ -1,8 +1,8 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
-import { DeleteRepoListItem } from '@app/Content/console/Repo/DeleteRepoListItem';
-import { EditRepoListItem } from '@app/Content/console/Repo/EditRepoListItem';
 import { useAuth } from '@app/hooks/useAuth';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
+import { DeleteRepoListItem } from '@app/Screens/console/Repo/DeleteRepoListItem';
+import { EditRepoListItem } from '@app/Screens/console/Repo/EditRepoListItem';
 import { RepoDbRead } from '@app/typings/schemas';
 import {
     IconButton,

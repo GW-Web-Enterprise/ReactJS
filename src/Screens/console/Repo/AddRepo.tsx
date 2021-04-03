@@ -1,7 +1,7 @@
 import repoIcon from '@app/assets/repo.svg';
 import { InlineIcon } from '@app/Components/InlineIcon';
-import { RepoSaveDialog, RepoSaveFormData } from '@app/Content/console/Repo/RepoSaveDialog';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
+import { RepoSaveDialog, RepoSaveFormData } from '@app/Screens/console/Repo/RepoSaveDialog';
 import { RepoDbSave } from '@app/typings/schemas';
 import { Button, withStyles } from '@material-ui/core';
 import firebase from 'firebase/app';

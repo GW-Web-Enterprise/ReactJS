@@ -1,6 +1,6 @@
-import { AddFaculty } from '@app/Content/console/Faculty/AddFaculty';
-import { FacultyListItem } from '@app/Content/console/Faculty/FacultyListItem';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
+import { AddFaculty } from '@app/Screens/console/Faculty/AddFaculty';
+import { FacultyListItem } from '@app/Screens/console/Faculty/FacultyListItem';
 import { FacultyDbRead } from '@app/typings/schemas';
 import { LinearProgress, Typography } from '@material-ui/core';
 import firebase from 'firebase/app';
