@@ -18,10 +18,11 @@ import firebase from 'firebase/app';
 import { useAuth } from '@app/hooks/useAuth';
 import { useGlobalUtils } from '@app/hooks/useGlobalUtils';
 import { LimitedBackdrop } from '@app/Components/LimitedBackdrop';
+import { RepoDbRead } from '@app/typings/schemas';
 
 type FileListRowsProps = {
     facultyId: string;
-    repoId: string;
+    repoDoc: RepoDbRead;
     /** A cache of all the filenames of the parent */
     filenameMemo: MutableRefObject<{
         [key: string]: boolean;
@@ -32,7 +33,8 @@ type FileListRowsProps = {
     setFiles: Dispatch<SetStateAction<CustomFileList>>;
 };
 const functions = firebase.app().functions('asia-southeast2');
-export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filenameMemo, files, setFiles }) => {
+export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoDoc, filenameMemo, files, setFiles }) => {
+    const { id: repoId, closeTimestamp, finalTimestamp } = repoDoc;
     const { currentUser } = useAuth();
     const { showAlert, showLoading } = useGlobalUtils();
     const trackLastestEdit = useRef({
@@ -146,33 +148,37 @@ export const FileListRows: VFC<FileListRowsProps> = ({ facultyId, repoId, filena
                                             </ListItemIcon>
                                             <ListItemText primary="Download" />
                                         </ListItem>
-                                        <ListItem
-                                            button
-                                            onClick={() => {
-                                                trackLastestEdit.current.filenameToEdit = name;
-                                                trackLastestEdit.current.fileIndexToRename = index;
-                                                close();
-                                                setOpen(true);
-                                            }}
-                                        >
-                                            <ListItemIcon>
-                                                <Edit />
-                                            </ListItemIcon>
-                                            <ListItemText primary="Rename" />
-                                        </ListItem>
-                                        <ListItem
-                                            button
-                                            onClick={() => {
-                                                showLoading('Deleting...');
-                                                close();
-                                                handleDelete(index);
-                                            }}
-                                        >
-                                            <ListItemIcon>
-                                                <Delete />
-                                            </ListItemIcon>
-                                            <ListItemText primary="Delete" />
-                                        </ListItem>
+                                        {firebase.firestore.Timestamp.now().valueOf() <= finalTimestamp.valueOf() && (
+                                            <ListItem
+                                                button
+                                                onClick={() => {
+                                                    trackLastestEdit.current.filenameToEdit = name;
+                                                    trackLastestEdit.current.fileIndexToRename = index;
+                                                    close();
+                                                    setOpen(true);
+                                                }}
+                                            >
+                                                <ListItemIcon>
+                                                    <Edit />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Rename" />
+                                            </ListItem>
+                                        )}
+                                        {firebase.firestore.Timestamp.now().valueOf() <= closeTimestamp.valueOf() && (
+                                            <ListItem
+                                                button
+                                                onClick={() => {
+                                                    showLoading('Deleting...');
+                                                    close();
+                                                    handleDelete(index);
+                                                }}
+                                            >
+                                                <ListItemIcon>
+                                                    <Delete />
+                                                </ListItemIcon>
+                                                <ListItemText primary="Delete" />
+                                            </ListItem>
+                                        )}
                                     </List>
                                 )}
                             />
