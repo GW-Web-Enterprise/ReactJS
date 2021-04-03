@@ -5,16 +5,17 @@ import 'firebase/auth';
 import firebaseConfig from '@app/firebase-config.json';
 import { getUserRole } from '@app/utils/getUserRole';
 
-type AuthFunc = (email: string, password: string) => Promise<firebase.auth.UserCredential>;
+type SignUpFunc = (email: string, password: string, displayName: string) => Promise<void>;
+type PasswordLoginFunc = (email: string, password: string) => Promise<firebase.auth.UserCredential>;
 type ChangeCreFunc = (newCredential: string) => Promise<void>;
 type UserRole = 'guest' | 'admin' | 'manager';
 interface AuthContextInterface {
     currentUser: firebase.User | null;
     userRole: UserRole;
     lazyLogin: () => Promise<firebase.auth.UserCredential>;
-    loginWithPassword: AuthFunc;
+    loginWithPassword: PasswordLoginFunc;
     loginWithGoogle: () => Promise<firebase.auth.UserCredential>;
-    signup: AuthFunc;
+    signup: SignUpFunc;
     logout: () => Promise<void>;
     resetPassword: ChangeCreFunc;
     updatePassword: ChangeCreFunc;
@@ -44,13 +45,20 @@ function useProvideAuth() {
     const [userRole, setUserRole] = useState<UserRole>('guest');
     const history = useHistory();
 
-    const signup: AuthFunc = (email, password) => auth.createUserWithEmailAndPassword(email, password);
+    const signup: SignUpFunc = (email, password, displayName) =>
+        auth.createUserWithEmailAndPassword(email, password).then(({ user }) => {
+            // After account is created and user is logged in successfully...
+            const functions = firebase.app().functions('asia-southeast2');
+            const updateDuplicateProfile = functions.httpsCallable('default-updateDuplicateProfile');
+            updateDuplicateProfile({ displayName });
+            user!.updateProfile({ displayName });
+        });
 
     const lazyLogin = () => auth.signInAnonymously();
 
     const loginWithGoogle = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
 
-    const loginWithPassword: AuthFunc = (email, password) => auth.signInWithEmailAndPassword(email, password);
+    const loginWithPassword: PasswordLoginFunc = (email, password) => auth.signInWithEmailAndPassword(email, password);
 
     const logout = () => auth.signOut();
 

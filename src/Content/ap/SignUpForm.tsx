@@ -18,8 +18,7 @@ const SignUpForm: VFC = () => {
     const { register, handleSubmit, errors } = useForm<Inps>();
     const createUser = async ({ email, password, fullname }: Inps) => {
         setLoading(true);
-        const { user } = await signup(email, password);
-        await user!.updateProfile({ displayName: fullname });
+        await signup(email, password, fullname);
         showAlert({ status: 'success', message: 'Account is created successfully' });
     };
     const linkToGoogleAcc = async (email: string, password: string) => {
