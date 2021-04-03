@@ -13,15 +13,7 @@ export const DigSpinner: VFC = () => {
                     focusable="false"
                     data-testid="digSpinnerTrack"
                 >
-                    <rect
-                        fill="none"
-                        stroke-linecap="square"
-                        stroke-width="6"
-                        x="3"
-                        y="3"
-                        width="18"
-                        height="18"
-                    ></rect>
+                    <rect fill="none" strokeLinecap="square" strokeWidth="6" x="3" y="3" width="18" height="18"></rect>
                 </svg>
                 <div className="dig-Spinner-dot dig-Spinner-dot--one"></div>
                 <div className="dig-Spinner-dot dig-Spinner-dot--two"></div>
