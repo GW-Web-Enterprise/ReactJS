@@ -77,13 +77,14 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoDoc })
                     </LimitedBackdrop>
                 )}
                 <Collapse in={open} timeout="auto" unmountOnExit>
-                    {firebase.firestore.Timestamp.now().valueOf() > closeTimestamp.valueOf() && (
-                        <Box color="info.main" display="inline" fontSize="fontSize" mt={1}>
-                            Close date and time of this repo has passed, therefore it is unable to accept any new file
-                        </Box>
-                    )}
                     {dropbox && (
                         <Box margin={1}>
+                            {firebase.firestore.Timestamp.now().valueOf() > closeTimestamp.valueOf() && (
+                                <Box color="info.main" display="inline" fontSize="fontSize" mt={1}>
+                                    Close date and time of this repo has passed, therefore it is unable to accept any
+                                    new file
+                                </Box>
+                            )}
                             <Typography variant="h6" gutterBottom>
                                 Your dropbox
                                 <PopoverItem
