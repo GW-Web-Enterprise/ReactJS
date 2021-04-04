@@ -1,6 +1,7 @@
 import { PopoverItem } from '@app/Components/PopoverItem';
 import { IRepoCollapsibleRow } from '@app/Components/RepoTable';
 import { STATUS_TO_JSX } from '@app/constants/dropboxStatus';
+import { useAuth } from '@app/hooks/useAuth';
 import { useFirestoreQuery } from '@app/hooks/useFirestoreQuery';
 import { ReviewSubmitDialog } from '@app/Screens/console/Repo/ReviewSubmitDialog';
 import { IDropboxDb, IDropboxReview } from '@app/typings/schemas';
@@ -29,8 +30,9 @@ import { Fragment, useState } from 'react';
 const db = firebase.firestore();
 export const ReviewRow: IRepoCollapsibleRow = ({ open, repoDoc }) => {
     const { id: repoId } = repoDoc;
+    const { currentUser } = useAuth();
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [dropbox, setDropbox] = useState<IDropboxReview>(null);
+    const [dropboxToReview, setDropbox] = useState<IDropboxReview>(null);
     const { data = [], status } = useFirestoreQuery(
         db.collection('repos').doc(repoId).collection('dropboxes').where('size', '!=', 0)
     );
@@ -40,13 +42,16 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoDoc }) => {
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
                 repoId={repoId}
-                dropbox={dropbox}
+                dropbox={dropboxToReview}
             />
             <TableRow>
                 {status === 'success' && (
                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box margin={1}>
+                                <Box color="info.main" display="inline" fontSize="fontSize" mt={1}>
+                                    Note that you cannot edit dropbox reviews given by other coordinators.
+                                </Box>
                                 <Typography variant="h6" gutterBottom component="div">
                                     Review dropboxes of students in the faculty
                                 </Typography>
@@ -83,6 +88,7 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoDoc }) => {
                                                 createdAt,
                                                 status,
                                                 size,
+                                                reviewerId,
                                                 reviewerName,
                                                 reviewerEmail,
                                                 reviewedAt,
@@ -102,7 +108,9 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoDoc }) => {
                                                             placement="bottom"
                                                             renderToggle={(toggle, toggleEl) => (
                                                                 <Button type="button" ref={toggleEl} onClick={toggle}>
-                                                                    {STATUS_TO_JSX[status]}
+                                                                    {STATUS_TO_JSX[status]} &nbsp;
+                                                                    {reviewerId === currentUser!.uid &&
+                                                                        '(given by you)'}
                                                                 </Button>
                                                             )}
                                                             renderPopContent={() =>
@@ -160,40 +168,46 @@ export const ReviewRow: IRepoCollapsibleRow = ({ open, repoDoc }) => {
                                                                         </ListItemIcon>
                                                                         <ListItemText primary="Download to view" />
                                                                     </ListItem>
-                                                                    <ListItem
-                                                                        button
-                                                                        onClick={() => {
-                                                                            close();
-                                                                            setDropbox({
-                                                                                id,
-                                                                                status: 'approved',
-                                                                                feedback
-                                                                            });
-                                                                            setDialogOpen(true);
-                                                                        }}
-                                                                    >
-                                                                        <ListItemIcon>
-                                                                            <AssignmentTurnedIn />
-                                                                        </ListItemIcon>
-                                                                        <ListItemText primary="Approve or edit feedback" />
-                                                                    </ListItem>
-                                                                    <ListItem
-                                                                        button
-                                                                        onClick={() => {
-                                                                            close();
-                                                                            setDropbox({
-                                                                                id,
-                                                                                status: 'rejected',
-                                                                                feedback
-                                                                            });
-                                                                            setDialogOpen(true);
-                                                                        }}
-                                                                    >
-                                                                        <ListItemIcon>
-                                                                            <CancelSharp />
-                                                                        </ListItemIcon>
-                                                                        <ListItemText primary="Reject or edit feedback" />
-                                                                    </ListItem>
+                                                                    {status === 'pending' ||
+                                                                        (reviewerId === currentUser!.uid && (
+                                                                            <ListItem
+                                                                                button
+                                                                                onClick={() => {
+                                                                                    close();
+                                                                                    setDropbox({
+                                                                                        id,
+                                                                                        status: 'approved',
+                                                                                        feedback
+                                                                                    });
+                                                                                    setDialogOpen(true);
+                                                                                }}
+                                                                            >
+                                                                                <ListItemIcon>
+                                                                                    <AssignmentTurnedIn />
+                                                                                </ListItemIcon>
+                                                                                <ListItemText primary="Approve or edit your own feedback" />
+                                                                            </ListItem>
+                                                                        ))}
+                                                                    {status === 'pending' ||
+                                                                        (reviewerId === currentUser!.uid && (
+                                                                            <ListItem
+                                                                                button
+                                                                                onClick={() => {
+                                                                                    close();
+                                                                                    setDropbox({
+                                                                                        id,
+                                                                                        status: 'rejected',
+                                                                                        feedback
+                                                                                    });
+                                                                                    setDialogOpen(true);
+                                                                                }}
+                                                                            >
+                                                                                <ListItemIcon>
+                                                                                    <CancelSharp />
+                                                                                </ListItemIcon>
+                                                                                <ListItemText primary="Reject or edit your own feedback" />
+                                                                            </ListItem>
+                                                                        ))}
                                                                 </List>
                                                             )}
                                                         />
