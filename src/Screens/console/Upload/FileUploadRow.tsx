@@ -41,8 +41,8 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoDoc })
             const querySnapshot = await dropboxesRef.where('ownerId', '==', currentUser!.uid).get();
             // if no dropbox for the current user is found, create one for them (create on-demand)
             if (querySnapshot.empty) {
-                firebase.firestore.Timestamp.now().valueOf() <= closeTimestamp.valueOf() &&
-                    (await dropboxesRef.add({
+                if (firebase.firestore.Timestamp.now().valueOf() <= closeTimestamp.valueOf()) {
+                    const docRef = await dropboxesRef.add({
                         facultyId,
                         repoId,
                         status: 'pending',
@@ -51,7 +51,10 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoDoc })
                         ownerName: currentUser!.displayName,
                         ownerEmail: currentUser!.email,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    }));
+                    });
+                    const docSnapshot = await docRef.get();
+                    setDropbox({ id: docSnapshot.id, ...docSnapshot.data() } as IDropboxDb);
+                }
                 setWait('');
                 // No dropbox -> no file -> terminate here
                 return setFiles([]);
@@ -77,14 +80,13 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoDoc })
                     </LimitedBackdrop>
                 )}
                 <Collapse in={open} timeout="auto" unmountOnExit>
+                    {firebase.firestore.Timestamp.now().valueOf() > closeTimestamp.valueOf() && (
+                        <Box color="info.main" display="inline" fontSize="fontSize" margin={1}>
+                            Close date and time of this repo has passed, therefore it is unable to accept any new file
+                        </Box>
+                    )}
                     {dropbox && (
                         <Box margin={1}>
-                            {firebase.firestore.Timestamp.now().valueOf() > closeTimestamp.valueOf() && (
-                                <Box color="info.main" display="inline" fontSize="fontSize" mt={1}>
-                                    Close date and time of this repo has passed, therefore it is unable to accept any
-                                    new file
-                                </Box>
-                            )}
                             <Typography variant="h6" gutterBottom>
                                 Your dropbox
                                 <PopoverItem
@@ -96,7 +98,7 @@ export const FileUploadRow: IRepoCollapsibleRow = ({ open, facultyId, repoDoc })
                                         </Button>
                                     )}
                                     renderPopContent={() =>
-                                        (dropbox && dropbox.status !== 'pending' && (
+                                        (dropbox.status !== 'pending' && (
                                             <Fragment>
                                                 <div>
                                                     <strong>Reviewer's name:</strong> {dropbox.reviewerName}
