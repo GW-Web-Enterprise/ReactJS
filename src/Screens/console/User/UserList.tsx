@@ -30,13 +30,14 @@ type Sysuser = {
     };
 };
 export const UserList = () => {
-    const { showAlert } = useGlobalUtils();
+    const { showAlert, showLoading } = useGlobalUtils();
     const [data, setData] = useState<Array<Sysuser>>([]);
     useEffect(() => {
         getUsers({}).then(({ data: { users } }) => setData(users));
     }, []);
     const handleSetRole = (index: number, payload: Payload & { uid: string }) =>
         setRole(payload).then(() => {
+            showLoading('');
             showAlert({ status: 'success', message: 'Role is set successfully' });
             const temp = data.slice();
             temp[index] = { ...temp[index], customClaims: { ...payload } };
@@ -86,6 +87,7 @@ export const UserList = () => {
                                                     disabled={!!isManager}
                                                     onClick={() => {
                                                         close();
+                                                        showLoading('Setting role to manager...');
                                                         handleSetRole(index, { uid, isManager: true });
                                                     }}
                                                 >
@@ -104,6 +106,7 @@ export const UserList = () => {
                                                     disabled={!isManager}
                                                     onClick={() => {
                                                         close();
+                                                        showLoading('Setting role to guest...');
                                                         handleSetRole(index, { uid, isGuest: true });
                                                     }}
                                                 >
